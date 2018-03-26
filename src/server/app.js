@@ -3,6 +3,7 @@ const TruffleContract = require('truffle-contract')
 const WarFactory = require('../solidity/build/contracts/WarFactory.json')
 const CoinWars = require('../solidity/build/contracts/CoinWar.json')
 const WarList = require('./warlist')
+const http = require('http')
 
 const server = {
   address: '0x0',
@@ -94,6 +95,6 @@ const server = {
 };
 
 (function() {
-  // initialize the server
+  console.log('CoinWar server start at port 8080')
   server.init()
 })()

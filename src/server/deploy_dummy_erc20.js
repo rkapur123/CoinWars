@@ -20,12 +20,34 @@ const server = {
       this.address = await this.getAddress()
 
       // deploy first token
-      const token1Contract = await this.deployDummyToken(100, 'Dummy Token 1', 18, 'DT1')
+      const token1Contract = await this.deployDummyToken(1000, 'Dummy Token 1', 18, 'DT1')
       console.log(`First token DT1 has been deployed at ${token1Contract.address}`)
 
+      let balance1 = await token1Contract.balanceOf(this.address)
+      console.log(`Balance (DT1) of ${this.address} is`, balance1.toNumber())
+
       // deploy second token
-      const token2Contract = await this.deployDummyToken(100, 'Dummy Token 2', 18, 'DT2')
+      const token2Contract = await this.deployDummyToken(1000, 'Dummy Token 2', 18, 'DT2')
       console.log(`Second token DT2 has been deployed at ${token2Contract.address}`)
+
+      let balance2 = await token2Contract.balanceOf(this.address)
+      console.log(`Balance (DT2) of ${this.address} is`, balance2.toNumber())
+
+      // create dummy balances DT1
+      await token1Contract.transfer('0xf17f52151EbEF6C7334FAD080c5704D77216b732', 150, { from: `${this.address}`, gas: 5000000 })
+      console.log(`150 DT1 successfully transferred to 0xf17f52151EbEF6C7334FAD080c5704D77216b732`)
+      await token1Contract.transfer('0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef', 50, { from: `${this.address}`, gas: 5000000 })
+      console.log(`50 DT1 successfully transferred to 0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef`)
+      await token1Contract.transfer('0x821aEa9a577a9b44299B9c15c88cf3087F3b5544', 200, { from: `${this.address}`, gas: 5000000 })
+      console.log(`200 DT1 successfully transferred to 0x821aEa9a577a9b44299B9c15c88cf3087F3b5544`)
+
+      // create dummy balances DT2
+      await token2Contract.transfer('0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2', 200, { from: `${this.address}`, gas: 5000000 })
+      console.log(`200 DT2 successfully transferred to 0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2`)
+      await token2Contract.transfer('0x2932b7A2355D6fecc4b5c0B6BD44cC31df247a2e', 80, { from: `${this.address}`, gas: 5000000 })
+      console.log(`80 DT2 successfully transferred to 0x2932b7A2355D6fecc4b5c0B6BD44cC31df247a2e`)
+      await token2Contract.transfer('0x2191eF87E392377ec08E7c08Eb105Ef5448eCED5', 160, { from: `${this.address}`, gas: 5000000 })
+      console.log(`160 DT2 successfully transferred to 0x2191eF87E392377ec08E7c08Eb105Ef5448eCED5`)
 
     } catch(error) {
       console.log(error)
@@ -48,7 +70,7 @@ const server = {
       }
     }
     const tokenInstance = await tokenContract.new(
-      100, 'Dummy Token 1', 18, 'DT1', { from: `${this.address}`, gas: 5000000 }
+      totalAmt, name, decimal, symbol, { from: `${this.address}`, gas: 5000000 }
     )
     return tokenInstance
   }
