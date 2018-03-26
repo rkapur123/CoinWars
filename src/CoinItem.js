@@ -11,8 +11,9 @@ export default class CoinItem extends Component {
     }
   }
 
-  loadWars = async wfInstance => {
+  loadWars = async () => {
     const warsList = []
+    const wfInstance = await this.props.warfactory.deployed()
     let warsCount = await wfInstance.getWarsCount.call({ from: this.props.account })
     let wCount = warsCount.toNumber()
     console.log('Wars Count', wCount)
@@ -47,14 +48,7 @@ export default class CoinItem extends Component {
   }
 
   componentDidMount = async () => {
-    const wfInstance = await this.props.warfactory.deployed()
-    var newWarEvent = wfInstance.NewWarStarted()
-    var _self = this
-    newWarEvent.watch(function(error, result) {
-      _self.loadWars(wfInstance)
-    })
-
-    this.loadWars(wfInstance)
+    this.loadWars()
   }
 
   render() {
@@ -65,6 +59,7 @@ export default class CoinItem extends Component {
           <WarStage
             web3={this.props.web3}
             opponents={item}
+            reload={() => this.loadWars()}
             account={this.props.account} />
         </div>
       )

@@ -25,6 +25,7 @@ export default class WarStage extends Component {
     const bet = await coinInstance.transfer(coinWarAddress, this.state.bid,
       { from: `${this.props.account}`, gas: 5000000 })
     console.log(bet)
+    this.props.reload()
   }
 
   render() {
