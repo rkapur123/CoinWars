@@ -1,6 +1,8 @@
 const Web3 = require('web3')
 const TruffleContract = require('truffle-contract')
 const ERC20 = require('../solidity/build/contracts/ERC20.json')
+const HDWalletProvider = require("truffle-hdwallet-provider");
+
 
 const server = {
   address: '0x0',
@@ -15,6 +17,15 @@ const server = {
       web3_provider = new Web3.providers.HttpProvider("http://localhost:8545")
     }
     this.web3 = new Web3(web3_provider)
+
+    //this.web3.eth.getAccounts().then(function(error, result) { console.log(result)  });
+    var mnemonic = "assault crew bench private fit tank type forum grant decade flag impact"; // 12 word mnemonic
+    for (i = 0; i < 10; i++) {
+      var provider = new HDWalletProvider(mnemonic, "http://localhost:8545", i);
+      console.log(provider.getAddress());
+    }
+
+
 
     try {
       this.address = await this.getAddress()
