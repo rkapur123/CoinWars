@@ -88,7 +88,7 @@ const server = {
       }
     }
 
-    const instance = await contract.deployed(coin1Addr, coin2Addr, fromBlock, toBlock)
+    const instance = await contract.new(coin1Addr, coin2Addr, fromBlock, toBlock, { from: `${this.address}`, gas: 5000000 })
     return instance
   }
 

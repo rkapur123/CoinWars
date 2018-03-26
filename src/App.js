@@ -56,7 +56,10 @@ class App extends Component {
           <h1 className="App-title">Welcome to COIN WARS</h1>
         </header>
         <div>
-          <CoinItem warfactory={this.warfactory} account={this.state.account} />
+          <CoinItem
+            web3={this.web3}
+            warfactory={this.warfactory}
+            account={this.state.account} />
         </div>
       </div>
     );

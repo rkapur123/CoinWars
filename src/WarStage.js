@@ -1,22 +1,37 @@
 import React, {Component} from 'react'
 import { Button, Row, Col, ButtonGroup } from 'react-bootstrap'
+import ERC20 from './solidity/build/contracts/ERC20.json'
+import TruffleContract from 'truffle-contract'
 
 export default class WarStage extends Component {
 
   state = {
     coin: false,
-    bid: 0
+    bid: 0,
+    message: false
   }
 
-  handleSubmit(e) {
+  componentDidMount() {
+    this.tokenContract = TruffleContract(ERC20)
+    this.tokenContract.setProvider(this.props.web3.currentProvider)
+  }
+
+  async handleSubmit(e) {
     e.preventDefault()
+    const { coinWarAddress } = this.props.opponents
     console.log('Coin Selected', this.state.coin)
     console.log('Bid Placed', this.state.bid)
+    const coinInstance = await this.tokenContract.at(this.state.coin)
+    const bet = await coinInstance.transfer(coinWarAddress, this.state.bid,
+      { from: `${this.props.account}`, gas: 5000000 })
+    console.log(bet)
   }
 
   render() {
     console.log(this.state.coin)
-    const { coin1, coin2, toBlock, coin1Address, coin2Address, coin1Balance, coin2Balance } = this.props.opponents
+    const { coin1, coin2, toBlock,
+      coin1Address, coin2Address, coin1Balance,
+      coin2Balance } = this.props.opponents
     return (
       <div>
         <div className="time_notif">11:50:00 / Block# {toBlock}</div>

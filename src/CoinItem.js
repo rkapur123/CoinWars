@@ -27,6 +27,7 @@ export default class CoinItem extends Component {
         const coin2Balance = wars[4].toString(10)
         const fromBlock = wars[5].toString(10)
         const toBlock = wars[6].toString(10)
+        const coinWarAddress = wars[7].toString(10)
         warsList.push({
           coin1,
           coin2,
@@ -35,7 +36,8 @@ export default class CoinItem extends Component {
           coin1Balance,
           coin2Balance,
           fromBlock,
-          toBlock
+          toBlock,
+          coinWarAddress
         })
       }
       this.setState({ wars: warsList, message: null })
@@ -60,7 +62,10 @@ export default class CoinItem extends Component {
       console.log(item)
       return (
         <div key={index}>
-          <WarStage opponents={item} />
+          <WarStage
+            web3={this.props.web3}
+            opponents={item}
+            account={this.props.account} />
         </div>
       )
     })
