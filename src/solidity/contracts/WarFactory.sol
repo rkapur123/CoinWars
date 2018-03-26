@@ -58,7 +58,7 @@ contract WarFactory {
   {
     CoinWar coinWar = CoinWar(allWars[index].coinWar);
     var (balance1, balance2) = coinWar.getOpponentsBalance();
-    return (allWars[index].opponents, address(coinWar.token1), address(coinWar.token2), balance1, balance2, coinWar.fromBlock(), coinWar.toBlock());
+    return (allWars[index].opponents, address(coinWar.token1()), address(coinWar.token2()), balance1, balance2, coinWar.fromBlock(), coinWar.toBlock());
   }
 
   modifier onlyOwner() {

@@ -1,4 +1,5 @@
 var ERC20 = artifacts.require("ERC20");
+var ERC22 = artifacts.require("ERC20");
 var CoinWar = artifacts.require("CoinWar");
 var WarFactory = artifacts.require("WarFactory");
 var CoinManager = artifacts.require("CoinManager");
@@ -17,12 +18,15 @@ module.exports = deployer => {
     })
     .catch(error => console.log(error))
     */
-  deployer.deploy(ERC20, 100, "Winner", 18, "W")
+
+
+
+  deployer.deploy(ERC20, 100, "Winner", 18, "WT")
     .then(resp => {
-      return deployer.deploy(ERC20, 100, "Looser", 18, "L")
+      return deployer.deploy(ERC22, 100, "Looser", 18, "LT")
     })
     .then(resp => {
-      return deployer.deploy(CoinWar, ERC20.address, ERC20.address, 0, 100)
+      return deployer.deploy(CoinWar, ERC20.address, ERC22.address, 0, 100)
     })
   deployer.deploy(CoinManager)
   deployer.deploy(WarFactory)
