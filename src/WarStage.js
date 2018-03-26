@@ -8,28 +8,44 @@ export default class WarStage extends Component {
   state = {
     coin: false,
     bid: 0,
-    message: false
+    message: false,
+    coinWarBalance: 0
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    let _self = this
     this.tokenContract = TruffleContract(ERC20)
     this.tokenContract.setProvider(this.props.web3.currentProvider)
+
+    this.coins = new Map()
+    const { coin1Address, coin2Address, coinWarAddress } = this.props.opponents
+    const coin1 = await this.tokenContract.at(coin1Address)
+    const coin1Event = await coin1.Transfer({}, { fromBlock: 0, toBlock: 'latest' })
+    coin1Event.watch(async function(error, results) {
+      const coinWarBalance =  await coin1.balanceOf(coinWarAddress)
+      _self.props.reload(coinWarBalance)
+    })
+
+    this.coins.set(coin1Address, coin1)
+
+    const coin2 = await this.tokenContract.at(coin2Address)
+    const coin2Event = await coin2.Transfer({}, { fromBlock: 0, toBlock: 'latest' })
+    coin2Event.watch(async function(error, results) {
+      const coinWarBalance = await coin2.balanceOf(coinWarAddress)
+      _self.props.reload(coinWarBalance)
+    })
+
+    this.coins.set(coin2Address, coin2)
   }
 
   async handleSubmit(e) {
     e.preventDefault()
     const { coinWarAddress } = this.props.opponents
-    console.log('Coin Selected', this.state.coin)
-    console.log('Bid Placed', this.state.bid)
-    const coinInstance = await this.tokenContract.at(this.state.coin)
-    const bet = await coinInstance.transfer(coinWarAddress, this.state.bid,
+    await this.coins.get(this.state.coin).transfer(coinWarAddress, this.state.bid,
       { from: `${this.props.account}`, gas: 5000000 })
-    console.log(bet)
-    this.props.reload()
   }
 
   render() {
-    console.log(this.state.coin)
     const { coin1, coin2, toBlock,
       coin1Address, coin2Address, coin1Balance,
       coin2Balance } = this.props.opponents
@@ -51,13 +67,13 @@ export default class WarStage extends Component {
           </Col>
           <Col xs={6} md={6}>
             <div className="progress_wrap">
-              <span>$30000/{coin1Balance} {coin1}</span>
+              <span>$30000/<span className="balance">{coin1Balance}</span> {coin1}</span>
               <div className="progress">
                 <div className="progress-bar progress-bar-striped" role="progressbar" style={{ width: '10%' }} aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
             <div className="progress_wrap bottom">
-              <span>$30000/{coin2Balance} {coin2}</span>
+              <span>$30000/<span className="balance">{coin2Balance}</span> {coin2}</span>
               <div className="progress">
                 <div className="progress-bar progress-bar-striped" role="progressbar" style={{ width: '30%' }} aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
               </div>

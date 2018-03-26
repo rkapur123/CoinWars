@@ -16,7 +16,6 @@ export default class CoinItem extends Component {
     const wfInstance = await this.props.warfactory.deployed()
     let warsCount = await wfInstance.getWarsCount.call({ from: this.props.account })
     let wCount = warsCount.toNumber()
-    console.log('Wars Count', wCount)
     if (wCount > 0) {
       for (let j = 1; j <= wCount; j++) {
         const wars = await wfInstance.getWarAtIndex(j - 1)
@@ -53,13 +52,17 @@ export default class CoinItem extends Component {
 
   render() {
     const warList = this.state.wars.map((item, index) => {
-      console.log(item)
       return (
         <div key={index}>
           <WarStage
             web3={this.props.web3}
             opponents={item}
-            reload={() => this.loadWars()}
+            reload={(balance) => {
+              if (balance > 0) {
+                console.log('CoinWar Balance', balance.toNumber())
+              }
+              this.loadWars()
+            }}
             account={this.props.account} />
         </div>
       )
