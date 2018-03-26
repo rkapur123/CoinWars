@@ -2,8 +2,21 @@ import React, {Component} from 'react'
 import { Button, Row, Col, ButtonGroup } from 'react-bootstrap'
 
 export default class WarStage extends Component {
+
+  state = {
+    coin: false,
+    bid: 0
+  }
+
+  handleSubmit(e) {
+    e.preventDefault()
+    console.log('Coin Selected', this.state.coin)
+    console.log('Bid Placed', this.state.bid)
+  }
+
   render() {
-    const { coin1, coin2, toBlock, coin1Balance, coin2Balance } = this.props.opponents
+    console.log(this.state.coin)
+    const { coin1, coin2, toBlock, coin1Address, coin2Address, coin1Balance, coin2Balance } = this.props.opponents
     return (
       <div>
         <div className="time_notif">11:50:00 / Block# {toBlock}</div>
@@ -35,18 +48,25 @@ export default class WarStage extends Component {
             </div>
           </Col>
           <Col xs={4} md={4}>
-            <form>
+            <form onSubmit={this.handleSubmit.bind(this)}>
               <div className="form-group">
                 <ButtonGroup>
-                  <Button>{coin1}</Button>
-                  <Button>{coin2}</Button>
+                  <Button active={this.state.coin === coin1Address ? true : false}
+                    onClick={() => this.setState({ coin: coin1Address })}>{coin1}</Button>
+                  <Button active={this.state.coin === coin2Address ? true : false}
+                    onClick={() => this.setState({ coin: coin2Address })}>{coin2}</Button>
                 </ButtonGroup>
               </div>
+              <input type="hidden" name="coin" value={this.state.coin} />
               <div className="form-group">
                 <button type="button" className="btn btn-block btn-info">Overtake</button>
               </div>
               <div className="form-group">
-                <input type="number" className="form-control" id="validationDefault01" placeholder="bet amount e.g. 100" required />
+                <input type="number" className="form-control" name="amount"
+                  value={this.state.bid}
+                  onChange={(e) => this.setState({ bid: e.target.value })}
+                  placeholder="bet amount e.g. 100"
+                  required />
               </div>
               <div className="form-group">
                 <button type="submit" className="btn btn-block btn-primary">Submit</button>

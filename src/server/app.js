@@ -95,6 +95,6 @@ const server = {
 };
 
 (function() {
-  console.log('CoinWar server start at port 8080')
   server.init()
+  console.log('Coin Wars have been deployed')
 })()

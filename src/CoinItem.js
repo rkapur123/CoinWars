@@ -21,6 +21,8 @@ export default class CoinItem extends Component {
         const wars = await wfInstance.getWarAtIndex(j - 1)
         const coin1 = wars[0].split(' ')[0]
         const coin2 = wars[0].split(' ')[1]
+        const coin1Address = wars[1].toString(10)
+        const coin2Address = wars[2].toString(10)
         const coin1Balance = wars[3].toString(10)
         const coin2Balance = wars[4].toString(10)
         const fromBlock = wars[5].toString(10)
@@ -28,6 +30,8 @@ export default class CoinItem extends Component {
         warsList.push({
           coin1,
           coin2,
+          coin1Address,
+          coin2Address,
           coin1Balance,
           coin2Balance,
           fromBlock,
@@ -52,11 +56,14 @@ export default class CoinItem extends Component {
   }
 
   render() {
-    const warList = this.state.wars.map((item, index) => (
-      <div key={index}>
-        <WarStage opponents={item} />
-      </div>
-    ))
+    const warList = this.state.wars.map((item, index) => {
+      console.log(item)
+      return (
+        <div key={index}>
+          <WarStage opponents={item} />
+        </div>
+      )
+    })
 
     return (
       <Grid>

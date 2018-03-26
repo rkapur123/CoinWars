@@ -4,8 +4,8 @@ module.exports = {
       'id': 1,
       'coin1_name': 'DT1',
       'coin2_name': 'DT2',
-      'coin1_address': '0x8cdaf0cd259887258bc13a92c0a6da92698644c0',
-      'coin2_address': '0xf12b5dd4ead5f743c6baa640b0216200e89b60da',
+      'coin1_address': '0x2c2b9c9a4a25e24b174f26114e8926a9f2128fe4',
+      'coin2_address': '0x30753e4a8aad7f8597332e813735def5dd395028',
       'from_block': 10,
       'to_block': 20
     },
