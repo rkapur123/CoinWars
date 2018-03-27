@@ -14,7 +14,7 @@ export default class CoinItem extends Component {
   loadWars = async () => {
     const warsList = []
     const wfInstance = await this.props.warfactory.deployed()
-    let warsCount = await wfInstance.getWarsCount.call({ from: this.props.account })
+    let warsCount = await wfInstance.getWarsCount.call({ from: this.props.account, gas: 5000000 })
     let wCount = warsCount.toNumber()
     if (wCount > 0) {
       for (let j = 1; j <= wCount; j++) {

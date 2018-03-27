@@ -12,7 +12,8 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      account: false
+      account: false,
+      balance: 0
     }
 
     if (typeof window.web3 !== 'undefined') {
@@ -29,8 +30,10 @@ class App extends Component {
   }
 
   componentDidMount = () => {
-    this.web3.eth.getCoinbase((err, account) => {
-      this.setState({ account })
+    this.web3.eth.getCoinbase(async (err, account) => {
+      const balanceRaw = await this.web3.eth.getBalance(account)
+      const balance = await this.web3.utils.fromWei(balanceRaw)
+      this.setState({ account, balance })
     })
   }
 
@@ -55,6 +58,9 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to COIN WARS</h1>
         </header>
+        <p style={{ margin: '20px 0 10px' }}>Your Address:
+          <strong style={{ color: '#1e617d' }}>{this.state.account}</strong></p>
+        <p>Balance: <strong>{this.state.balance}</strong> ether</p>
         <div>
           <CoinItem
             web3={this.web3}

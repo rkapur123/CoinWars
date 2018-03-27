@@ -22,7 +22,10 @@ export default class WarStage extends Component {
     const coin1 = await this.tokenContract.at(coin1Address)
     const coin1Event = await coin1.Transfer({}, { fromBlock: 0, toBlock: 'latest' })
     coin1Event.watch(async function(error, results) {
+      console.log(error, results)
       const coinWarBalance =  await coin1.balanceOf(coinWarAddress)
+      const myBalance = await coin1.balanceOf(_self.props.account)
+      console.log(`${_self.props.account} balance is ${myBalance.toNumber()}`)
       _self.props.reload(coinWarBalance)
     })
 
@@ -31,7 +34,10 @@ export default class WarStage extends Component {
     const coin2 = await this.tokenContract.at(coin2Address)
     const coin2Event = await coin2.Transfer({}, { fromBlock: 0, toBlock: 'latest' })
     coin2Event.watch(async function(error, results) {
+      console.log(error, results)
       const coinWarBalance = await coin2.balanceOf(coinWarAddress)
+      const myBalance = await coin2.balanceOf(_self.props.account)
+      console.log(`${_self.props.account} balance is ${myBalance.toNumber()}`)
       _self.props.reload(coinWarBalance)
     })
 
@@ -41,8 +47,14 @@ export default class WarStage extends Component {
   async handleSubmit(e) {
     e.preventDefault()
     const { coinWarAddress } = this.props.opponents
-    await this.coins.get(this.state.coin).transfer(coinWarAddress, this.state.bid,
-      { from: `${this.props.account}`, gas: 5000000 })
+    const coin = this.coins.get(this.state.coin)
+    if (coin) {
+      const bet = await coin.transfer(coinWarAddress, this.state.bid,
+        { from: `${this.props.account}`, gas: 5000000 })
+      console.log('Transfer initialiated', bet)
+    } else {
+      console.log('no coin found ...')
+    }
   }
 
   render() {

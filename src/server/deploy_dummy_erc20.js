@@ -42,6 +42,8 @@ const server = {
       let balance2 = await token2Contract.balanceOf(this.address)
       console.log(`Balance (DT2) of ${this.address} is`, balance2.toNumber())
 
+      console.log('_____________________#######__________')
+
       // create dummy balances DT1
       await token1Contract.transfer('0xf17f52151EbEF6C7334FAD080c5704D77216b732', 150, { from: `${this.address}`, gas: 5000000 })
       console.log(`150 DT1 successfully transferred to 0xf17f52151EbEF6C7334FAD080c5704D77216b732`)
@@ -50,6 +52,8 @@ const server = {
       await token1Contract.transfer('0x821aEa9a577a9b44299B9c15c88cf3087F3b5544', 200, { from: `${this.address}`, gas: 5000000 })
       console.log(`200 DT1 successfully transferred to 0x821aEa9a577a9b44299B9c15c88cf3087F3b5544`)
 
+      console.log('__________________________________')
+
       // create dummy balances DT2
       await token2Contract.transfer('0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2', 200, { from: `${this.address}`, gas: 5000000 })
       console.log(`200 DT2 successfully transferred to 0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2`)
@@ -57,6 +61,14 @@ const server = {
       console.log(`80 DT2 successfully transferred to 0x2932b7A2355D6fecc4b5c0B6BD44cC31df247a2e`)
       await token2Contract.transfer('0x2191eF87E392377ec08E7c08Eb105Ef5448eCED5', 160, { from: `${this.address}`, gas: 5000000 })
       console.log(`160 DT2 successfully transferred to 0x2191eF87E392377ec08E7c08Eb105Ef5448eCED5`)
+
+      console.log('____________________########____________')
+
+      balance1 = await token1Contract.balanceOf(this.address)
+      console.log(`Final Balance (DT1) of ${this.address} is`, balance1.toNumber())
+
+      balance2 = await token2Contract.balanceOf(this.address)
+      console.log(`Final Balance (DT2) of ${this.address} is`, balance2.toNumber())
 
     } catch(error) {
       console.log(error)
