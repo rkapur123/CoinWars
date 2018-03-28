@@ -19,9 +19,11 @@ const server = {
     this.web3 = new Web3(web3_provider)
 
     //this.web3.eth.getAccounts().then(function(error, result) { console.log(result)  });
-    var mnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"; // 12 word mnemonic
+    var mnemonic = "assault crew bench private fit tank type forum grant decade flag impact"; // 12 word mnemonic
+    var addrArray = []
     for (i = 0; i < 10; i++) {
       var provider = new HDWalletProvider(mnemonic, "http://localhost:8545", i);
+      addrArray.push(provider.getAddress())
       console.log(provider.getAddress());
     }
 
@@ -45,22 +47,22 @@ const server = {
       console.log('_____________________#######__________')
 
       // create dummy balances DT1
-      await token1Contract.transfer('0xf17f52151EbEF6C7334FAD080c5704D77216b732', 150, { from: `${this.address}`, gas: 5000000 })
-      console.log(`150 DT1 successfully transferred to 0xf17f52151EbEF6C7334FAD080c5704D77216b732`)
-      await token1Contract.transfer('0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef', 50, { from: `${this.address}`, gas: 5000000 })
-      console.log(`50 DT1 successfully transferred to 0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef`)
-      await token1Contract.transfer('0x821aEa9a577a9b44299B9c15c88cf3087F3b5544', 200, { from: `${this.address}`, gas: 5000000 })
-      console.log(`200 DT1 successfully transferred to 0x821aEa9a577a9b44299B9c15c88cf3087F3b5544`)
+      await token1Contract.transfer(addrArray[1], 150, { from: `${this.address}`, gas: 5000000 })
+      console.log(`150 DT1 successfully transferred to ` + addrArray[1])
+      await token1Contract.transfer(addrArray[2], 50, { from: `${this.address}`, gas: 5000000 })
+      console.log(`50 DT1 successfully transferred to ` + addrArray[2])
+      await token1Contract.transfer(addrArray[3], 200, { from: `${this.address}`, gas: 5000000 })
+      console.log(`200 DT1 successfully transferred to ` + addrArray[3])
 
       console.log('__________________________________')
 
       // create dummy balances DT2
-      await token2Contract.transfer('0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2', 200, { from: `${this.address}`, gas: 5000000 })
-      console.log(`200 DT2 successfully transferred to 0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2`)
-      await token2Contract.transfer('0x2932b7A2355D6fecc4b5c0B6BD44cC31df247a2e', 80, { from: `${this.address}`, gas: 5000000 })
-      console.log(`80 DT2 successfully transferred to 0x2932b7A2355D6fecc4b5c0B6BD44cC31df247a2e`)
-      await token2Contract.transfer('0x2191eF87E392377ec08E7c08Eb105Ef5448eCED5', 160, { from: `${this.address}`, gas: 5000000 })
-      console.log(`160 DT2 successfully transferred to 0x2191eF87E392377ec08E7c08Eb105Ef5448eCED5`)
+      await token2Contract.transfer(addrArray[1], 200, { from: `${this.address}`, gas: 5000000 })
+      console.log(`200 DT2 successfully transferred to ` + addrArray[1])
+      await token2Contract.transfer(addrArray[2], 80, { from: `${this.address}`, gas: 5000000 })
+      console.log(`80 DT2 successfully transferred to ` + addrArray[2])
+      await token2Contract.transfer(addrArray[3], 160, { from: `${this.address}`, gas: 5000000 })
+      console.log(`160 DT2 successfully transferred to ` + addrArray[3])
 
       console.log('____________________########____________')
 

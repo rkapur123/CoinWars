@@ -101,13 +101,17 @@ const app = {
                 console.log(data)
               }
 
-              // console.log(JSON.stringify(coin1Addresses))
+
 
               // call the warfactory closeWarAtIndex here
               await warfactory.closeWarAtIndex(
-                i, coin1Addresses, coin1Bets, coin1_address,
-                coin2Addresses, coin2Bets, coin2_address
+                0,   coin1Addresses , coin1Bets, coin1_address,
+                coin2Addresses, coin2Bets, coin2_address, {from : this.address}
               )
+              
+
+              //console.log(coin1Addresses);
+            //await warfactory.sendAddr(coin1Addresses[0], coin1Bets);
 
             }
 
