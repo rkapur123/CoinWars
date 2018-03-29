@@ -25,6 +25,7 @@ export default class WarStage extends Component {
       console.log(error, results)
       const coinWarBalance =  await coin1.balanceOf(coinWarAddress)
       const myBalance = await coin1.balanceOf(_self.props.account)
+      if (_self.props.getBalanceCoin1) { _self.props.getBalanceCoin1(myBalance) }
       console.log(`${_self.props.account} balance is ${myBalance.toNumber()}`)
       _self.props.reload(coinWarBalance)
     })
@@ -37,6 +38,7 @@ export default class WarStage extends Component {
       console.log(error, results)
       const coinWarBalance = await coin2.balanceOf(coinWarAddress)
       const myBalance = await coin2.balanceOf(_self.props.account)
+      if (_self.props.getBalanceCoin2) { _self.props.getBalanceCoin2(myBalance) }
       console.log(`${_self.props.account} balance is ${myBalance.toNumber()}`)
       _self.props.reload(coinWarBalance)
     })

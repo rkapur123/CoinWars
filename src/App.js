@@ -13,7 +13,8 @@ class App extends Component {
     super()
     this.state = {
       account: false,
-      balance: 0
+      balance1: 0,
+      balance2: 0
     }
 
     if (typeof window.web3 !== 'undefined') {
@@ -32,8 +33,7 @@ class App extends Component {
   componentDidMount = () => {
     this.web3.eth.getCoinbase(async (err, account) => {
       const balanceRaw = await this.web3.eth.getBalance(account)
-      const balance = await this.web3.utils.fromWei(balanceRaw)
-      this.setState({ account, balance })
+      this.setState({ account })
     })
   }
 
@@ -60,12 +60,17 @@ class App extends Component {
         </header>
         <p style={{ margin: '20px 0 10px' }}>Your Address:
           <strong style={{ color: '#1e617d' }}>{this.state.account}</strong></p>
-        <p>Balance: <strong>{this.state.balance}</strong> ether</p>
+        <p>Balance Coin1: <strong>{this.state.balance1}</strong> tokens</p>
+        <p>Balance Coin2: <strong>{this.state.balance2}</strong> tokens</p>
         <div>
           <CoinItem
             web3={this.web3}
             warfactory={this.warfactory}
-            account={this.state.account} />
+            account={this.state.account}
+            getBalanceCoin1={(balance) => this.setState({ balance1: balance.toNumber() })}
+            getBalanceCoin2={balance => this.setState({ balance2: balance.toNumber() })}
+            />
+
         </div>
       </div>
     );

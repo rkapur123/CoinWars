@@ -103,13 +103,9 @@ contract CoinWar {
       //"0x000000000000000000000000000000000000dEaD" --> burn address to be added
       looser.tokenContract.transfer(address(looser.tokenContract), burnAmount);
       looser.tokenContract.transfer(owner, ownerFee);
-
-
     }
 
     afterBurn = true;
-
-
   }
 
   function withdraw()
@@ -129,8 +125,6 @@ contract CoinWar {
     winner.tokenMapping[msg.sender] = 0;
     looser.tokenContract.transfer(msg.sender, winnings);
     winner.tokenContract.transfer(msg.sender, userBet);
-
-
   }
 
   /* Helpers */

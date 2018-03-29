@@ -43,7 +43,7 @@ const server = {
           id, { from: `${this.address}`, gas: `500000` }
         )
 
-        console.log(`Successfully created coinwar for ${coin1_name} and ${coin2_name}`)
+        console.log(`Successfully created coinwar for ${coin1_name} and ${coin2_name} by ${this.address}`)
       }
 
     } catch(error) {

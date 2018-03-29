@@ -71,6 +71,12 @@ const app = {
         const coin1 = await tokenContract.at(coin1_address)
         const coin2 = await tokenContract.at(coin2_address)
 
+        const bal1 = await coin1.balanceOf(this.address)
+        console.log(`Tokens DT1 remaining of owner ${this.address} is ${bal1}`)
+
+        const bal2 = await coin2.balanceOf(this.address)
+        console.log(`Tokens DT2 remaining of owner ${this.address} is ${bal2}`)
+
         const filter = {
           fromBlock: 0,
           toBlock: 'latest'
@@ -101,14 +107,14 @@ const app = {
                 console.log(data)
               }
 
-
+              console.log(this.address)
 
               // call the warfactory closeWarAtIndex here
               await warfactory.closeWarAtIndex(
-                0,   coin1Addresses , coin1Bets, coin1_address,
-                coin2Addresses, coin2Bets, coin2_address, {from : this.address}
+                i, coin1Addresses , coin1Bets, coin1_address,
+                coin2Addresses, coin2Bets, coin2_address, {from : `${this.address}`, gas: 5000000 }
               )
-              
+
 
               //console.log(coin1Addresses);
             //await warfactory.sendAddr(coin1Addresses[0], coin1Bets);

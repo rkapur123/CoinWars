@@ -64,6 +64,12 @@ export default class CoinItem extends Component {
               }
               this.loadWars()
             }}
+            getBalanceCoin2={balance => {
+              if (this.props.getBalanceCoin2) { this.props.getBalanceCoin2(balance) }
+            }}
+            getBalanceCoin1={(balance) => {
+              if (this.props.getBalanceCoin1) { this.props.getBalanceCoin1(balance) }
+            }}
             account={this.props.account} />
         </div>
       )

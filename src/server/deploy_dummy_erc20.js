@@ -19,7 +19,7 @@ const server = {
     this.web3 = new Web3(web3_provider)
 
     //this.web3.eth.getAccounts().then(function(error, result) { console.log(result)  });
-    var mnemonic = "assault crew bench private fit tank type forum grant decade flag impact"; // 12 word mnemonic
+    var mnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"; // 12 word mnemonic
     var addrArray = []
     for (i = 0; i < 10; i++) {
       var provider = new HDWalletProvider(mnemonic, "http://localhost:8545", i);
