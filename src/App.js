@@ -32,7 +32,6 @@ class App extends Component {
 
   componentDidMount = () => {
     this.web3.eth.getCoinbase(async (err, account) => {
-      const balanceRaw = await this.web3.eth.getBalance(account)
       this.setState({ account })
     })
   }
@@ -69,7 +68,7 @@ class App extends Component {
             account={this.state.account}
             getBalanceCoin1={(balance) => this.setState({ balance1: balance.toNumber() })}
             getBalanceCoin2={balance => this.setState({ balance2: balance.toNumber() })}
-            />
+          />
 
         </div>
       </div>
