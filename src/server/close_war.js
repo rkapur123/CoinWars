@@ -115,10 +115,6 @@ const app = {
                 coin2Addresses, coin2Bets, coin2_address, {from : `${this.address}`, gas: 5000000 }
               )
 
-
-              //console.log(coin1Addresses);
-            //await warfactory.sendAddr(coin1Addresses[0], coin1Bets);
-
             }
 
           })

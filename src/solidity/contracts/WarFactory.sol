@@ -10,7 +10,6 @@ contract WarFactory {
     string opponents;
     CoinWar coinWar;
     bool isOngoing;
-    string warID;
   }
 
   War[] public allWars;
@@ -24,23 +23,19 @@ contract WarFactory {
     owner = msg.sender;
   }
 
-  event NewWarStarted(string warID);
-
-  /* function createCoinWar(string _opponents, address _tokeOne, address _tokenTwo, uint _fromBlock, uint _toBlock)
+  function createCoinWar(string _opponents, address _tokeOne, address _tokenTwo, uint _fromBlock, uint _toBlock)
     public
     onlyOwner
   {
     ongGoingWars += 1;
     CoinWar newWar = new CoinWar(_tokeOne, _tokenTwo, _fromBlock, _toBlock);
     allWars.push(War(_opponents, newWar, true));
+  }
 
-  } */
-
-  function createCoinWar(string _opponents, address _coinWarAddress, string _warID) public onlyOwner {
+  /* function createCoinWar(string _opponents, address _coinWarAddress, string _warID) public onlyOwner {
     ongGoingWars += 1;
     allWars.push(War(_opponents, CoinWar(_coinWarAddress), true, _warID));
-    NewWarStarted(_warID);
-  }
+  } */
 
   function closeWarAtIndex(uint index, address[] winningAddresses, uint[] winningBets, address winningContract, address[] loosingAddresses, uint[] loosingBets, address loosingContract)
     public
