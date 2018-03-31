@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Button, Row, Col, ButtonGroup } from 'react-bootstrap'
+import { Button, Row, Col, ButtonGroup, Label } from 'react-bootstrap'
 import ERC20 from './solidity/build/contracts/ERC20.json'
 import TruffleContract from 'truffle-contract'
 import ReactTimeout from 'react-timeout'
@@ -11,7 +11,10 @@ class WarStage extends Component {
     bid: 0,
     message: false,
     coinWarBalance: 0,
-    block: 0
+    block: 0,
+    coin1TokenBalance: 0,
+    coin2TokenBalance: 0,
+    withdrawn: false
   }
 
   async componentDidMount() {
@@ -21,12 +24,19 @@ class WarStage extends Component {
 
     this.coins = new Map()
     const { coin1Address, coin2Address, coinWarAddress } = this.props.opponents
+
+    // get coinwar instance
+    this.coinwarsInstance = await this.props.coinwars.at(coinWarAddress)
+
     const coin1 = await this.tokenContract.at(coin1Address)
     const coin1Event = await coin1.Transfer({}, { fromBlock: 0, toBlock: 'latest' })
     coin1Event.watch(async function(error, results) {
       const coinWarBalance =  await coin1.balanceOf(coinWarAddress)
       const myBalance = await coin1.balanceOf(_self.props.account)
-      if (_self.props.getBalanceCoin1) { _self.props.getBalanceCoin1(myBalance) }
+      if (_self.props.getBalanceCoin1) {
+        _self.props.getBalanceCoin1(myBalance)
+        _self.setState({ coin1TokenBalance: myBalance.toNumber() })
+      }
       _self.props.reload(coinWarBalance)
     })
 
@@ -37,7 +47,10 @@ class WarStage extends Component {
     coin2Event.watch(async function(error, results) {
       const coinWarBalance = await coin2.balanceOf(coinWarAddress)
       const myBalance = await coin2.balanceOf(_self.props.account)
-      if (_self.props.getBalanceCoin2) { _self.props.getBalanceCoin2(myBalance) }
+      if (_self.props.getBalanceCoin2) {
+        _self.props.getBalanceCoin2(myBalance)
+        _self.setState({ coin2TokenBalance: myBalance.toNumber() })
+      }
       _self.props.reload(coinWarBalance)
     })
 
@@ -86,6 +99,14 @@ class WarStage extends Component {
     }
   }
 
+  withdraw = async () => {
+    const { account } = this.props
+    if (this.coinwarsInstance) {
+      await this.coinwarsInstance.withdraw({ from: account, gas: 5000000 })
+      this.setState({ withdrawn: true })
+    }
+  }
+
   placeBid = () => {
     const { coin1, coin2, fromBlock, toBlock, coin1Address, coin2Address } = this.props.opponents
     const { block, coin, bid } = this.state
@@ -123,7 +144,14 @@ class WarStage extends Component {
       )
     } else if (block > parseInt(toBlock)) {
       return (
-        <div>Game Over</div>
+        <div>
+          <div style={{ paddingBottom: 20 }}>Game Over</div>
+          {!this.state.withdrawn ? (
+            <Button bsStyle="success" bsSize="large" onClick={this.withdraw.bind(this)}>Withdraw</Button>
+          ) : (
+            <div><em>Money has been withdrawn ! Please don't forget to participate in the next game</em></div>
+          )}
+        </div>
       )
     }
   }
@@ -132,9 +160,12 @@ class WarStage extends Component {
     const { coin1, coin2, toBlock,
       coin1Address, coin2Address, coin1Balance,
       coin2Balance } = this.props.opponents
+    const { coin1TokenBalance, coin2TokenBalance } = this.state
     return (
       <div>
         <div className="time_notif">11:50:00 / {this.state.block}# {toBlock}</div>
+        <div>Balance {coin1}: <Label bsStyle="info">{coin1TokenBalance}</Label> tokens</div>
+        <div>Balance {coin2}: <Label bsStyle="success">{coin2TokenBalance}</Label> tokens</div>
         <Row className="show-grid">
           <Col xs={2} md={2}>
             <div className="coin">

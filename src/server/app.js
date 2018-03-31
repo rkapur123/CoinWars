@@ -30,7 +30,7 @@ const server = {
       for (let i = 0; i < wars.length; i++) {
         const { coin1_name, coin2_name,
           coin1_address, coin2_address,
-          from_block, to_block, id } = wars[i]
+          from_block, to_block } = wars[i]
 
         // create coin war instance
         await this.warfactory.createCoinWar(
@@ -41,15 +41,6 @@ const server = {
           to_block,
           { from: `${this.address}`, gas: 5000000 }
         )
-        // let coinWarInstance = await this.getCoinWarContract(
-        //   CoinWars, coin1_address, coin2_address, from_block, to_block
-        // )
-
-        // await this.warfactory.createCoinWar(
-        //   `${coin1_name} ${coin2_name}`,
-        //   coinWarInstance.address,
-        //   id, { from: `${this.address}`, gas: `500000` }
-        // )
 
         console.log(`Successfully created coinwar for ${coin1_name} and ${coin2_name} by ${this.address}`)
       }

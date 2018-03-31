@@ -41,8 +41,22 @@ const server = {
       const token2Contract = await this.deployDummyToken(1000, 'Dummy Token 2', 18, 'DT2')
       console.log(`Second token DT2 has been deployed at ${token2Contract.address}`)
 
+      // deploy third token
+      const token3Contract = await this.deployDummyToken(1000, 'Dummy Token 3', 18, 'DT3')
+      console.log(`Third token DT3 has been deployed at ${token3Contract.address}`)
+
+      // deploy fourth token
+      const token4Contract = await this.deployDummyToken(1000, 'Dummy Token 4', 18, 'DT4')
+      console.log(`Fourth token DT4 has been deployed at ${token4Contract.address}`)
+
       let balance2 = await token2Contract.balanceOf(this.address)
       console.log(`Balance (DT2) of ${this.address} is`, balance2.toNumber())
+
+      let balance3 = await token3Contract.balanceOf(this.address)
+      console.log(`Balance (DT3) of ${this.address} is`, balance3.toNumber())
+
+      let balance4 = await token4Contract.balanceOf(this.address)
+      console.log(`Balance (DT4) of ${this.address} is`, balance4.toNumber())
 
       console.log('_____________________#######__________')
 
@@ -64,6 +78,26 @@ const server = {
       await token2Contract.transfer(addrArray[3], 160, { from: `${this.address}`, gas: 5000000 })
       console.log(`160 DT2 successfully transferred to ` + addrArray[3])
 
+      console.log('__________________________________')
+
+      // create dummy balances DT3
+      await token3Contract.transfer(addrArray[1], 250, { from: `${this.address}`, gas: 5000000 })
+      console.log(`200 DT3 successfully transferred to ` + addrArray[1])
+      await token3Contract.transfer(addrArray[2], 120, { from: `${this.address}`, gas: 5000000 })
+      console.log(`80 DT3 successfully transferred to ` + addrArray[2])
+      await token3Contract.transfer(addrArray[3], 180, { from: `${this.address}`, gas: 5000000 })
+      console.log(`160 DT3 successfully transferred to ` + addrArray[3])
+
+      console.log('__________________________________')
+
+      // create dummy balances DT4
+      await token4Contract.transfer(addrArray[1], 120, { from: `${this.address}`, gas: 5000000 })
+      console.log(`200 DT4 successfully transferred to ` + addrArray[1])
+      await token4Contract.transfer(addrArray[2], 200, { from: `${this.address}`, gas: 5000000 })
+      console.log(`80 DT4 successfully transferred to ` + addrArray[2])
+      await token4Contract.transfer(addrArray[3], 140, { from: `${this.address}`, gas: 5000000 })
+      console.log(`160 DT4 successfully transferred to ` + addrArray[3])
+
       console.log('____________________########____________')
 
       balance1 = await token1Contract.balanceOf(this.address)
@@ -71,6 +105,12 @@ const server = {
 
       balance2 = await token2Contract.balanceOf(this.address)
       console.log(`Final Balance (DT2) of ${this.address} is`, balance2.toNumber())
+
+      balance3 = await token3Contract.balanceOf(this.address)
+      console.log(`Final Balance (DT3) of ${this.address} is`, balance3.toNumber())
+
+      balance4 = await token4Contract.balanceOf(this.address)
+      console.log(`Final Balance (DT4) of ${this.address} is`, balance4.toNumber())
 
     } catch(error) {
       console.log(error)

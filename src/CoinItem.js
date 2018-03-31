@@ -57,6 +57,7 @@ export default class CoinItem extends Component {
         <div key={index}>
           <WarStage
             web3={this.props.web3}
+            coinwars={this.props.coinwars}
             opponents={item}
             reload={(balance) => {
               if (balance > 0) {
