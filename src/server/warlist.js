@@ -33,8 +33,8 @@ module.exports = {
       'coin2_name': 'DT4',
       'coin1_address': '0xfb88de099e13c3ed21f80a7a1e49f8caecf10df6',
       'coin2_address': '0xaa588d3737b611bafd7bd713445b314bd453a5c8',
-      'from_block': 28,
-      'to_block': 34
+      'from_block': 33,
+      'to_block': 40
     },
   ]
 }

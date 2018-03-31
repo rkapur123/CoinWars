@@ -25,7 +25,6 @@ export default class CoinItem extends Component {
         const coin2Address = wars[2].toString(10)
         const coin1Balance = wars[3].toString(10)
         const coin2Balance = wars[4].toString(10)
-        console.log('COIN1 BALANCE', coin1Balance)
         const fromBlock = wars[5].toString(10)
         const toBlock = wars[6].toString(10)
         const coinWarAddress = wars[7].toString(10)
@@ -56,13 +55,9 @@ export default class CoinItem extends Component {
       return (
         <div key={index}>
           <WarStage
-            web3={this.props.web3}
-            coinwars={this.props.coinwars}
+            { ...this.props }
             opponents={item}
             reload={(balance) => {
-              if (balance > 0) {
-                console.log('CoinWar Balance', balance.toNumber())
-              }
               this.loadWars()
             }}
             getBalanceCoin2={balance => {

@@ -14,7 +14,8 @@ class WarStage extends Component {
     block: 0,
     coin1TokenBalance: 0,
     coin2TokenBalance: 0,
-    withdrawn: false
+    withdrawn: false,
+    warClosed: false
   }
 
   async componentDidMount() {
@@ -56,6 +57,13 @@ class WarStage extends Component {
 
     this.coins.set(coin2Address, coin2)
 
+    // war closed event
+    const wfInstance = await this.props.warfactory.deployed()
+    const warClosedEvent = await wfInstance.WarClosed()
+    warClosedEvent.watch(function(error, results) {
+      _self.setState({ warClosed: true })
+    })
+
     // fire after 1 second
     this.props.setInterval(this.scanBlock.bind(this), 1500)
 
@@ -63,6 +71,7 @@ class WarStage extends Component {
     this.webSocket.onopen = function (event) {
       _self.webSocket.send(`War between ${coin1Address} and ${coin2Address}`)
     }
+
     this.webSocket.onmessage = function(message) {
       const { data } = message
       console.log(data)
@@ -107,6 +116,20 @@ class WarStage extends Component {
     }
   }
 
+  close = () => {
+    if (!this.state.warClosed) {
+      return (
+        <div><em>This was has ended ! You will be allowed to withdraw funds shortly.</em></div>
+      )
+    } else {
+      if (!this.state.withdrawn) {
+        return (<Button bsStyle="success" bsSize="large" onClick={this.withdraw.bind(this)}>Withdraw</Button>)
+      } else {
+        return (<div><em>Money has been withdrawn ! Please don't forget to participate in the next game</em></div>)
+      }
+    }
+  }
+
   placeBid = () => {
     const { coin1, coin2, fromBlock, toBlock, coin1Address, coin2Address } = this.props.opponents
     const { block, coin, bid } = this.state
@@ -146,11 +169,7 @@ class WarStage extends Component {
       return (
         <div>
           <div style={{ paddingBottom: 20 }}>Game Over</div>
-          {!this.state.withdrawn ? (
-            <Button bsStyle="success" bsSize="large" onClick={this.withdraw.bind(this)}>Withdraw</Button>
-          ) : (
-            <div><em>Money has been withdrawn ! Please don't forget to participate in the next game</em></div>
-          )}
+          {this.close()}
         </div>
       )
     }

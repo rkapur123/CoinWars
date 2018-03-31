@@ -16,6 +16,7 @@ contract WarFactory {
   uint public ongGoingWars = 10;
 
   address public owner;
+  event WarClosed(uint index);
 
   function WarFactory()
     public
@@ -44,6 +45,7 @@ contract WarFactory {
     ongGoingWars -= 1;
     allWars[index].isOngoing = false;
     CoinWar(allWars[index].coinWar).setResults(winningAddresses, winningBets, winningContract, loosingAddresses, loosingBets, loosingContract);
+    WarClosed(index);
   }
 
   function getWarAtIndex(uint index)
