@@ -4,8 +4,7 @@ pragma solidity ^0.4.18;
 import { CoinWar } from "./CoinWar.sol";
 
 contract WarFactory {
-
-
+  
   struct War {
     string opponents;
     CoinWar coinWar;
@@ -13,7 +12,7 @@ contract WarFactory {
   }
 
   War[] public allWars;
-  uint public ongGoingWars = 10;
+  uint public ongGoingWars;
 
   address public owner;
   event WarClosed(uint index);
@@ -32,11 +31,6 @@ contract WarFactory {
     CoinWar newWar = new CoinWar(_tokeOne, _tokenTwo, _fromBlock, _toBlock);
     allWars.push(War(_opponents, newWar, true));
   }
-
-  /* function createCoinWar(string _opponents, address _coinWarAddress, string _warID) public onlyOwner {
-    ongGoingWars += 1;
-    allWars.push(War(_opponents, CoinWar(_coinWarAddress), true, _warID));
-  } */
 
   function closeWarAtIndex(uint index, address[] winningAddresses, uint[] winningBets, address winningContract, address[] loosingAddresses, uint[] loosingBets, address loosingContract)
     public

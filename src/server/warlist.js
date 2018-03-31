@@ -6,8 +6,8 @@ module.exports = {
       'coin2_name': 'DT2',
       'coin1_address': '0x2c2b9c9a4a25e24b174f26114e8926a9f2128fe4',
       'coin2_address': '0x30753e4a8aad7f8597332e813735def5dd395028',
-      'from_block': 20,
-      'to_block': 25
+      'from_block': 30,
+      'to_block': 35
     },
     {
       'id': 2,
@@ -15,8 +15,8 @@ module.exports = {
       'coin2_name': 'DT3',
       'coin1_address': '0x2c2b9c9a4a25e24b174f26114e8926a9f2128fe4',
       'coin2_address': '0xfb88de099e13c3ed21f80a7a1e49f8caecf10df6',
-      'from_block': 24,
-      'to_block': 30
+      'from_block': 34,
+      'to_block': 40
     },
     {
       'id': 3,
@@ -24,8 +24,8 @@ module.exports = {
       'coin2_name': 'DT3',
       'coin1_address': '0x30753e4a8aad7f8597332e813735def5dd395028',
       'coin2_address': '0xfb88de099e13c3ed21f80a7a1e49f8caecf10df6',
-      'from_block': 28,
-      'to_block': 34
+      'from_block': 39,
+      'to_block': 44
     },
     {
       'id': 3,
@@ -33,8 +33,8 @@ module.exports = {
       'coin2_name': 'DT4',
       'coin1_address': '0xfb88de099e13c3ed21f80a7a1e49f8caecf10df6',
       'coin2_address': '0xaa588d3737b611bafd7bd713445b314bd453a5c8',
-      'from_block': 33,
-      'to_block': 40
+      'from_block': 43,
+      'to_block': 48
     },
   ]
 }

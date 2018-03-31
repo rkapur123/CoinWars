@@ -58,28 +58,22 @@ const app = {
         }
       }
 
-      let wars = WarList.wars
-
-      for (let i = 0; i < wars.length; i++) {
+      const warIndex = process.argv[2]
+      if (warIndex) {
+        let wars = WarList.wars
         const { coin1_address, coin2_address,
-          from_block, to_block } = wars[i]
+             from_block, to_block } = wars[warIndex]
 
-        const warfactory = await this.getContract(WarFactory);
-        const war = await warfactory.getWarAtIndex(i)
+        const warfactory = await this.getContract(WarFactory)
+        const war = await warfactory.getWarAtIndex(warIndex)
         const coinWarAddress = war[7]
 
         const coin1 = await tokenContract.at(coin1_address)
         const coin2 = await tokenContract.at(coin2_address)
 
-        const bal1 = await coin1.balanceOf(this.address)
-        console.log(`Tokens DT1 remaining of owner ${this.address} is ${bal1}`)
-
-        const bal2 = await coin2.balanceOf(this.address)
-        console.log(`Tokens DT2 remaining of owner ${this.address} is ${bal2}`)
-
         const filter = {
-          fromBlock: 0,
-          toBlock: 'latest'
+          fromBlock: from_block,
+          toBlock: to_block
         }
 
         let coin1Addresses = []
@@ -107,21 +101,22 @@ const app = {
                 console.log(data)
               }
 
-              console.log(this.address)
-
               // call the warfactory closeWarAtIndex here
               await warfactory.closeWarAtIndex(
-                i, coin1Addresses , coin1Bets, coin1_address,
+                warIndex, coin1Addresses , coin1Bets, coin1_address,
                 coin2Addresses, coin2Bets, coin2_address, {from : `${this.address}`, gas: 5000000 }
               )
+
+              console.log(`War at index ${warIndex} has been successfully closed`)
 
             }
 
           })
         })
 
+      } else {
+        console.log('Please specify the index of war which is to be closed e.g. node close_war.js <war index>')
       }
-
     } catch (error) {
       console.log(error)
     }
