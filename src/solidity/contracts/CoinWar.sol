@@ -1,12 +1,14 @@
 pragma solidity ^0.4.18;
 
-import { ERC20 } from "./ERC20.sol";
+//import { ERC20 } from "./ERC20.sol";
 
-/* Eventually Replace With 1 ERC20 Wrapper
 contract ERC20 {
+
+  function balanceOf(address _owner) public view returns (uint256 balance);
   function transfer(address _to, uint256 _value) public returns (bool success);
+  
 }
-*/
+
 
 contract CoinWar {
 
