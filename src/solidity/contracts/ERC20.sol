@@ -22,6 +22,7 @@ contract ERC20 is ERC20Interface {
     string public name;                   //fancy name: eg Simon Bucks
     uint8 public decimals;                //How many decimals to show.
     string public symbol;                 //An identifier: eg SBX
+    uint public totalSupply;
 
     function ERC20(
         uint256 _initialAmount,

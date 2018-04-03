@@ -2,39 +2,39 @@ module.exports = {
   'wars': [
     {
       'id': 1,
-      'coin1_name': 'DT1',
-      'coin2_name': 'DT2',
-      'coin1_address': '0x2c2b9c9a4a25e24b174f26114e8926a9f2128fe4',
-      'coin2_address': '0x30753e4a8aad7f8597332e813735def5dd395028',
-      'from_block': 30,
-      'to_block': 35
+      'coin1_name': 'CWDTK1',
+      'coin2_name': 'CWDTK2',
+      'coin1_address': '0x3dfab5ec949855a324ea5b7d1ae91ec05b2601bb',
+      'coin2_address': '0x2b0c0ba2c90ce76033d982ca764de9f74541655f',
+      'from_block': 2045226,
+      'to_block': 2045265
     },
     {
       'id': 2,
-      'coin1_name': 'DT1',
-      'coin2_name': 'DT3',
-      'coin1_address': '0x2c2b9c9a4a25e24b174f26114e8926a9f2128fe4',
-      'coin2_address': '0xfb88de099e13c3ed21f80a7a1e49f8caecf10df6',
-      'from_block': 34,
-      'to_block': 40
+      'coin1_name': 'CWDTK1',
+      'coin2_name': 'CWDTK3',
+      'coin1_address': '0x3dfab5ec949855a324ea5b7d1ae91ec05b2601bb',
+      'coin2_address': '0x48fed40f5eb8df64fdcf55574df045cbffde5431',
+      'from_block': 2045228,
+      'to_block': 2045267
     },
     {
       'id': 3,
-      'coin1_name': 'DT2',
-      'coin2_name': 'DT3',
-      'coin1_address': '0x30753e4a8aad7f8597332e813735def5dd395028',
-      'coin2_address': '0xfb88de099e13c3ed21f80a7a1e49f8caecf10df6',
-      'from_block': 39,
-      'to_block': 44
+      'coin1_name': 'CWDTK3',
+      'coin2_name': 'CWDTK4',
+      'coin1_address': '0x48fed40f5eb8df64fdcf55574df045cbffde5431',
+      'coin2_address': '0x0a69abcd13eb5850bf3d614a6cc71e12c804dcab',
+      'from_block': 2045226,
+      'to_block': 2045265
     },
     {
       'id': 3,
-      'coin1_name': 'DT3',
-      'coin2_name': 'DT4',
-      'coin1_address': '0xfb88de099e13c3ed21f80a7a1e49f8caecf10df6',
-      'coin2_address': '0xaa588d3737b611bafd7bd713445b314bd453a5c8',
-      'from_block': 43,
-      'to_block': 48
+      'coin1_name': 'CWDTK4',
+      'coin2_name': 'CWDTK2',
+      'coin1_address': '0x0a69abcd13eb5850bf3d614a6cc71e12c804dcab',
+      'coin2_address': '0x2b0c0ba2c90ce76033d982ca764de9f74541655f',
+      'from_block': 2045228,
+      'to_block': 2045267
     },
   ]
 }
