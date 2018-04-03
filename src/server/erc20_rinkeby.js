@@ -13,20 +13,14 @@ const server = {
   web3: null,
 
   init: async function() {
-    let web3_provider
-    if (typeof web3 !== 'undefined') {
-      web3_provider = web3.currentProvider;
-    } else {
-      // set the provider you want from Web3.providers
-      web3_provider = new Web3.providers.HttpProvider(`https://rinkeby.infura.io/${accessToken}`)
-    }
-    this.web3 = new Web3(web3_provider)
+    const provider = new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/${accessToken}`, 0)
+    this.web3 = new Web3(provider)
 
     var addrArray = []
     for (i = 0; i < 4; i++) {
-      var provider = new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/${accessToken}`, i);
-      addrArray.push(provider.getAddress())
-      console.log(provider.getAddress());
+      var providers = new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/${accessToken}`, i);
+      addrArray.push(providers.getAddress())
+      console.log(providers.getAddress());
     }
 
     try {

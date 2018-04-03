@@ -18,13 +18,14 @@ const server = {
   warfactory: null,
 
   init: async function() {
-    let web3_provider = new Web3.providers.HttpProvider(`https://rinkeby.infura.io/${accessToken}`)
-    this.web3 = new Web3(web3_provider)
-
-    // this.address = await this.getAddress()
-
+    // let web3_provider = new Web3.providers.HttpProvider(`https://rinkeby.infura.io/${accessToken}`)
     const provider = new HDWalletProvider(
       mnemonic, `https://rinkeby.infura.io/${accessToken}`, 0)
+    this.web3 = new Web3(provider)
+    // this.address = await this.getAddress()
+
+    // const provider = new HDWalletProvider(
+    //   mnemonic, `https://rinkeby.infura.io/${accessToken}`, 0)
 
     this.address = provider.getAddress()
     console.log(this.address)

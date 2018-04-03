@@ -4,7 +4,7 @@ pragma solidity ^0.4.18;
 import { CoinWar } from "./CoinWar.sol";
 
 contract WarFactory {
-  
+
   struct War {
     string opponents;
     CoinWar coinWar;
