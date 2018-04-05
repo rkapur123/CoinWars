@@ -1,11 +1,14 @@
 import React, {Component} from 'react'
-import { Button, Row, Col, ButtonGroup, Label, Image } from 'react-bootstrap'
+import { Button, Row, Col, ButtonGroup, Label, Image, ProgressBar } from 'react-bootstrap'
 import ERC20 from './solidity/build/contracts/ERC20.json'
 import TruffleContract from 'truffle-contract'
 import ReactTimeout from 'react-timeout'
 import BlockTracker from 'eth-block-tracker'
 import hexToDec from 'hex-to-dec'
 import CoinMarketCap from 'coinmarketcap-api'
+
+// change this value to 50000 or more
+const MAX_PROGRESS_PRICE = 100
 
 class WarStage extends Component {
 
@@ -231,6 +234,9 @@ class WarStage extends Component {
     let coin1_bet_cost = parseFloat(coin1Balance * coin1_usd).toFixed(3)
     let coin2_bet_cost = parseFloat(coin2Balance * coin2_usd).toFixed(3)
 
+    const coin1Progress = parseFloat((coin1_bet_cost / MAX_PROGRESS_PRICE) * 100)
+    const coin2Progress = parseFloat((coin2_bet_cost / MAX_PROGRESS_PRICE) * 100)
+
     return (
       <div>
         <div className="time_notif">11:50:00 / {this.state.block}# {toBlock}</div>
@@ -260,15 +266,11 @@ class WarStage extends Component {
           <Col xs={6} md={6}>
             <div className="progress_wrap">
               <span>${coin1_bet_cost}/<span className="balance">{coin1Balance}</span> {coin1}</span>
-              <div className="progress">
-                <div className="progress-bar progress-bar-striped" role="progressbar" style={{ width: '10%' }} aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
+              <ProgressBar striped active now={coin1Progress} label={`60%`} srOnly />
             </div>
             <div className="progress_wrap bottom">
               <span>${coin2_bet_cost}/<span className="balance">{coin2Balance}</span> {coin2}</span>
-              <div className="progress">
-                <div className="progress-bar progress-bar-striped" role="progressbar" style={{ width: '30%' }} aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
+              <ProgressBar striped active now={coin2Progress} label={`${coin2Progress}%`} srOnly />
             </div>
           </Col>
           <Col xs={4} md={4}>
