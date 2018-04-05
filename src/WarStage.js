@@ -3,6 +3,8 @@ import { Button, Row, Col, ButtonGroup, Label } from 'react-bootstrap'
 import ERC20 from './solidity/build/contracts/ERC20.json'
 import TruffleContract from 'truffle-contract'
 import ReactTimeout from 'react-timeout'
+import BlockTracker from 'eth-block-tracker'
+import hexToDec from 'hex-to-dec'
 
 class WarStage extends Component {
 
@@ -64,35 +66,13 @@ class WarStage extends Component {
       _self.setState({ warClosed: true })
     })
 
-    // fire after 1 second
-    this.props.setInterval(this.scanBlock.bind(this), 1500)
-
-    this.webSocket = new WebSocket("ws://localhost:8080")
-    this.webSocket.onopen = function (event) {
-      _self.webSocket.send(`War between ${coin1Address} and ${coin2Address}`)
-    }
-
-    this.webSocket.onmessage = function(message) {
-      const { data } = message
-      console.log(data)
-    }
-  }
-
-  componentWillUnmount = () => {
-    this.webSocket.close()
-  }
-
-  scanBlock = () => {
-    const _self = this
-    const { web3 } = this.props
-    web3.eth.getBlockNumber(function(err, block) {
-      console.log(block)
-      _self.setState({ block })
+    const provider = this.props.web3.currentProvider
+    const blockTracker = new BlockTracker({ provider })
+    blockTracker.on('block', (newBlock) => {
+      console.log(newBlock)
+      _self.setState({ block: hexToDec(newBlock.number) })
     })
-  }
-
-  handleData = data => {
-    console.log(data)
+    blockTracker.start()
   }
 
   async handleSubmit(e) {
@@ -175,6 +155,38 @@ class WarStage extends Component {
     }
   }
 
+  placeBid2 = () => {
+    const { coin1, coin2, fromBlock, toBlock, coin1Address, coin2Address } = this.props.opponents
+    const { block, coin, bid } = this.state
+
+    return (
+      <form onSubmit={this.handleSubmit.bind(this)}>
+        <div className="form-group">
+          <ButtonGroup>
+            <Button active={coin === coin1Address ? true : false}
+              onClick={() => this.setState({ coin: coin1Address })}>{coin1}</Button>
+            <Button active={coin === coin2Address ? true : false}
+              onClick={() => this.setState({ coin: coin2Address })}>{coin2}</Button>
+          </ButtonGroup>
+        </div>
+        <input type="hidden" name="coin" value={coin} />
+        <div className="form-group">
+          <button type="button" className="btn btn-block btn-info">Overtake</button>
+        </div>
+        <div className="form-group">
+          <input type="number" className="form-control" name="amount"
+            value={bid}
+            onChange={(e) => this.setState({ bid: e.target.value })}
+            placeholder="bet amount e.g. 100"
+            required />
+        </div>
+        <div className="form-group">
+          <button type="submit" className="btn btn-block btn-primary">Submit</button>
+        </div>
+      </form>
+    )
+  }
+
   render() {
     const { coin1, coin2, toBlock,
       coin1Address, coin2Address, coin1Balance,
@@ -213,7 +225,7 @@ class WarStage extends Component {
             </div>
           </Col>
           <Col xs={4} md={4}>
-            {this.placeBid()}
+            {this.placeBid2()}
           </Col>
         </Row>
       </div>

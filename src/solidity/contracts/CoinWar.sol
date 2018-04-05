@@ -6,7 +6,7 @@ contract ERC20 {
 
   function balanceOf(address _owner) public view returns (uint256 balance);
   function transfer(address _to, uint256 _value) public returns (bool success);
-  
+
 }
 
 
@@ -96,7 +96,10 @@ contract CoinWar {
     //require()
     if (looser.totalBet != 0) {
 
+      // 10% of total bets lost in the loosing coin
       burnAmount = fractionOf(looser.totalBet, 1, 10);
+
+      // 5% of the total bets lost in the loosing coin
       ownerFee = fractionOf(looser.totalBet, 1, 20);
 
       looser.totalBet -= burnAmount;
@@ -104,6 +107,8 @@ contract CoinWar {
 
       //"0x000000000000000000000000000000000000dEaD" --> burn address to be added
       looser.tokenContract.transfer(address(looser.tokenContract), burnAmount);
+
+      // the loosing owner pays fees to the owner of CoinWar contract
       looser.tokenContract.transfer(owner, ownerFee);
     }
 
