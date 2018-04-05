@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
-import { Button, Row, Col, ButtonGroup, Label } from 'react-bootstrap'
+import { Button, Row, Col, ButtonGroup, Label, Image } from 'react-bootstrap'
 import ERC20 from './solidity/build/contracts/ERC20.json'
 import TruffleContract from 'truffle-contract'
 import ReactTimeout from 'react-timeout'
 import BlockTracker from 'eth-block-tracker'
 import hexToDec from 'hex-to-dec'
+import CoinMarketCap from 'coinmarketcap-api'
 
 class WarStage extends Component {
 
@@ -17,7 +18,11 @@ class WarStage extends Component {
     coin1TokenBalance: 0,
     coin2TokenBalance: 0,
     withdrawn: false,
-    warClosed: false
+    warClosed: false,
+    coin1_usd: 0,
+    coin2_usd: 0,
+    coin1Image: null,
+    coin2Image: null
   }
 
   async componentDidMount() {
@@ -73,6 +78,37 @@ class WarStage extends Component {
       _self.setState({ block: hexToDec(newBlock.number) })
     })
     blockTracker.start()
+
+    // get price
+    this.coinMarketCapClient = new CoinMarketCap()
+    const coin1_name = await coin1.name()
+    const coin2_name = await coin2.name()
+    await this.getCoin1USD(coin1_name)
+    await this.getCoin2USD(coin2_name)
+  }
+
+  async getCoin1USD(coin_name) {
+    try {
+      const coin_data = await this.coinMarketCapClient
+        .getTicker({ limit: 1, currency: coin_name })
+      if (coin_data) {
+        this.setState({ coin1_usd: coin_data[0].price_usd })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async getCoin2USD(coin_name) {
+    try {
+      const coin_data = await this.coinMarketCapClient
+        .getTicker({ limit: 1, currency: coin_name })
+      if (coin_data) {
+        this.setState({ coin2_usd: coin_data[0].price_usd })
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   async handleSubmit(e) {
@@ -191,7 +227,10 @@ class WarStage extends Component {
     const { coin1, coin2, toBlock,
       coin1Address, coin2Address, coin1Balance,
       coin2Balance } = this.props.opponents
-    const { coin1TokenBalance, coin2TokenBalance } = this.state
+    const { coin1TokenBalance, coin2TokenBalance, coin1_usd, coin2_usd } = this.state
+    let coin1_bet_cost = parseFloat(coin1Balance * coin1_usd).toFixed(3)
+    let coin2_bet_cost = parseFloat(coin2Balance * coin2_usd).toFixed(3)
+
     return (
       <div>
         <div className="time_notif">11:50:00 / {this.state.block}# {toBlock}</div>
@@ -202,23 +241,31 @@ class WarStage extends Component {
             <div className="coin">
               <Button
                 bsClass="coin-btn"
-                bsSize="lg" bsStyle="info">{coin1}</Button>
+                bsSize="lg" bsStyle="info">
+                <Image
+                  style={{ maxWidth: 64 }}
+                  src={require(`./128/color/${coin1.toLowerCase()}.png`)} />
+              </Button>
             </div>
             <div className="coin">
               <Button
                 bsClass="coin-btn"
-                bsSize="lg" bsStyle="success">{coin2}</Button>
+                bsSize="lg" bsStyle="success">
+                <Image
+                  style={{ maxWidth: 64 }}
+                  src={require(`./128/color/${coin2.toLowerCase()}.png`)} />
+              </Button>
             </div>
           </Col>
           <Col xs={6} md={6}>
             <div className="progress_wrap">
-              <span>$30000/<span className="balance">{coin1Balance}</span> {coin1}</span>
+              <span>${coin1_bet_cost}/<span className="balance">{coin1Balance}</span> {coin1}</span>
               <div className="progress">
                 <div className="progress-bar progress-bar-striped" role="progressbar" style={{ width: '10%' }} aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
             <div className="progress_wrap bottom">
-              <span>$30000/<span className="balance">{coin2Balance}</span> {coin2}</span>
+              <span>${coin2_bet_cost}/<span className="balance">{coin2Balance}</span> {coin2}</span>
               <div className="progress">
                 <div className="progress-bar progress-bar-striped" role="progressbar" style={{ width: '30%' }} aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
