@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Grid, Row, Col, Navbar, Nav, NavItem } from 'react-bootstrap'
+import Particles from 'react-particles-js';
 import logo from './logo.svg'
 import step_1 from './resources/step_1.png'
 import step_2 from './resources/step_2.png'
@@ -63,6 +64,8 @@ class App extends Component {
           <h1 className="App-title">Welcome to COIN WARS</h1>
         </header>
         */}
+
+        
 
         <Navbar fixedTop>
           <Navbar.Header>
