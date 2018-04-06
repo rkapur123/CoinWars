@@ -16,6 +16,8 @@ contract CoinWar {
   ERC20 public token1;
   ERC20 public token2;
 
+  uint public token1Decimals
+
   struct Team {
     ERC20 tokenContract;
     mapping (address => uint) tokenMapping;
@@ -93,6 +95,7 @@ contract CoinWar {
   function burn()
     internal
   {
+
     //require()
     if (looser.totalBet != 0) {
 

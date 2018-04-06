@@ -8,7 +8,7 @@ import hexToDec from 'hex-to-dec'
 import CoinMarketCap from 'coinmarketcap-api'
 
 // change this value to 50000 or more
-const MAX_PROGRESS_PRICE = 100
+const MAX_PROGRESS_PRICE = 50000
 
 class WarStage extends Component {
 
@@ -144,7 +144,7 @@ class WarStage extends Component {
       if (!this.state.withdrawn) {
         return (<Button bsStyle="success" bsSize="large" onClick={this.withdraw.bind(this)}>Withdraw</Button>)
       } else {
-        return (<div><em>Money has been withdrawn ! Please don't forget to participate in the next game</em></div>)
+        return (<div><em>Money has been withdrawn ! Please dont forget to participate in the next game</em></div>)
       }
     }
   }

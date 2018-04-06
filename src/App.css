@@ -1,6 +1,39 @@
 body {
   font-family: 'Open Sans', sans-serif;
+  padding: 60px;
 }
+
+.navbar.navbar-default {
+  background-color: #303030;
+  height: 60px;
+}
+
+.navbar.navbar-default .navbar-brand {
+  color: #ffffff;
+  font-family: 'Open Sans';
+  font-weight: bold;
+  font-size: 35px;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus,
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: #E0E0E0;
+}
+
+.navbar-default .navbar-nav > li > a {
+    padding-right: 20px;
+    color: #ffffff;
+    font-family: 'Open Sans';
+    font-size: 20px;
+
+}
+
+.walkthrough {
+  padding-top: 100px;
+  padding-bottom: 50px;
+}
+
 
 .App {
   text-align: center;
