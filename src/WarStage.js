@@ -266,11 +266,11 @@ class WarStage extends Component {
           <Col xs={6} md={6}>
             <div className="progress_wrap">
               <span>${coin1_bet_cost}/<span className="balance">{coin1Balance}</span> {coin1}</span>
-              <ProgressBar striped active now={coin1Progress} label={`60%`} srOnly />
+              <ProgressBar  active now={coin1Progress} label={`60%`} srOnly />
             </div>
             <div className="progress_wrap bottom">
               <span>${coin2_bet_cost}/<span className="balance">{coin2Balance}</span> {coin2}</span>
-              <ProgressBar striped active now={coin2Progress} label={`${coin2Progress}%`} srOnly />
+              <ProgressBar  active now={coin2Progress} label={`${coin2Progress}%`} srOnly />
             </div>
           </Col>
           <Col xs={4} md={4}>

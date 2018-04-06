@@ -1,6 +1,6 @@
 body {
   font-family: 'Open Sans', sans-serif;
-  padding: 60px;
+  padding: 100px;
 }
 
 .navbar.navbar-default {
@@ -10,7 +10,7 @@ body {
 
 .navbar.navbar-default .navbar-brand {
   color: #ffffff;
-  font-family: 'Open Sans';
+  font-family: 'Star Jedi 2';
   font-weight: bold;
   font-size: 35px;
 }
@@ -29,10 +29,19 @@ body {
 
 }
 
-.walkthrough {
-  padding-top: 100px;
+
+
+.intro {
+
+  border-radius: 25px;
+  padding-top: 50px;
   padding-bottom: 50px;
+  border: 1px solid #303030;
+  background-color: #303030;
+  color: #ffffff;
 }
+
+
 
 
 .App {

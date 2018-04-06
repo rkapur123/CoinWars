@@ -76,7 +76,8 @@ class App extends Component {
           </Nav>
         </Navbar>
 
-        <Grid className="walkthrough">
+        <div className="intro">
+        <Grid>
           <Row>
             <Col xs={4} md={4}>
               <img src={step_1}/>
@@ -103,6 +104,7 @@ class App extends Component {
             </Col>
           </Row>
         </Grid>
+        </div>
 
 
 
