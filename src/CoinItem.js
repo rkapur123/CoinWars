@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Grid, Alert } from 'react-bootstrap'
+import { Alert } from 'react-bootstrap'
 import WarStage from './WarStage'
 
 export default class CoinItem extends Component {
@@ -53,7 +53,7 @@ export default class CoinItem extends Component {
   render() {
     const warList = this.state.wars.map((item, index) => {
       return (
-        <div key={index}>
+        <div className="war_stage_item" key={index}>
           <WarStage
             { ...this.props }
             opponents={item}
@@ -72,14 +72,14 @@ export default class CoinItem extends Component {
     })
 
     return (
-      <Grid className="intro">
+      <div className="stage_wrap">
         {this.state.message && (
           <Alert bsStyle="warning">
             <strong>Holy guacamole!</strong> {this.state.message}
           </Alert>
         )}
         {warList}
-      </Grid>
+      </div>
     )
   }
 }

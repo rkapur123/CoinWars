@@ -1,6 +1,7 @@
 body {
   font-family: 'Open Sans', sans-serif;
   padding: 100px;
+  background: #000;
 }
 
 .navbar.navbar-default {
@@ -29,10 +30,7 @@ body {
 
 }
 
-
-
 .intro {
-
   border-radius: 25px;
   padding-top: 50px;
   padding-bottom: 50px;
@@ -41,8 +39,16 @@ body {
   color: #ffffff;
 }
 
-
-
+.stage_wrap {
+  border-radius: 25px;
+  -moz-border-radius: 25px;
+  -webkit-border-radius: 25px;
+  padding: 50px 0;
+  border: 1px solid #303030;
+  background-color: #303030;
+  color: #ffffff;
+  overflow: hidden;
+}
 
 .App {
   text-align: center;
@@ -68,10 +74,10 @@ body {
   font-size: large;
 }
 
-.show-grid {
-  margin-bottom: 10px;
-  padding: 0;
-  border-bottom: 1px solid #efefef;
+.war_stage_item .show-grid {
+  margin: 10px 0 20px;
+  padding: 10px 0 20px;
+  border-bottom: 1px solid #535353;
 }
 
 .time_notif {
@@ -85,7 +91,6 @@ body {
   border-radius: 80px;
   -moz-border-radius: 80px;
   -webkit-border-radius: 80px;
-  box-shadow: 1px 2px 2px #dfdfdf;
 }
 
 .coin-btn.active {
@@ -112,6 +117,7 @@ body {
   font-weight: bold;
   font-size: 18px;
   background-color: #f1f1f1;
+  color: #313131;
   padding: 5px 15px 0;
   line-height: 1.3em;
   border-top-left-radius: 4px;

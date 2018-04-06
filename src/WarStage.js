@@ -9,6 +9,7 @@ import CoinMarketCap from 'coinmarketcap-api'
 
 // change this value to 50000 or more
 const MAX_PROGRESS_PRICE = 50000
+const INCREMENT_FACTORS = 10000
 
 class WarStage extends Component {
 
@@ -25,7 +26,8 @@ class WarStage extends Component {
     coin1_usd: 0,
     coin2_usd: 0,
     coin1Image: null,
-    coin2Image: null
+    coin2Image: null,
+    overtake: 0
   }
 
   async componentDidMount() {
@@ -39,11 +41,11 @@ class WarStage extends Component {
     // get coinwar instance
     this.coinwarsInstance = await this.props.coinwars.at(coinWarAddress)
 
-    const coin1 = await this.tokenContract.at(coin1Address)
-    const coin1Event = await coin1.Transfer({}, { fromBlock: 0, toBlock: 'latest' })
+    this.coin1 = await this.tokenContract.at(coin1Address)
+    const coin1Event = await this.coin1.Transfer({}, { fromBlock: 0, toBlock: 'latest' })
     coin1Event.watch(async function(error, results) {
-      const coinWarBalance =  await coin1.balanceOf(coinWarAddress)
-      const myBalance = await coin1.balanceOf(_self.props.account)
+      const coinWarBalance =  await _self.coin1.balanceOf(coinWarAddress)
+      const myBalance = await _self.coin1.balanceOf(_self.props.account)
       if (_self.props.getBalanceCoin1) {
         _self.props.getBalanceCoin1(myBalance)
         _self.setState({ coin1TokenBalance: myBalance.toNumber() })
@@ -51,13 +53,13 @@ class WarStage extends Component {
       _self.props.reload(coinWarBalance)
     })
 
-    this.coins.set(coin1Address, coin1)
+    this.coins.set(coin1Address, this.coin1)
 
-    const coin2 = await this.tokenContract.at(coin2Address)
-    const coin2Event = await coin2.Transfer({}, { fromBlock: 0, toBlock: 'latest' })
+    this.coin2 = await this.tokenContract.at(coin2Address)
+    const coin2Event = await this.coin2.Transfer({}, { fromBlock: 0, toBlock: 'latest' })
     coin2Event.watch(async function(error, results) {
-      const coinWarBalance = await coin2.balanceOf(coinWarAddress)
-      const myBalance = await coin2.balanceOf(_self.props.account)
+      const coinWarBalance = await _self.coin2.balanceOf(coinWarAddress)
+      const myBalance = await _self.coin2.balanceOf(_self.props.account)
       if (_self.props.getBalanceCoin2) {
         _self.props.getBalanceCoin2(myBalance)
         _self.setState({ coin2TokenBalance: myBalance.toNumber() })
@@ -65,7 +67,7 @@ class WarStage extends Component {
       _self.props.reload(coinWarBalance)
     })
 
-    this.coins.set(coin2Address, coin2)
+    this.coins.set(coin2Address, this.coin2)
 
     // war closed event
     const wfInstance = await this.props.warfactory.deployed()
@@ -83,9 +85,13 @@ class WarStage extends Component {
     blockTracker.start()
 
     // get price
+    this.props.setTimeout(this.getCoinsPrice, 3000)
+  }
+
+  getCoinsPrice = async () => {
+    const coin1_name = await this.coin1.name()
+    const coin2_name = await this.coin2.name()
     this.coinMarketCapClient = new CoinMarketCap()
-    const coin1_name = await coin1.name()
-    const coin2_name = await coin2.name()
     await this.getCoin1USD(coin1_name)
     await this.getCoin2USD(coin2_name)
   }
@@ -127,6 +133,10 @@ class WarStage extends Component {
     }
   }
 
+  overtake = () => {
+    this.refs.amount.value = 300
+  }
+
   withdraw = async () => {
     const { account } = this.props
     if (this.coinwarsInstance) {
@@ -144,7 +154,7 @@ class WarStage extends Component {
       if (!this.state.withdrawn) {
         return (<Button bsStyle="success" bsSize="large" onClick={this.withdraw.bind(this)}>Withdraw</Button>)
       } else {
-        return (<div><em>Money has been withdrawn ! Please dont forget to participate in the next game</em></div>)
+        return (<div><em>Money has been withdrawn ! Please don't forget to participate in the next game</em></div>)
       }
     }
   }
@@ -166,11 +176,14 @@ class WarStage extends Component {
           </div>
           <input type="hidden" name="coin" value={coin} />
           <div className="form-group">
-            <button type="button" className="btn btn-block btn-info">Overtake</button>
+            <Button bsStyle="info"
+              disabled
+              onClick={this.overtake}>Overtake</Button>
           </div>
           <div className="form-group">
             <input type="number" className="form-control" name="amount"
               value={bid}
+              ref="amount"
               onChange={(e) => this.setState({ bid: e.target.value })}
               placeholder="bet amount e.g. 100"
               required />
@@ -195,8 +208,8 @@ class WarStage extends Component {
   }
 
   placeBid2 = () => {
-    const { coin1, coin2, fromBlock, toBlock, coin1Address, coin2Address } = this.props.opponents
-    const { block, coin, bid } = this.state
+    const { coin1, coin2, coin1Address, coin2Address } = this.props.opponents
+    const { coin, bid } = this.state
 
     return (
       <form onSubmit={this.handleSubmit.bind(this)}>
@@ -210,11 +223,15 @@ class WarStage extends Component {
         </div>
         <input type="hidden" name="coin" value={coin} />
         <div className="form-group">
-          <button type="button" className="btn btn-block btn-info">Overtake</button>
+          <Button bsStyle="info"
+            style={{ width: '100%' }}
+            disabled={!coin}
+            onClick={this.overtake}>Overtake</Button>
         </div>
         <div className="form-group">
           <input type="number" className="form-control" name="amount"
             value={bid}
+            ref="amount"
             onChange={(e) => this.setState({ bid: e.target.value })}
             placeholder="bet amount e.g. 100"
             required />
@@ -228,7 +245,7 @@ class WarStage extends Component {
 
   render() {
     const { coin1, coin2, toBlock,
-      coin1Address, coin2Address, coin1Balance,
+      coin1Balance,
       coin2Balance } = this.props.opponents
     const { coin1TokenBalance, coin2TokenBalance, coin1_usd, coin2_usd } = this.state
     let coin1_bet_cost = parseFloat(coin1Balance * coin1_usd).toFixed(3)
@@ -265,16 +282,18 @@ class WarStage extends Component {
           </Col>
           <Col xs={6} md={6}>
             <div className="progress_wrap">
-              <span>${coin1_bet_cost}/<span>{coin1Balance}</span> {coin1}</span>
-              <ProgressBar  active now={coin1Progress} label={`60%`} srOnly />
+              <span>${coin1_bet_cost}/<span className="balance">{coin1Balance}</span> {coin1}</span>
+              <ProgressBar striped active now={coin1Progress} label={`60%`} srOnly />
             </div>
             <div className="progress_wrap bottom">
-              <span>${coin2_bet_cost}/<span>{coin2Balance}</span> {coin2}</span>
-              <ProgressBar  active now={coin2Progress} label={`${coin2Progress}%`} srOnly />
+              <span>${coin2_bet_cost}/<span className="balance">{coin2Balance}</span> {coin2}</span>
+              <ProgressBar striped active now={coin2Progress} label={`${coin2Progress}%`} srOnly />
             </div>
           </Col>
-          <Col xs={3} md={3}>
-            {this.placeBid2()}
+          <Col xs={4} md={4}>
+            <div style={{ paddingLeft: 20, paddingRight: 20 }}>
+              {this.placeBid2()}
+            </div>
           </Col>
         </Row>
       </div>
