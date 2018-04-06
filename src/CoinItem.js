@@ -72,7 +72,7 @@ export default class CoinItem extends Component {
     })
 
     return (
-      <Grid>
+      <Grid className="intro">
         {this.state.message && (
           <Alert bsStyle="warning">
             <strong>Holy guacamole!</strong> {this.state.message}
