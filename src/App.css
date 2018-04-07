@@ -1,7 +1,17 @@
+@font-face {
+  font-family: 'Star Wars';
+  src: url('resources/star-wars-font.eot'); /* IE9 Compat Modes */
+  src: url('resources/star-wars-font.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('resources/star-wars-font.woff') format('woff'), /* Pretty Modern Browsers */
+       url('resources/star-wars-font.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('resources/star-wars-font.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
 body {
   font-family: 'Open Sans', sans-serif;
   padding: 100px;
   background: #000;
+  background-image: url("resources/background.png");
 }
 
 .navbar.navbar-default {
@@ -10,34 +20,45 @@ body {
 }
 
 .navbar.navbar-default .navbar-brand {
+  padding-top: 20px;
   color: #ffffff;
-  font-family: 'Open Sans';
-  font-weight: bold;
-  font-size: 35px;
+  font-family: 'Star Wars';
+  font-size: 50px;
 }
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus,
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
-    color: #E0E0E0;
+    color: #828282;
 }
 
 .navbar-default .navbar-nav > li > a {
     padding-right: 20px;
     color: #ffffff;
-    font-family: 'Open Sans';
+    font-family: 'Star Wars';
     font-size: 20px;
 
 }
 
+
+
 .intro {
   border-radius: 25px;
-  padding-top: 50px;
-  padding-bottom: 50px;
+  padding-top: 25px;
+  padding-bottom: 25px;
   border: 1px solid #303030;
   background-color: #303030;
   color: #ffffff;
 }
+
+.playNow {
+  color: #ffffff;
+  font-family: 'Star Wars';
+  font-size: 40px;
+  padding-top: 40px;
+  padding-bottom: 100px;
+}
+
 
 .stage_wrap {
   border-radius: 25px;
@@ -49,6 +70,8 @@ body {
   color: #ffffff;
   overflow: hidden;
 }
+
+
 
 .App {
   text-align: center;

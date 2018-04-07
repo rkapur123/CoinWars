@@ -19,15 +19,7 @@ class App extends Component {
           <h1 className="App-title">Welcome to COIN WARS</h1>
         </header>
         */}
-        <Particles style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 0
-          }}>
-        </Particles>
+
         <nav className="navbar navbar-default navbar-fixed-top">
           <div className="container">
             <div className="navbar-header">
@@ -35,7 +27,7 @@ class App extends Component {
             </div>
             <ul class="nav navbar-nav navbar-right">
               <li>
-                <NavLink to="/">Home</NavLink>
+                <NavLink to="/" className="game">Coin Wars</NavLink>
               </li>
               <li>
                 <NavLink to="/account">Account</NavLink>

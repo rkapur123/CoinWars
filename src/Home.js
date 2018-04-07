@@ -66,7 +66,7 @@ export default class Home extends Component {
               </Col>
               <Col xs={4} md={4} lg={4}>
                 <div style={{ minHeight: 300, paddingTop: 80 }}>
-                  <img src={step_2} alt="step 2" />
+                  <img src={step_2} alt="step 2"/>
                 </div>
                 <div>
                   <p>Step 2</p>
@@ -86,9 +86,8 @@ export default class Home extends Component {
           </Grid>
         </div>
 
-        <p style={{ margin: '20px 0 10px', padding: '20px 0' }}>Your Address:
-          <strong style={{ color: '#1e617d' }}>{this.state.account}</strong>
-        </p>
+        <p className="playNow"> Play Now </p>
+
         <div className="war_wrap">
           <CoinItem
             web3={this.web3}

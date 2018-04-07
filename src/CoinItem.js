@@ -73,6 +73,9 @@ export default class CoinItem extends Component {
 
     return (
       <div className="stage_wrap">
+        <p style={{ margin: '20px 0 10px', padding: '20px 0' }}>Your Address:
+          <strong style={{ color: '#1e617d' }}> {this.props.account}</strong>
+        </p>
         {this.state.message && (
           <Alert bsStyle="warning">
             <strong>Holy guacamole!</strong> {this.state.message}
