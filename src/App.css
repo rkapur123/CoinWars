@@ -9,7 +9,7 @@
 
 body {
   font-family: 'Open Sans', sans-serif;
-  padding: 100px;
+  padding: 80px;
   background: #000;
   background-image: url("resources/background.png");
 }
@@ -51,12 +51,38 @@ body {
   color: #ffffff;
 }
 
+.coinWar {
+  color: #ffffff;
+  font-family: 'Star Wars';
+  font-size: 60px;
+  padding-bottom: 10px;
+}
+
 .playNow {
   color: #ffffff;
   font-family: 'Star Wars';
   font-size: 40px;
-  padding-top: 40px;
-  padding-bottom: 100px;
+  padding-top: 20px;
+}
+
+.arrow {
+  padding-top: 10px;
+  padding-bottom: 30px;
+}
+.bounce {
+  -moz-animation: bounce 1s infinite ease-in-out;
+  -webkit-animation: bounce 1s infinite ease-in-out;
+  animation: bounce 1s infinite ease-in-out;
+}
+
+.numberFont {
+  font-size: 25px;
+  font-weight: bold;
+
+}
+
+.instructionFont {
+  font-size: 20px;
 }
 
 
@@ -70,6 +96,9 @@ body {
   color: #ffffff;
   overflow: hidden;
 }
+
+
+
 
 
 
@@ -149,6 +178,16 @@ body {
   border-top-right-radius: 4px;
   -moz-border-top-right-radius: 4px;
   -webkit-border-top-right-radius: 4px;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+
 }
 
 @keyframes App-logo-spin {

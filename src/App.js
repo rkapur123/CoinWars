@@ -27,7 +27,7 @@ class App extends Component {
             </div>
             <ul class="nav navbar-nav navbar-right">
               <li>
-                <NavLink to="/" className="game">Coin Wars</NavLink>
+                <NavLink to="/" className="game">Home</NavLink>
               </li>
               <li>
                 <NavLink to="/account">Account</NavLink>
