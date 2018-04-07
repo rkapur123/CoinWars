@@ -6,6 +6,8 @@ import ReactTimeout from 'react-timeout'
 import BlockTracker from 'eth-block-tracker'
 import hexToDec from 'hex-to-dec'
 import CoinMarketCap from 'coinmarketcap-api'
+import Big from 'big.js'
+import TokenDecimals from './token_decimals'
 
 // change this value to 50000 or more
 const MAX_PROGRESS_PRICE = 50000
@@ -88,18 +90,31 @@ class WarStage extends Component {
     this.props.setTimeout(this.getCoinsPrice, 3000)
   }
 
-  getCoinsPrice = async () => {
-    const coin1_name = await this.coin1.name()
-    const coin2_name = await this.coin2.name()
-    this.coinMarketCapClient = new CoinMarketCap()
-    await this.getCoin1USD(coin1_name)
-    await this.getCoin2USD(coin2_name)
+  getCoinsId = (coin) => {
+    let _coin = TokenDecimals[coin.toLowerCase()]
+    if (_coin) {
+      return _coin['id']
+    }
+    return false
   }
 
-  async getCoin1USD(coin_name) {
+  getCoinsPrice = async () => {
+    const { coin1, coin2 } = this.props.opponents
+    const coin1_id = this.getCoinsId(coin1)
+    const coin2_id = this.getCoinsId(coin2)
+    this.coinMarketCapClient = new CoinMarketCap()
+    if (coin1_id) {
+      await this.getCoin1USD(coin1_id)
+    }
+    if (coin2_id) {
+      await this.getCoin2USD(coin2_id)
+    }
+  }
+
+  async getCoin1USD(coin_id) {
     try {
       const coin_data = await this.coinMarketCapClient
-        .getTicker({ limit: 1, currency: coin_name })
+        .getTicker({ limit: 1, currency: coin_id })
       if (coin_data) {
         this.setState({ coin1_usd: coin_data[0].price_usd })
       }
@@ -108,10 +123,10 @@ class WarStage extends Component {
     }
   }
 
-  async getCoin2USD(coin_name) {
+  async getCoin2USD(coin_id) {
     try {
       const coin_data = await this.coinMarketCapClient
-        .getTicker({ limit: 1, currency: coin_name })
+        .getTicker({ limit: 1, currency: coin_id })
       if (coin_data) {
         this.setState({ coin2_usd: coin_data[0].price_usd })
       }
@@ -243,22 +258,70 @@ class WarStage extends Component {
     )
   }
 
+  getDecimals = (coin) => {
+    if (coin) {
+      return coin['decimals']
+    }
+    return 18
+  }
+
+  getTokenDecimals = coin => {
+    let count = 10
+    for (let i = 0; i < this.getDecimals(coin); i++) {
+      count *= 10
+    }
+    return count;
+  }
+
+  // the price of bet amount (is usd)
+  getNumberOfTokensBetPrice = (coin, bet_amount, price_usd) => {
+    let _coin = TokenDecimals[coin.toLowerCase()]
+    let x = new Big(price_usd)
+    let y = x
+      .div(this.getTokenDecimals(_coin))
+      .times(bet_amount)
+      .toFixed(this.getDecimals(_coin))
+    return y
+  }
+
+  // get number of tokens bet (amount)
+  getNumberOfTokensBet = (coin, bet_amount) => {
+    let _coin = TokenDecimals[coin.toLowerCase()]
+    let x = new Big(bet_amount)
+    let y = x
+      .div(this.getTokenDecimals(_coin))
+      .toFixed(this.getDecimals(_coin))
+    return y
+  }
+
   render() {
     const { coin1, coin2, toBlock,
       coin1Balance,
       coin2Balance } = this.props.opponents
     const { coin1TokenBalance, coin2TokenBalance, coin1_usd, coin2_usd } = this.state
-    let coin1_bet_cost = parseFloat(coin1Balance * coin1_usd).toFixed(3)
-    let coin2_bet_cost = parseFloat(coin2Balance * coin2_usd).toFixed(3)
 
-    const coin1Progress = parseFloat((coin1_bet_cost / MAX_PROGRESS_PRICE) * 100)
-    const coin2Progress = parseFloat((coin2_bet_cost / MAX_PROGRESS_PRICE) * 100)
+    const coin1_balance = this.getNumberOfTokensBet(coin1, coin1TokenBalance)
+    const coin2_balance = this.getNumberOfTokensBet(coin2, coin2TokenBalance)
+
+    const coin1_bet_amount = this.getNumberOfTokensBet(coin1, coin1Balance)
+    const coin2_bet_amount = this.getNumberOfTokensBet(coin2, coin2Balance)
+
+    const coin1_bet_price = this.getNumberOfTokensBetPrice(coin1, coin1Balance, coin1_usd)
+    const coin2_bet_price = this.getNumberOfTokensBetPrice(coin2, coin2Balance, coin2_usd)
+
+    const coin1Progress = parseFloat((coin1_bet_price / MAX_PROGRESS_PRICE) * 100)
+    const coin2Progress = parseFloat((coin2_bet_price / MAX_PROGRESS_PRICE) * 100)
+
+    // var x = new Big(coin1Balance)
+    // var y = new Big(1000000000000000000)
+    // var z = x.div(y)
+    // console.log(z.toFixed(18))
 
     return (
       <div>
         <div className="time_notif">11:50:00 / {this.state.block}# {toBlock}</div>
-        <div>Balance {coin1}: <Label bsStyle="info">{coin1TokenBalance}</Label> tokens</div>
-        <div>Balance {coin2}: <Label bsStyle="success">{coin2TokenBalance}</Label> tokens</div>
+        <div>Balance {coin1}: <Label bsStyle="info">{coin1_balance}</Label> tokens</div>
+        <div>Balance {coin2}: <Label bsStyle="success">{coin2_balance}</Label> tokens</div>
         <Row className="show-grid">
           <Col xs={2} md={2}>
             <div className="coin">
@@ -282,11 +345,11 @@ class WarStage extends Component {
           </Col>
           <Col xs={6} md={6}>
             <div className="progress_wrap">
-              <span>${coin1_bet_cost}/<span className="balance">{coin1Balance}</span> {coin1}</span>
+              <span>${coin1_bet_price}/<span className="balance">{coin1_bet_amount}</span> {coin1}</span>
               <ProgressBar striped active now={coin1Progress} label={`60%`} srOnly />
             </div>
             <div className="progress_wrap bottom">
-              <span>${coin2_bet_cost}/<span className="balance">{coin2Balance}</span> {coin2}</span>
+              <span>${coin2_bet_price}/<span className="balance">{coin2_bet_amount}</span> {coin2}</span>
               <ProgressBar striped active now={coin2Progress} label={`${coin2Progress}%`} srOnly />
             </div>
           </Col>

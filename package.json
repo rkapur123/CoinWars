@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "big.js": "^5.0.3",
     "coinmarketcap-api": "^1.0.3",
     "eth-block-tracker": "^2.3.0",
     "hex-to-dec": "^1.0.1",

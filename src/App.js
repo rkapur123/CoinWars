@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Switch, Route, NavLink } from 'react-router-dom'
-import Particles from 'react-particles-js'
 import './App.css'
 
 // main components
@@ -25,7 +24,7 @@ class App extends Component {
             <div className="navbar-header">
               <NavLink to="/" className="navbar-brand">CryptoGamez</NavLink>
             </div>
-            <ul class="nav navbar-nav navbar-right">
+            <ul className="nav navbar-nav navbar-right">
               <li>
                 <NavLink to="/" className="game">Home</NavLink>
               </li>
