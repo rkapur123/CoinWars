@@ -16,7 +16,7 @@ contract CoinWar {
   ERC20 public token1;
   ERC20 public token2;
 
-  uint public token1Decimals
+  uint public token1Decimals;
 
   struct Team {
     ERC20 tokenContract;

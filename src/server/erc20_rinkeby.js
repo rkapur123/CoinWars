@@ -6,7 +6,7 @@ const HDWalletProvider = require("truffle-hdwallet-provider")
 const accessToken = 'vXJ9MlTj969EuStvmyPN'
 
 // don't forget to replace this with your own mnemonic
-const mnemonic = 'chalk when job clarify trigger tongue only close glimpse hour multiply start'
+const mnemonic = 'region fish wave balcony example useful pattern length genre defense crater push'
 
 const server = {
   address: '0x0',
@@ -61,8 +61,8 @@ const server = {
       await token1Contract.transfer(addrArray[1], 50000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`50000000000 TRX successfully transferred to ` + addrArray[1])
 
-      await token1Contract.transfer('0x9fa877509a7b5d90bdbdf911aeeaacce12857521', 50000000000000000, { from: `${this.address}`, gas: 5000000 })
-      console.log(`50000000000 TRX successfully transferred to 0x9fa877509a7b5d90bdbdf911aeeaacce12857521`)
+      await token1Contract.transfer('0xA4feB0579dC656C6fbC3ad62C8C6B87B9198E766', 50000000000000000, { from: `${this.address}`, gas: 5000000 })
+      console.log(`50000000000 TRX successfully transferred to 0xA4feB0579dC656C6fbC3ad62C8C6B87B9198E766`)
 
       // 0x37c69511c5ba54798accf6a6be6ac87de31a09b1 - 2500
       //await token1Contract.transfer(addrArray[2], 2500, { from: `${this.address}`, gas: 5000000 })
@@ -79,8 +79,8 @@ const server = {
       await token2Contract.transfer(addrArray[1], 500000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`500000000 EOS successfully transferred to ` + addrArray[1])
 
-      await token2Contract.transfer('0x9fa877509a7b5d90bdbdf911aeeaacce12857521', 500000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
-      console.log(`500000000 EOS successfully transferred to 0x9fa877509a7b5d90bdbdf911aeeaacce12857521`)
+      await token2Contract.transfer('0xA4feB0579dC656C6fbC3ad62C8C6B87B9198E766', 500000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
+      console.log(`500000000 EOS successfully transferred to 0xA4feB0579dC656C6fbC3ad62C8C6B87B9198E766`)
       // 0x37c69511c5ba54798accf6a6be6ac87de31a09b1 - 3200
       //await token2Contract.transfer(addrArray[2], 3200, { from: `${this.address}`, gas: 5000000 })
       //console.log(`3200 DT2 successfully transferred to ` + addrArray[2])
@@ -95,8 +95,8 @@ const server = {
       await token3Contract.transfer(addrArray[1], 98596191000000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`98596191 BNB successfully transferred to ` + addrArray[1])
 
-      await token3Contract.transfer('0x9fa877509a7b5d90bdbdf911aeeaacce12857521', 98596191000000000000000000, { from: `${this.address}`, gas: 5000000 })
-      console.log(`98596191 BNB successfully transferred to 0x9fa877509a7b5d90bdbdf911aeeaacce12857521`)
+      await token3Contract.transfer('0xA4feB0579dC656C6fbC3ad62C8C6B87B9198E766', 98596191000000000000000000, { from: `${this.address}`, gas: 5000000 })
+      console.log(`98596191 BNB successfully transferred to 0xA4feB0579dC656C6fbC3ad62C8C6B87B9198E766`)
       // 0x37c69511c5ba54798accf6a6be6ac87de31a09b1 - 1200
       //await token3Contract.transfer(addrArray[2], 1200, { from: `${this.address}`, gas: 5000000 })
       //console.log(`1200 DT3 successfully transferred to ` + addrArray[2])
@@ -111,8 +111,8 @@ const server = {
       await token4Contract.transfer(addrArray[1], 500000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`500000000 VEN successfully transferred to ` + addrArray[1])
 
-      await token4Contract.transfer('0x9fa877509a7b5d90bdbdf911aeeaacce12857521', 500000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
-      console.log(`500000000 VEN successfully transferred to 0x9fa877509a7b5d90bdbdf911aeeaacce12857521`)
+      await token4Contract.transfer('0xA4feB0579dC656C6fbC3ad62C8C6B87B9198E766', 500000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
+      console.log(`500000000 VEN successfully transferred to 0xA4feB0579dC656C6fbC3ad62C8C6B87B9198E766`)
       // 0x37c69511c5ba54798accf6a6be6ac87de31a09b1 - 1600
       //await token4Contract.transfer(addrArray[2], 1600, { from: `${this.address}`, gas: 5000000 })
       //console.log(`1600 DT4 successfully transferred to ` + addrArray[2])

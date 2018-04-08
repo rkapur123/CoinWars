@@ -29,7 +29,8 @@ class WarStage extends Component {
     coin2_usd: 0,
     coin1Image: null,
     coin2Image: null,
-    overtake: 0
+    overtake: 0,
+    startTime: 0
   }
 
   async componentDidMount() {
@@ -88,6 +89,9 @@ class WarStage extends Component {
 
     // get price
     this.props.setTimeout(this.getCoinsPrice, 3000)
+
+    // get start time of war
+    this.getTime()
   }
 
   getCoinsId = (coin) => {
@@ -174,58 +178,9 @@ class WarStage extends Component {
     }
   }
 
-  placeBid = () => {
-    const { coin1, coin2, fromBlock, toBlock, coin1Address, coin2Address } = this.props.opponents
-    const { block, coin, bid } = this.state
-
-    if (block >= parseInt(fromBlock) && block <= parseInt(toBlock)) {
-      return (
-        <form onSubmit={this.handleSubmit.bind(this)}>
-          <div className="form-group">
-            <ButtonGroup>
-              <Button active={coin === coin1Address ? true : false}
-                onClick={() => this.setState({ coin: coin1Address })}>{coin1}</Button>
-              <Button active={coin === coin2Address ? true : false}
-                onClick={() => this.setState({ coin: coin2Address })}>{coin2}</Button>
-            </ButtonGroup>
-          </div>
-          <input type="hidden" name="coin" value={coin} />
-          <div className="form-group">
-            <Button bsStyle="info"
-              disabled
-              onClick={this.overtake}>Overtake</Button>
-          </div>
-          <div className="form-group">
-            <input type="number" className="form-control" name="amount"
-              value={bid}
-              ref="amount"
-              onChange={(e) => this.setState({ bid: e.target.value })}
-              placeholder="bet amount e.g. 100"
-              required />
-          </div>
-          <div className="form-group">
-            <button type="submit" className="btn btn-block btn-primary">Submit</button>
-          </div>
-        </form>
-      )
-    } else if (block < parseInt(fromBlock)) {
-      return (
-        <div>Currently this war is not running</div>
-      )
-    } else if (block > parseInt(toBlock)) {
-      return (
-        <div>
-          <div style={{ paddingBottom: 20 }}>Game Over</div>
-          {this.close()}
-        </div>
-      )
-    }
-  }
-
-  placeBid2 = () => {
+  bidForm = () => {
     const { coin1, coin2, coin1Address, coin2Address } = this.props.opponents
     const { coin, bid } = this.state
-
     return (
       <form onSubmit={this.handleSubmit.bind(this)}>
         <div className="form-group">
@@ -256,6 +211,44 @@ class WarStage extends Component {
         </div>
       </form>
     )
+  }
+
+  placeBid = () => {
+    const { toBlock, fromBlock } = this.props.opponents
+    const { block } = this.state
+    if (block >= parseInt(fromBlock) && block <= parseInt(toBlock)) {
+      return this.bidForm()
+    } else if (block < parseInt(fromBlock)) {
+      return (
+        <div>Currently this war is not running</div>
+      )
+    } else if (block > parseInt(toBlock)) {
+      return (
+        <div>
+          <div style={{ paddingBottom: 20 }}>Game Over</div>
+          {this.close()}
+        </div>
+      )
+    }
+  }
+
+  // get the average block time
+  getBlockAverageTime = async () => {
+    const span = 100
+    const times = []
+    const { web3 } = this.props
+    const currentNumber = await web3.eth.getBlockNumber()
+
+    const firstBlock = await web3.eth.getBlock(currentNumber - span)
+    let prevTimestamp = firstBlock.timestamp
+
+    for (let i = currentNumber - span + 1; i <= currentNumber; i++) {
+      const block = await web3.eth.getBlock(i)
+      let time = block.timestamp - prevTimestamp
+      prevTimestamp = block.timestamp
+      times.push(time)
+    }
+    return Math.round(times.reduce((a, b) => a + b) / times.length)
   }
 
   getDecimals = (coin) => {
@@ -294,11 +287,21 @@ class WarStage extends Component {
     return y
   }
 
+  getTime = async () => {
+    const { block } = this.state
+    const { toBlock } = this.props.opponents
+    this.getBlockAverageTime()
+      .then(avgTime => {
+        let _startTime = avgTime * toBlock
+        this.setState({ startTime: _startTime })
+      })
+  }
+
   render() {
     const { coin1, coin2, toBlock,
       coin1Balance,
       coin2Balance } = this.props.opponents
-    const { coin1TokenBalance, coin2TokenBalance, coin1_usd, coin2_usd } = this.state
+    const { coin1TokenBalance, coin2TokenBalance, coin1_usd, coin2_usd, startTime, block } = this.state
 
     const coin1_balance = this.getNumberOfTokensBet(coin1, coin1TokenBalance)
     const coin2_balance = this.getNumberOfTokensBet(coin2, coin2TokenBalance)
@@ -319,7 +322,7 @@ class WarStage extends Component {
 
     return (
       <div>
-        <div className="time_notif">11:50:00 / {this.state.block}# {toBlock}</div>
+        <div className="time_notif">{startTime} / {block}# {toBlock}</div>
         <div>Balance {coin1}: <Label bsStyle="info">{coin1_balance}</Label> tokens</div>
         <div>Balance {coin2}: <Label bsStyle="success">{coin2_balance}</Label> tokens</div>
         <Row className="show-grid">
@@ -355,7 +358,7 @@ class WarStage extends Component {
           </Col>
           <Col xs={4} md={4}>
             <div style={{ paddingLeft: 20, paddingRight: 20 }}>
-              {this.placeBid2()}
+              {this.placeBid()}
             </div>
           </Col>
         </Row>
