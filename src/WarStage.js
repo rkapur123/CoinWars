@@ -271,7 +271,6 @@ class WarStage extends Component {
     let _coin = TokenDecimals[coin.toLowerCase()]
     let x = new Big(price_usd)
     let y = x
-      .div(this.getTokenDecimals(_coin))
       .times(bet_amount)
       .toFixed(this.getDecimals(_coin))
     return y
@@ -282,7 +281,6 @@ class WarStage extends Component {
     let _coin = TokenDecimals[coin.toLowerCase()]
     let x = new Big(bet_amount)
     let y = x
-      .div(this.getTokenDecimals(_coin))
       .toFixed(this.getDecimals(_coin))
     return y
   }
@@ -323,8 +321,8 @@ class WarStage extends Component {
     return (
       <div>
         <div className="time_notif">{startTime} / {block}# {toBlock}</div>
-        <div>Balance {coin1}: <Label bsStyle="info">{coin1_balance}</Label> tokens</div>
-        <div>Balance {coin2}: <Label bsStyle="success">{coin2_balance}</Label> tokens</div>
+        <div>Balance {coin1}: <Label bsStyle="info">{coin1_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</Label> tokens</div>
+        <div>Balance {coin2}: <Label bsStyle="success">{coin2_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</Label> tokens</div>
         <Row className="show-grid">
           <Col xs={2} md={2}>
             <div className="coin">
@@ -348,11 +346,11 @@ class WarStage extends Component {
           </Col>
           <Col xs={6} md={6}>
             <div className="progress_wrap">
-              <span>${coin1_bet_price}/<span className="balance">{coin1_bet_amount}</span> {coin1}</span>
+              <span>${coin1_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}/<span className="balance">{coin1_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin1}</span>
               <ProgressBar striped active now={coin1Progress} label={`60%`} srOnly />
             </div>
             <div className="progress_wrap bottom">
-              <span>${coin2_bet_price}/<span className="balance">{coin2_bet_amount}</span> {coin2}</span>
+              <span>${coin2_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}/<span className="balance">{coin2_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin2}</span>
               <ProgressBar striped active now={coin2Progress} label={`${coin2Progress}%`} srOnly />
             </div>
           </Col>
