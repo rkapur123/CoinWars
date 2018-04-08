@@ -3,6 +3,9 @@ pragma solidity ^0.4.18;
 
 import { CoinWar } from "./CoinWar.sol";
 
+
+
+
 contract WarFactory {
 
   struct War {
@@ -51,6 +54,20 @@ contract WarFactory {
     var (balance1, balance2) = coinWar.getOpponentsBalance();
     return (allWars[index].opponents, address(coinWar.token1()), address(coinWar.token2()), balance1, balance2, coinWar.fromBlock(), coinWar.toBlock(), address(coinWar));
   }
+
+  function getResultsAtIndexForUser(uint index, address user)
+    public
+    view
+    returns (string, uint, uint, uint, uint, uint)
+  {
+    CoinWar coinWar = CoinWar(allWars[index].coinWar);
+    var (winnerIndex, winningBet, loosingBet, totalWinningBet, totalLoosingBet) = coinWar.getUserBet(user);
+
+    return (allWars[index].opponents, winnerIndex, winningBet, loosingBet, totalWinningBet, totalLoosingBet);
+
+  }
+
+
 
   modifier onlyOwner() {
     require(msg.sender == owner);

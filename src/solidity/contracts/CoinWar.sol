@@ -16,7 +16,7 @@ contract CoinWar {
   ERC20 public token1;
   ERC20 public token2;
 
-  uint public token1Decimals;
+
 
   struct Team {
     ERC20 tokenContract;
@@ -33,8 +33,8 @@ contract CoinWar {
   uint public fromBlock;
   uint public toBlock;
 
-  uint public burnAmount;
-  bool public afterBurn;
+  //uint public burnAmount;
+  bool public afterFee;
 
 
   event LogAddress(address addr);
@@ -88,11 +88,11 @@ contract CoinWar {
     }
 
     //burn and take fee
-    burn();
+    takeOwnerFee();
 
   }
 
-  function burn()
+  function takeOwnerFee()
     internal
   {
 
@@ -100,27 +100,27 @@ contract CoinWar {
     if (looser.totalBet != 0) {
 
       // 10% of total bets lost in the loosing coin
-      burnAmount = fractionOf(looser.totalBet, 1, 10);
+      //burnAmount = fractionOf(looser.totalBet, 1, 10);
 
       // 5% of the total bets lost in the loosing coin
       ownerFee = fractionOf(looser.totalBet, 1, 20);
 
-      looser.totalBet -= burnAmount;
+      //looser.totalBet -= burnAmount;
       looser.totalBet -= ownerFee;
 
       //"0x000000000000000000000000000000000000dEaD" --> burn address to be added
-      looser.tokenContract.transfer(address(looser.tokenContract), burnAmount);
+      //looser.tokenContract.transfer(address(looser.tokenContract), burnAmount);
 
       // the loosing owner pays fees to the owner of CoinWar contract
       looser.tokenContract.transfer(owner, ownerFee);
     }
 
-    afterBurn = true;
+    afterFee = true;
   }
 
   function withdraw()
     public
-    onlyAfterBurn
+    onlyAfterFee
   {
     //add modifier to make sure burn and setResults passed
     uint userBet = winner.tokenMapping[msg.sender];
@@ -168,9 +168,11 @@ contract CoinWar {
   function getUserBet(address user)
     public
     view
-    returns (uint, uint)
+    returns (uint, uint, uint, uint, uint)
   {
-    return (winner.tokenMapping[user],looser.tokenMapping[user]);
+    if (address(winner.tokenContract) == address(token1))
+      return (1, winner.tokenMapping[user],looser.tokenMapping[user], winner.totalBet, looser.totalBet);
+    return (2, winner.tokenMapping[user],looser.tokenMapping[user], winner.totalBet, looser.totalBet);
   }
 
   function getTeamBet(address team)
@@ -195,8 +197,8 @@ contract CoinWar {
     _ ;
   }
 
-  modifier onlyAfterBurn() {
-    require(afterBurn == true);
+  modifier onlyAfterFee() {
+    require(afterFee == true);
     _ ;
   }
 
