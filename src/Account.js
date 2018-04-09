@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
-import { Table, Label } from 'react-bootstrap'
+import { Table, Label, Button } from 'react-bootstrap'
 import Big from 'big.js'
 
 export default class Account extends Component {
 
   state = {
-    results: []
+    results: [],
+    withdrawn: false
   }
 
   componentWillMount = () => {
@@ -51,8 +52,16 @@ export default class Account extends Component {
     }
   }
 
+  withdraw = async () => {
+    const { account } = this.props
+    if (this.coinwarsInstance) {
+      await this.coinwarsInstance.withdraw({ from: account, gas: 5000000 })
+      this.setState({ withdrawn: true })
+    }
+  }
+
   loadData = () => {
-    const { loading } = this.state
+    const { loading, withdrawn } = this.state
     if (loading) {
       return (
         <div className="intro">
@@ -69,9 +78,15 @@ export default class Account extends Component {
       const { token1, token2, winner, looser,
         winnerTokenAmount, looserTokenAmount, winnerTokenTotalBet, looserTokenTotalBet } = item
 
-      let arith = winnerTokenAmount
-        .div(winnerTokenTotalBet)
-        .toFixed(10)
+      let arith = 0
+      const _winnerTokenAmt = winnerTokenAmount.toFixed(10)
+
+      if (_winnerTokenAmt > 0) {
+        arith = winnerTokenAmount
+          .div(winnerTokenTotalBet)
+          .times(looserTokenTotalBet)
+          .toFixed(5)
+      }
 
       console.log(arith)
 
@@ -84,7 +99,9 @@ export default class Account extends Component {
               <Label style={{ marginLeft: 10 }} bsStyle="success">{looserTokenAmount.toString()}</Label> {looser}
           </td>
           <td>{winner}</td>
-          <td>10</td>
+          <td>{arith} {(_winnerTokenAmt > 0 && (withdrawn !== true)) && (
+              <Button bsStyle="success" bsSize="large" onClick={this.withdraw.bind(this)}>Withdraw</Button>
+            )}</td>
         </tr>
       )
     })
