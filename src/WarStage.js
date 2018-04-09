@@ -1,7 +1,5 @@
 import React, {Component} from 'react'
 import { Button, Row, Col, ButtonGroup, Label, Image, ProgressBar } from 'react-bootstrap'
-import ERC20 from './solidity/build/contracts/ERC20.json'
-import TruffleContract from 'truffle-contract'
 import ReactTimeout from 'react-timeout'
 import BlockTracker from 'eth-block-tracker'
 import hexToDec from 'hex-to-dec'
@@ -11,7 +9,6 @@ import TokenDecimals from './token_decimals'
 
 // change this value to 50000 or more
 const MAX_PROGRESS_PRICE = 50000
-const INCREMENT_FACTORS = 10000
 
 class WarStage extends Component {
 
@@ -34,64 +31,55 @@ class WarStage extends Component {
   }
 
   async componentDidMount() {
-    let _self = this
-    this.tokenContract = TruffleContract(ERC20)
-    this.tokenContract.setProvider(this.props.web3.currentProvider)
-
     this.coins = new Map()
-    const { coin1Address, coin2Address, coinWarAddress } = this.props.opponents
+    const { coin1Address, coin2Address, coinWarAddress, fromBlock, toBlock } = this.props.opponents
 
     // get coinwar instance
-    this.coinwarsInstance = await this.props.coinwars.at(coinWarAddress)
+    this.coinwarsInstance = await this.props.coinWarContract.at(coinWarAddress)
 
-    this.coin1 = await this.tokenContract.at(coin1Address)
-    const coin1Event = await this.coin1.Transfer({}, { fromBlock: 0, toBlock: 'latest' })
-    coin1Event.watch(async function(error, results) {
-      const coinWarBalance =  await _self.coin1.balanceOf(coinWarAddress)
-      const myBalance = await _self.coin1.balanceOf(_self.props.account)
-      if (_self.props.getBalanceCoin1) {
-        _self.props.getBalanceCoin1(myBalance)
-        _self.setState({ coin1TokenBalance: myBalance.toNumber() })
+    this.coin1 = await this.erc20Contract.at(coin1Address)
+    const coin1Event = await this.coin1.Transfer({}, { fromBlock, toBlock })
+    coin1Event.watch(async (error, results) => {
+      const coinWarBalance =  await this.coin1.balanceOf(coinWarAddress)
+      const myBalance = await this.coin1.balanceOf(this.props.account)
+      if (this.props.getBalanceCoin1) {
+        this.setState({ coin1TokenBalance: myBalance.toNumber() })
       }
-      _self.props.reload(coinWarBalance)
+      this.props.reload(coinWarBalance)
     })
 
     this.coins.set(coin1Address, this.coin1)
 
-    this.coin2 = await this.tokenContract.at(coin2Address)
-    const coin2Event = await this.coin2.Transfer({}, { fromBlock: 0, toBlock: 'latest' })
-    coin2Event.watch(async function(error, results) {
-      const coinWarBalance = await _self.coin2.balanceOf(coinWarAddress)
-      const myBalance = await _self.coin2.balanceOf(_self.props.account)
-      if (_self.props.getBalanceCoin2) {
-        _self.props.getBalanceCoin2(myBalance)
-        _self.setState({ coin2TokenBalance: myBalance.toNumber() })
+    this.coin2 = await this.erc20Contract.at(coin2Address)
+    const coin2Event = await this.coin2.Transfer({}, { fromBlock, toBlock })
+    coin2Event.watch(async (error, results) => {
+      const coinWarBalance = await this.coin2.balanceOf(coinWarAddress)
+      const myBalance = await this.coin2.balanceOf(this.props.account)
+      if (this.props.getBalanceCoin2) {
+        this.setState({ coin2TokenBalance: myBalance.toNumber() })
       }
-      _self.props.reload(coinWarBalance)
+      this.props.reload(coinWarBalance)
     })
 
     this.coins.set(coin2Address, this.coin2)
 
     // war closed event
-    const wfInstance = await this.props.warfactory.deployed()
+    const wfInstance = await this.props.warFactoryContract.deployed()
     const warClosedEvent = await wfInstance.WarClosed()
-    warClosedEvent.watch(function(error, results) {
-      _self.setState({ warClosed: true })
+    warClosedEvent.watch((error, results) => {
+      this.setState({ warClosed: true })
     })
 
-    const provider = this.props.web3.currentProvider
-    const blockTracker = new BlockTracker({ provider })
+    // get latest block event
+    const blockTracker = new BlockTracker({ provider: this.props.provider })
     blockTracker.on('block', (newBlock) => {
-      console.log(newBlock)
-      _self.setState({ block: hexToDec(newBlock.number) })
+      this.setState({ block: hexToDec(newBlock.number) })
+      // await this.getTime(hexToDec(newBlock.number))
     })
     blockTracker.start()
 
     // get price
     this.props.setTimeout(this.getCoinsPrice, 3000)
-
-    // get start time of war
-    this.getTime()
   }
 
   getCoinsId = (coin) => {
@@ -216,13 +204,13 @@ class WarStage extends Component {
   placeBid = () => {
     const { toBlock, fromBlock } = this.props.opponents
     const { block } = this.state
-    if (block >= parseInt(fromBlock) && block <= parseInt(toBlock)) {
+    if (block >= parseInt(fromBlock, 10) && block <= parseInt(toBlock, 10)) {
       return this.bidForm()
-    } else if (block < parseInt(fromBlock)) {
+    } else if (block < parseInt(fromBlock, 10)) {
       return (
         <div>Currently this war is not running</div>
       )
-    } else if (block > parseInt(toBlock)) {
+    } else if (block > parseInt(toBlock, 10)) {
       return (
         <div>
           <div style={{ paddingBottom: 20 }}>Game Over</div>
@@ -285,21 +273,24 @@ class WarStage extends Component {
     return y
   }
 
-  getTime = async () => {
-    const { block } = this.state
-    const { toBlock } = this.props.opponents
+  getTime = async (currentBlock) => {
+    const { fromBlock } = this.props.opponents
     this.getBlockAverageTime()
       .then(avgTime => {
-        let _startTime = avgTime * toBlock
-        this.setState({ startTime: _startTime })
+        if (currentBlock < fromBlock) {
+          let _startTime = avgTime * (fromBlock - currentBlock)
+          this.setState({ startTime: _startTime })
+        }
       })
   }
 
   render() {
-    const { coin1, coin2, toBlock,
-      coin1Balance,
+    const { coin1, coin2,
+      toBlock, coin1Balance,
       coin2Balance } = this.props.opponents
-    const { coin1TokenBalance, coin2TokenBalance, coin1_usd, coin2_usd, startTime, block } = this.state
+    const { coin1TokenBalance,
+      coin2TokenBalance, coin1_usd,
+      coin2_usd, startTime, block } = this.state
 
     const coin1_balance = this.getNumberOfTokensBet(coin1, coin1TokenBalance)
     const coin2_balance = this.getNumberOfTokensBet(coin2, coin2TokenBalance)
@@ -313,14 +304,9 @@ class WarStage extends Component {
     const coin1Progress = parseFloat((coin1_bet_price / MAX_PROGRESS_PRICE) * 100)
     const coin2Progress = parseFloat((coin2_bet_price / MAX_PROGRESS_PRICE) * 100)
 
-    // var x = new Big(coin1Balance)
-    // var y = new Big(1000000000000000000)
-    // var z = x.div(y)
-    // console.log(z.toFixed(18))
-
     return (
       <div>
-        <div className="time_notif">{startTime} / {block}# {toBlock}</div>
+        <div className="time_notif">{startTime} seconds / {block}# {toBlock}</div>
         <div>Balance {coin1}: <Label bsStyle="info">{coin1_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</Label> tokens</div>
         <div>Balance {coin2}: <Label bsStyle="success">{coin2_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</Label> tokens</div>
         <Row className="show-grid">

@@ -13,7 +13,7 @@ export default class CoinItem extends Component {
 
   loadWars = async () => {
     const warsList = []
-    const wfInstance = await this.props.warfactory.deployed()
+    const wfInstance = await this.props.warFactoryContract.deployed()
     let warsCount = await wfInstance.getWarsCount()
     let wCount = warsCount.toNumber()
     if (wCount > 0) {
@@ -46,29 +46,28 @@ export default class CoinItem extends Component {
     }
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     this.loadWars()
   }
 
   render() {
-    const warList = this.state.wars.map((item, index) => {
-      return (
-        <div className="war_stage_item" key={index}>
-          <WarStage
-            { ...this.props }
-            opponents={item}
-            reload={(balance) => {
-              this.loadWars()
-            }}
-            getBalanceCoin2={balance => {
-              if (this.props.getBalanceCoin2) { this.props.getBalanceCoin2(balance) }
-            }}
-            getBalanceCoin1={(balance) => {
-              if (this.props.getBalanceCoin1) { this.props.getBalanceCoin1(balance) }
-            }}
-            account={this.props.account} />
-        </div>
-      )
+    const warsArray = this.state.wars
+      .filter(filteredItem => {
+        const _toBlock = parseInt(filteredItem.toBlock, 10)
+        return _toBlock > this.props.currentBlock
+      })
+
+    const warList = warsArray
+      .map((item, index) => {
+        return (
+          <div className="war_stage_item" key={index}>
+            <WarStage
+              { ...this.props }
+              opponents={item}
+              reload={balance => this.loadWars()}
+            />
+          </div>
+        )
     })
 
     return (

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Switch, Route, NavLink } from 'react-router-dom'
+import Web3Container from './Web3Container'
 import './App.css'
 
 // main components
@@ -12,13 +13,6 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {/*
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to COIN WARS</h1>
-        </header>
-        */}
-
         <nav className="navbar navbar-default navbar-fixed-top">
           <div className="container">
             <div className="navbar-header">
@@ -40,8 +34,8 @@ class App extends Component {
 
         <main>
           <Switch>
-            <Route exact path='/' component={Home}/>
-            <Route path='/account' component={Account}/>
+            <Route exact path='/' component={Web3Container(Home)}/>
+            <Route path='/account' component={Web3Container(Account)}/>
             <Route path='/faq' component={Faq}/>
           </Switch>
         </main>
