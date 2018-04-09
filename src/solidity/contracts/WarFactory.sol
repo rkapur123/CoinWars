@@ -55,6 +55,10 @@ contract WarFactory {
     return (allWars[index].opponents, address(coinWar.token1()), address(coinWar.token2()), balance1, balance2, coinWar.fromBlock(), coinWar.toBlock(), address(coinWar));
   }
 
+  function isWarClosedAtIndex(uint index) public view returns (bool) {
+    return allWars[index].isOngoing;
+  }
+
   function getResultsAtIndexForUser(uint index, address user)
     public
     view
@@ -66,8 +70,6 @@ contract WarFactory {
     return (allWars[index].opponents, winnerIndex, winningBet, loosingBet, totalWinningBet, totalLoosingBet);
 
   }
-
-
 
   modifier onlyOwner() {
     require(msg.sender == owner);

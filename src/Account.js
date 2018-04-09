@@ -19,6 +19,7 @@ export default class Account extends Component {
     if (wCount > 0) {
       for (let j = 1; j <= wCount; j++) {
         const results = await wfInstance.getResultsAtIndexForUser(j - 1, account)
+        const isOnGoing = await wfInstance.isWarClosedAtIndex(j - 1)
         const tokens = results[0].split(' ')
         warResults.push({
           token1: tokens[0],
@@ -27,7 +28,8 @@ export default class Account extends Component {
           winnerTokenAmount: results[2],
           looserTokenAmount: results[3],
           winnerTokenTotalBet: results[4],
-          looserTokenTotalBet: results[5]
+          looserTokenTotalBet: results[5],
+          isOngoing: isOnGoing
         })
       }
       console.log(warResults)

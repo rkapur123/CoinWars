@@ -37,7 +37,7 @@ class WarStage extends Component {
     // get coinwar instance
     this.coinwarsInstance = await this.props.coinWarContract.at(coinWarAddress)
 
-    this.coin1 = await this.erc20Contract.at(coin1Address)
+    this.coin1 = await this.props.erc20Contract.at(coin1Address)
     const coin1Event = await this.coin1.Transfer({}, { fromBlock, toBlock })
     coin1Event.watch(async (error, results) => {
       const coinWarBalance =  await this.coin1.balanceOf(coinWarAddress)
@@ -50,7 +50,7 @@ class WarStage extends Component {
 
     this.coins.set(coin1Address, this.coin1)
 
-    this.coin2 = await this.erc20Contract.at(coin2Address)
+    this.coin2 = await this.props.erc20Contract.at(coin2Address)
     const coin2Event = await this.coin2.Transfer({}, { fromBlock, toBlock })
     coin2Event.watch(async (error, results) => {
       const coinWarBalance = await this.coin2.balanceOf(coinWarAddress)
