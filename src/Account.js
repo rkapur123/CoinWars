@@ -6,23 +6,23 @@ export default class Account extends Component {
 
   state = {
     results: [],
-    withdrawn: false
+    withdrawn: false,
+    warClosed: false
   }
 
   componentWillMount = () => {
     this.setState({ loading: true })
   }
 
-  componentDidMount = async () => {
+  loadWars = async () => {
     const { account } = this.props
     const warResults = []
-    const wfInstance = await this.props.warFactoryContract.deployed()
-    const warsCount = await wfInstance.getWarsCount()
+    const warsCount = await this.wfInstance.getWarsCount()
     const wCount = warsCount.toNumber()
     if (wCount > 0) {
       for (let j = 1; j <= wCount; j++) {
-        const results = await wfInstance.getResultsAtIndexForUser(j - 1, account)
-        const isOnGoing = await wfInstance.isWarClosedAtIndex(j - 1)
+        const results = await this.wfInstance.getResultsAtIndexForUser(j - 1, account)
+        const isOnGoing = await this.wfInstance.isWarClosedAtIndex(j - 1)
         if (!isOnGoing) {
           const tokens = results[0].split(' ')
           const _winner = results[1].toNumber()
@@ -47,11 +47,20 @@ export default class Account extends Component {
           })
         }
       }
-      console.log(warResults)
       this.setState({ results: warResults, loading: false })
     }
   }
 
+  componentDidMount = async () => {
+    this.wfInstance = await this.props.warFactoryContract.deployed()
+    const warClosedEvent = await this.wfInstance.WarClosed()
+    warClosedEvent.watch((error, results) => {
+      this.setState({ warClosed: true })
+    })
+    this.loadWars(this.wfInstance)
+  }
+
+  // WE NEED COINWAR ADDRESS FOR THIS FUNCTION TO WORK
   withdraw = async () => {
     const { account } = this.props
     if (this.coinwarsInstance) {
@@ -69,6 +78,18 @@ export default class Account extends Component {
           <p>Your Account: {this.props.account}</p>
           <div style={{ padding: 50 }}>
             <div>Loading Account Details ...</div>
+          </div>
+        </div>
+      )
+    }
+
+    if (this.state.results.length === 0) {
+      return (
+        <div className="intro">
+          <h1>Accounts Page</h1>
+          <p>Your Account: {this.props.account}</p>
+          <div style={{ padding: 50 }}>
+            <div>No war has been closed as yet ...</div>
           </div>
         </div>
       )

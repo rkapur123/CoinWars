@@ -55,6 +55,7 @@ export default (WrappedComponent) => {
       }
 
       const newProps = Object.assign({}, this.props, {
+        web3: this.web3,
         account,
         currentBlock,
         provider: this.web3Provider,

@@ -18,10 +18,10 @@ class WarStage extends Component {
     message: false,
     coinWarBalance: 0,
     block: 0,
-    coin1TokenBalance: 0,
-    coin2TokenBalance: 0,
-    withdrawn: false,
-    warClosed: false,
+    netCoin1Balance: 0,
+    netCoin2Balance: 0,
+    netCoin1Bet: 0,
+    netCoin2Bet: 0,
     coin1_usd: 0,
     coin2_usd: 0,
     coin1Image: null,
@@ -32,41 +32,59 @@ class WarStage extends Component {
 
   async componentDidMount() {
     this.coins = new Map()
-    const { coin1Address, coin2Address, coinWarAddress, fromBlock, toBlock } = this.props.opponents
+    const { coin1Address, coin2Address,
+      coinWarAddress, fromBlock, toBlock } = this.props.opponents
 
     // get coinwar instance
     this.coinwarsInstance = await this.props.coinWarContract.at(coinWarAddress)
 
+    // get erc20 coins instances
     this.coin1 = await this.props.erc20Contract.at(coin1Address)
-    const coin1Event = await this.coin1.Transfer({}, { fromBlock, toBlock })
-    coin1Event.watch(async (error, results) => {
-      console.log('COIN1_EVENT', results)
-      const coinWarBalance =  await this.coin1.balanceOf(coinWarAddress)
-      const myBalance = await this.coin1.balanceOf(this.props.account)
-      this.setState({ coin1TokenBalance: myBalance.toNumber() })
-      this.props.reload(coinWarBalance)
-    })
-
     this.coins.set(coin1Address, this.coin1)
-
     this.coin2 = await this.props.erc20Contract.at(coin2Address)
-    const coin2Event = await this.coin2.Transfer({}, { fromBlock, toBlock })
-    coin2Event.watch(async (error, results) => {
-      console.log('COIN2_EVENT', results)
-      const coinWarBalance = await this.coin2.balanceOf(coinWarAddress)
-      const myBalance = await this.coin2.balanceOf(this.props.account)
-      this.setState({ coin2TokenBalance: myBalance.toNumber() })
-      this.props.reload(coinWarBalance)
-    })
-
     this.coins.set(coin2Address, this.coin2)
 
-    // war closed event
-    const wfInstance = await this.props.warFactoryContract.deployed()
-    const warClosedEvent = await wfInstance.WarClosed()
-    warClosedEvent.watch((error, results) => {
-      this.setState({ warClosed: true })
+    // get coin1 balance
+    const c1_balance = await this.coin1.balanceOf(this.props.account)
+
+    // get coin2 balance
+    const c2_balance = await this.coin2.balanceOf(this.props.account)
+
+    this.setState({
+      netCoin1Balance: c1_balance.toNumber(),
+      netCoin2Balance: c2_balance.toNumber()
     })
+
+    const coin1Event = await this.coin1.Transfer({}, { fromBlock, toBlock })
+    coin1Event.watch(async (error, results) => {
+      console.log('COIN1_EVENT', results.args._value.toNumber())
+      const coinWarBalance = await this.coin1.balanceOf(coinWarAddress)
+      const myBalance = await this.coin1.balanceOf(this.props.account)
+      this.setState({
+        netCoin1Balance: myBalance.toNumber(),
+        netCoin1Bet: coinWarBalance.toNumber()
+      })
+      this.props.reload(coinWarBalance)
+    })
+
+    const coin2Event = await this.coin2.Transfer({}, { fromBlock, toBlock })
+    coin2Event.watch(async (error, results) => {
+      console.log('COIN2_EVENT', results.args._value.toNumber())
+      const coinWarBalance = await this.coin2.balanceOf(coinWarAddress)
+      const myBalance = await this.coin2.balanceOf(this.props.account)
+      this.setState({
+        netCoin2Balance: myBalance.toNumber(),
+        netCoin2Bet: coinWarBalance.toNumber()
+      })
+      this.props.reload(coinWarBalance)
+    })
+
+    // war closed event
+    // const wfInstance = await this.props.warFactoryContract.deployed()
+    // const warClosedEvent = await wfInstance.WarClosed()
+    // warClosedEvent.watch((error, results) => {
+    //   this.setState({ warClosed: true })
+    // })
 
     // get latest block event
     const blockTracker = new BlockTracker({ provider: this.props.provider })
@@ -76,7 +94,7 @@ class WarStage extends Component {
     })
     blockTracker.start()
 
-    // get price
+    // get price from coinmarketcap after every 3 seconds
     this.props.setTimeout(this.getCoinsPrice, 3000)
   }
 
@@ -142,28 +160,6 @@ class WarStage extends Component {
     this.refs.amount.value = 300
   }
 
-  withdraw = async () => {
-    const { account } = this.props
-    if (this.coinwarsInstance) {
-      await this.coinwarsInstance.withdraw({ from: account, gas: 5000000 })
-      this.setState({ withdrawn: true })
-    }
-  }
-
-  close = () => {
-    if (!this.state.warClosed) {
-      return (
-        <div><em>This was has ended ! You will be allowed to withdraw funds shortly.</em></div>
-      )
-    } else {
-      if (!this.state.withdrawn) {
-        return (<Button bsStyle="success" bsSize="large" onClick={this.withdraw.bind(this)}>Withdraw</Button>)
-      } else {
-        return (<div><em>Money has been withdrawn ! Please don't forget to participate in the next game</em></div>)
-      }
-    }
-  }
-
   bidForm = () => {
     const { coin1, coin2, coin1Address, coin2Address } = this.props.opponents
     const { coin, bid } = this.state
@@ -201,18 +197,22 @@ class WarStage extends Component {
 
   placeBid = () => {
     const { toBlock, fromBlock } = this.props.opponents
-    const { block } = this.state
-    if (block >= parseInt(fromBlock, 10) && block <= parseInt(toBlock, 10)) {
+    const { currentBlock } = this.props
+
+    const _fromBlock = parseInt(fromBlock, 10)
+    const _toBlock = parseInt(toBlock, 10)
+
+    if (currentBlock >= _fromBlock && currentBlock <= _toBlock) {
       return this.bidForm()
-    } else if (block < parseInt(fromBlock, 10)) {
+    } else if (currentBlock < _fromBlock) {
       return (
         <div>Currently this war is not running</div>
       )
-    } else if (block > parseInt(toBlock, 10)) {
+    } else if (currentBlock > _toBlock) {
       return (
         <div>
           <div style={{ paddingBottom: 20 }}>Game Over</div>
-          {this.close()}
+          <div><em>This war is over ! You will be allowed to withdraw funds shortly. Please check your accounts page</em></div>
         </div>
       )
     }
@@ -254,6 +254,7 @@ class WarStage extends Component {
 
   // the price of bet amount (is usd)
   getNumberOfTokensBetPrice = (coin, bet_amount, price_usd) => {
+    if (!bet_amount) bet_amount = 0
     let _coin = TokenDecimals[coin.toLowerCase()]
     let x = new Big(price_usd)
     let y = x
@@ -264,6 +265,7 @@ class WarStage extends Component {
 
   // get number of tokens bet (amount)
   getNumberOfTokensBet = (coin, bet_amount) => {
+    if (!bet_amount) bet_amount = 0
     let _coin = TokenDecimals[coin.toLowerCase()]
     let x = new Big(bet_amount)
     let y = x
@@ -283,21 +285,19 @@ class WarStage extends Component {
   }
 
   render() {
-    const { coin1, coin2,
-      toBlock, coin1Balance,
-      coin2Balance } = this.props.opponents
-    const { coin1TokenBalance,
-      coin2TokenBalance, coin1_usd,
+    const { coin1, coin2, toBlock } = this.props.opponents
+    const { netCoin1Balance, netCoin2Balance,
+      netCoin1Bet, netCoin2Bet, coin1_usd,
       coin2_usd, startTime, block } = this.state
 
-    const coin1_balance = this.getNumberOfTokensBet(coin1, coin1TokenBalance)
-    const coin2_balance = this.getNumberOfTokensBet(coin2, coin2TokenBalance)
+    const coin1_balance = this.getNumberOfTokensBet(coin1, netCoin1Balance)
+    const coin2_balance = this.getNumberOfTokensBet(coin2, netCoin2Balance)
 
-    const coin1_bet_amount = this.getNumberOfTokensBet(coin1, coin1Balance)
-    const coin2_bet_amount = this.getNumberOfTokensBet(coin2, coin2Balance)
+    const coin1_bet_amount = this.getNumberOfTokensBet(coin1, netCoin1Bet)
+    const coin2_bet_amount = this.getNumberOfTokensBet(coin2, netCoin2Bet)
 
-    const coin1_bet_price = this.getNumberOfTokensBetPrice(coin1, coin1Balance, coin1_usd)
-    const coin2_bet_price = this.getNumberOfTokensBetPrice(coin2, coin2Balance, coin2_usd)
+    const coin1_bet_price = this.getNumberOfTokensBetPrice(coin1, netCoin1Bet, coin1_usd)
+    const coin2_bet_price = this.getNumberOfTokensBetPrice(coin2, netCoin2Bet, coin2_usd)
 
     const coin1Progress = parseFloat((coin1_bet_price / MAX_PROGRESS_PRICE) * 100)
     const coin2Progress = parseFloat((coin2_bet_price / MAX_PROGRESS_PRICE) * 100)
