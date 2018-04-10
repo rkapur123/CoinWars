@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import { Alert } from 'react-bootstrap'
 import WarStage from './WarStage'
+import Big from 'big.js'
 
 export default class CoinItem extends Component {
 
@@ -18,17 +18,17 @@ export default class CoinItem extends Component {
     let wCount = warsCount.toNumber()
     if (wCount > 0) {
       for (let j = 1; j <= wCount; j++) {
-        const wars = await wfInstance.getWarAtIndex(j - 1)
+        const wars = await wfInstance.getWarAtIndex(1)
         const coin1 = wars[0].split(' ')[0]
         const coin2 = wars[0].split(' ')[1]
         const coin1Address = wars[1].toString(10)
         const coin2Address = wars[2].toString(10)
-        const coin1Balance = wars[3]
-        const coin2Balance = wars[4]
-        console.log(coin1Balance, coin2Balance)
+        const coin1Balance = wars[3].toNumber()
+        const coin2Balance = wars[4].toNumber()
         const fromBlock = wars[5].toString(10)
         const toBlock = wars[6].toString(10)
         const coinWarAddress = wars[7].toString(10)
+
         warsList.push({
           coin1,
           coin2,

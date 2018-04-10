@@ -40,11 +40,10 @@ class WarStage extends Component {
     this.coin1 = await this.props.erc20Contract.at(coin1Address)
     const coin1Event = await this.coin1.Transfer({}, { fromBlock, toBlock })
     coin1Event.watch(async (error, results) => {
+      console.log('COIN1_EVENT', results)
       const coinWarBalance =  await this.coin1.balanceOf(coinWarAddress)
       const myBalance = await this.coin1.balanceOf(this.props.account)
-      if (this.props.getBalanceCoin1) {
-        this.setState({ coin1TokenBalance: myBalance.toNumber() })
-      }
+      this.setState({ coin1TokenBalance: myBalance.toNumber() })
       this.props.reload(coinWarBalance)
     })
 
@@ -53,11 +52,10 @@ class WarStage extends Component {
     this.coin2 = await this.props.erc20Contract.at(coin2Address)
     const coin2Event = await this.coin2.Transfer({}, { fromBlock, toBlock })
     coin2Event.watch(async (error, results) => {
+      console.log('COIN2_EVENT', results)
       const coinWarBalance = await this.coin2.balanceOf(coinWarAddress)
       const myBalance = await this.coin2.balanceOf(this.props.account)
-      if (this.props.getBalanceCoin2) {
-        this.setState({ coin2TokenBalance: myBalance.toNumber() })
-      }
+      this.setState({ coin2TokenBalance: myBalance.toNumber() })
       this.props.reload(coinWarBalance)
     })
 
