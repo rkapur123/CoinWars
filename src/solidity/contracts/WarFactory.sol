@@ -51,7 +51,7 @@ contract WarFactory {
     returns (string,address, address, uint, uint, uint, uint, address)
   {
     CoinWar coinWar = CoinWar(allWars[index].coinWar);
-    var (balance1, balance2) = coinWar.getOpponentsBalance();
+    var (balance1, balance2) = coinWar.getUserBalance(msg.sender);
     return (allWars[index].opponents, address(coinWar.token1()), address(coinWar.token2()), balance1, balance2, coinWar.fromBlock(), coinWar.toBlock(), address(coinWar));
   }
 

@@ -157,12 +157,12 @@ contract CoinWar {
 
   /* Getters */
 
-  function getOpponentsBalance()
+  function getUserBalance(address user)
     public
     view
     returns (uint, uint)
   {
-    return (token1.balanceOf(address(this)), token2.balanceOf(address(this)));
+    return (token1.balanceOf(user), token2.balanceOf(user));
   }
 
   function getUserBet(address user)
@@ -170,9 +170,15 @@ contract CoinWar {
     view
     returns (uint, uint, uint, uint, uint)
   {
-    if (address(winner.tokenContract) == address(token1))
+    if (address(winner.tokenContract) == address(token1)) {
       return (1, winner.tokenMapping[user],looser.tokenMapping[user], winner.totalBet, looser.totalBet);
-    return (2, winner.tokenMapping[user],looser.tokenMapping[user], winner.totalBet, looser.totalBet);
+    } else if (address(winner.tokenContract) == address(token2)) {
+      return (2, winner.tokenMapping[user],looser.tokenMapping[user], winner.totalBet, looser.totalBet);
+    } else {
+      return (0, 0, 0, 0, 0);
+    }
+
+
   }
 
   function getTeamBet(address team)
