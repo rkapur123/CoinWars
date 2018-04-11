@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import WarStage from './WarStage'
-import Big from 'big.js'
 
 export default class CoinItem extends Component {
 
@@ -21,7 +20,7 @@ export default class CoinItem extends Component {
       for (let j = 1; j <= wCount; j++) {
         const wars = await wfInstance.getWarAtIndex(j - 1)
         const isOnGoing = await wfInstance.isWarClosedAtIndex(j - 1)
-        if (isOnGoing) {
+        if (isOnGoing[0]) {
           const coin1 = wars[0].split(' ')[0]
           const coin2 = wars[0].split(' ')[1]
           const coin1Address = wars[1].toString(10)

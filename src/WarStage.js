@@ -15,6 +15,7 @@ class WarStage extends Component {
   state = {
     coin: false,
     bid: 0,
+    showBid: 0,
     message: false,
     coinWarBalance: 0,
     block: 0,
@@ -140,23 +141,18 @@ class WarStage extends Component {
   async handleSubmit(e) {
     e.preventDefault()
     const { coinWarAddress } = this.props.opponents
-    const { coin, coinSelected } = this.state
+    const { coin, coinSelected, showBid } = this.state
     const _coin = this.coins.get(coin)
     if (_coin) {
-      const _bid = new Big(parseFloat(this.state.bid))
-      console.log(this.getTokenDecimals(coinSelected))
+      const _bid = new Big(parseFloat(showBid))
       const _amount = _bid
-        .toFixed(2)
-      console.log(_amount)
-      // const _formattedBid = _bid
-      //   .toFixed(this.getDecimals(coinSelected))
-      //   .times(this.getTokenDecimals(coinSelected))
-      //
-      // console.log(parseFloat(this.state.bid))
+        .times(this.getMultFactorForCoin(coinSelected))
+        .toFixed(this.getDecimalsInCoin(coinSelected))
+      console.log(`Bet ${_amount} placed for ${coinSelected}`)
 
-      // const bet = await coin.transfer(coinWarAddress, this.state.bid,
-      //   { from: `${this.props.account}`, gas: 5000000 })
-      // console.log('Transfer initialiated', bet)
+      const bet = await _coin.transfer(coinWarAddress, _amount,
+        { from: `${this.props.account}`, gas: 5000000 })
+      console.log('Transfer initialiated', bet)
     } else {
       console.log('no coin found ...')
     }
@@ -166,11 +162,20 @@ class WarStage extends Component {
     this.refs.amount.value = 300
   }
 
+  formatted = (bid, coinSelected) => {
+    if (!bid) bid = 0
+    const _bid = new Big(parseFloat(bid))
+    const _amount = _bid
+      .div(this.getMultFactorForCoin(coinSelected))
+      .toFixed(this.getDecimalsInCoin(coinSelected))
+    return _amount
+  }
+
   bidForm = () => {
     const { coin1, coin2, coin1Address, coin2Address } = this.props.opponents
-    const { coin, bid } = this.state
+    const { coin, bid, showBid, coinSelected } = this.state
     return (
-      <form onSubmit={this.handleSubmit.bind(this)}>
+      <form style={{ marginTop: -50 }} onSubmit={this.handleSubmit.bind(this)}>
         <div className="form-group">
           <ButtonGroup>
             <Button active={coin === coin1Address ? true : false}
@@ -189,8 +194,21 @@ class WarStage extends Component {
         <div className="form-group">
           <input type="number" className="form-control" name="amount"
             value={bid}
-            ref="amount"
-            onChange={(e) => this.setState({ bid: e.target.value })}
+            onChange={(e) => {
+              this.setState({
+                bid: e.target.value,
+                showBid: this.formatted(e.target.value, coinSelected)
+              })
+            }}
+            disabled={!coin}
+            placeholder="bet amount e.g. 100"
+            required />
+        </div>
+        <div className="form-group">
+          <input type="number" className="form-control" name="final_amount"
+            ref="show_amount"
+            value={showBid}
+            disabled
             placeholder="bet amount e.g. 100"
             required />
         </div>
@@ -203,18 +221,18 @@ class WarStage extends Component {
 
   placeBid = () => {
     const { toBlock, fromBlock } = this.props.opponents
-    const { currentBlock } = this.props
+    const { block } = this.state
 
     const _fromBlock = parseInt(fromBlock, 10)
     const _toBlock = parseInt(toBlock, 10)
 
-    if (currentBlock >= _fromBlock && currentBlock <= _toBlock) {
+    if (block >= _fromBlock && block <= _toBlock) {
       return this.bidForm()
-    } else if (currentBlock < _fromBlock) {
+    } else if (block < _fromBlock) {
       return (
         <div>Currently this war is not running</div>
       )
-    } else if (currentBlock > _toBlock) {
+    } else if (block > _toBlock) {
       return (
         <div>
           <div style={{ paddingBottom: 20 }}>Game Over</div>
@@ -289,15 +307,13 @@ class WarStage extends Component {
     return 18
   }
 
-  // getNumberOfTokens2 = (coin, bet_amount) => {
-  //   if (!bet_amount) bet_amount = 0
-  //   let _coin = TokenDecimals[coin.toLowerCase()]
-  //   let x = new Big(bet_amount)
-  //   let y = x
-  //     .times(this.getTokenDecimals(_coin))
-  //     .toFixed(this.getDecimals(_coin))
-  //   return y
-  // }
+  getMultFactorForCoin = coin => {
+    let factor = 1
+    for (let i = 0; i < this.getDecimalsInCoin(coin); i++) {
+      factor = factor * 10;
+    }
+    return factor
+  }
 
   getTime = async (currentBlock) => {
     const { fromBlock } = this.props.opponents

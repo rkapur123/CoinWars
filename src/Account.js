@@ -4,10 +4,13 @@ import Big from 'big.js'
 
 export default class Account extends Component {
 
-  state = {
-    results: [],
-    withdrawn: false,
-    warClosed: false
+  constructor() {
+    super()
+    this.state = {
+      results: [],
+      withdrawn: false,
+      warClosed: false
+    }
   }
 
   componentWillMount = () => {
@@ -23,7 +26,7 @@ export default class Account extends Component {
       for (let j = 1; j <= wCount; j++) {
         const results = await this.wfInstance.getResultsAtIndexForUser(j - 1, account)
         const isOnGoing = await this.wfInstance.isWarClosedAtIndex(j - 1)
-        if (!isOnGoing) {
+        if (!isOnGoing[0]) {
           const tokens = results[0].split(' ')
           const _winner = results[1].toNumber()
           let winner, looser
@@ -43,7 +46,8 @@ export default class Account extends Component {
             winnerTokenAmount: new Big(results[2]),
             looserTokenAmount: new Big(results[3]),
             winnerTokenTotalBet: new Big(results[4]),
-            looserTokenTotalBet: new Big(results[5])
+            looserTokenTotalBet: new Big(results[5]),
+            coinWarAddress: isOnGoing[1]
           })
         }
       }
@@ -61,11 +65,15 @@ export default class Account extends Component {
   }
 
   // WE NEED COINWAR ADDRESS FOR THIS FUNCTION TO WORK
-  withdraw = async () => {
-    const { account } = this.props
-    if (this.coinwarsInstance) {
-      await this.coinwarsInstance.withdraw({ from: account, gas: 5000000 })
+  withdraw = async (coinWarAddress) => {
+    const { account, coinWarContract } = this.props
+    try {
+      const coinWarInstance = await coinWarContract.at(coinWarAddress)
+      const receipt = await coinWarInstance.withdraw({ from: account, gas: 5000000 })
+      console.log(receipt)
       this.setState({ withdrawn: true })
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -97,7 +105,8 @@ export default class Account extends Component {
 
     const warsClosed = this.state.results.map((item, index) => {
       const { token1, token2, winner, looser,
-        winnerTokenAmount, looserTokenAmount, winnerTokenTotalBet, looserTokenTotalBet } = item
+        winnerTokenAmount, looserTokenAmount,
+        winnerTokenTotalBet, looserTokenTotalBet, coinWarAddress } = item
 
       let arith = 0
       const _winnerTokenAmt = winnerTokenAmount.toFixed(10)
@@ -121,7 +130,7 @@ export default class Account extends Component {
           </td>
           <td>{winner}</td>
           <td>{arith} {(_winnerTokenAmt > 0 && (withdrawn !== true)) && (
-              <Button bsStyle="success" bsSize="large" onClick={this.withdraw.bind(this)}>Withdraw</Button>
+              <Button bsStyle="success" bsSize="large" onClick={this.withdraw.bind(this, coinWarAddress)}>Withdraw</Button>
             )}</td>
         </tr>
       )
