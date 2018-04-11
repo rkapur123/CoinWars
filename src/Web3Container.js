@@ -15,7 +15,8 @@ export default (WrappedComponent) => {
       this.state = {
         account: false,
         currentBlock: 0,
-        loading: false
+        loading: false,
+        error: false
       }
       this.loadWeb3()
     }
@@ -37,15 +38,25 @@ export default (WrappedComponent) => {
       this.erc20.setProvider(this.web3Provider)
     }
 
-    componentDidMount = () => {
-      this.web3.eth.getCoinbase(async (err, account) => {
+    componentDidMount = async () => {
+      try {
+        const account = await this.web3.eth.getCoinbase()
         const currentBlock = await this.web3.eth.getBlock('latest')
         this.setState({ account, currentBlock: currentBlock.number })
-      })
+      } catch (error) {
+        this.setState({ error: `Please ensure that you are connected to your network` })
+      }
     }
 
     render() {
-      const { account, currentBlock } = this.state
+      const { account, currentBlock, error } = this.state
+
+      if (error) {
+        return (
+          <div style={{ padding: 60, color: 'white' }}>{error}</div>
+        )
+      }
+
       if (!account) {
         return (
           <div style={{ padding: '80px 50px' }}>

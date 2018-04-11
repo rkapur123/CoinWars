@@ -4,7 +4,6 @@ const ERC20 = require('../solidity/build/contracts/ERC20.json')
 const WarFactory = require('../solidity/build/contracts/WarFactory.json')
 const HDWalletProvider = require("truffle-hdwallet-provider")
 const CoinMarketCap = require('coinmarketcap-api')
-const WarList = require('./warlist')
 const TokenDecimals = require('./token_decimals')
 
 const accessToken = 'vXJ9MlTj969EuStvmyPN'
@@ -67,12 +66,12 @@ const app = {
 
       const warIndex = process.argv[2]
       if (warIndex) {
-        let wars = WarList.wars
-        const { coin1_address, coin2_address,
-             from_block, to_block } = wars[warIndex]
-
         const warfactory = await this.getContract(WarFactory)
         const war = await warfactory.getWarAtIndex(warIndex)
+        const coin1_address = war[1]
+        const coin2_address = war[2]
+        const from_block = war[5]
+        const to_block = war[6]
         const coinWarAddress = war[7]
 
         const coin1 = await tokenContract.at(coin1_address)

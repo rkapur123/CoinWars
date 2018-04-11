@@ -24,6 +24,7 @@ class WarStage extends Component {
     netCoin2Bet: 0,
     coin1_usd: 0,
     coin2_usd: 0,
+    coinSelected: false,
     coin1Image: null,
     coin2Image: null,
     overtake: 0,
@@ -78,13 +79,6 @@ class WarStage extends Component {
       })
       this.props.reload(coinWarBalance)
     })
-
-    // war closed event
-    // const wfInstance = await this.props.warFactoryContract.deployed()
-    // const warClosedEvent = await wfInstance.WarClosed()
-    // warClosedEvent.watch((error, results) => {
-    //   this.setState({ warClosed: true })
-    // })
 
     // get latest block event
     const blockTracker = new BlockTracker({ provider: this.props.provider })
@@ -146,11 +140,23 @@ class WarStage extends Component {
   async handleSubmit(e) {
     e.preventDefault()
     const { coinWarAddress } = this.props.opponents
-    const coin = this.coins.get(this.state.coin)
-    if (coin) {
-      const bet = await coin.transfer(coinWarAddress, this.state.bid,
-        { from: `${this.props.account}`, gas: 5000000 })
-      console.log('Transfer initialiated', bet)
+    const { coin, coinSelected } = this.state
+    const _coin = this.coins.get(coin)
+    if (_coin) {
+      const _bid = new Big(parseFloat(this.state.bid))
+      console.log(this.getTokenDecimals(coinSelected))
+      const _amount = _bid
+        .toFixed(2)
+      console.log(_amount)
+      // const _formattedBid = _bid
+      //   .toFixed(this.getDecimals(coinSelected))
+      //   .times(this.getTokenDecimals(coinSelected))
+      //
+      // console.log(parseFloat(this.state.bid))
+
+      // const bet = await coin.transfer(coinWarAddress, this.state.bid,
+      //   { from: `${this.props.account}`, gas: 5000000 })
+      // console.log('Transfer initialiated', bet)
     } else {
       console.log('no coin found ...')
     }
@@ -168,9 +174,9 @@ class WarStage extends Component {
         <div className="form-group">
           <ButtonGroup>
             <Button active={coin === coin1Address ? true : false}
-              onClick={() => this.setState({ coin: coin1Address })}>{coin1}</Button>
+              onClick={() => this.setState({ coin: coin1Address, coinSelected: coin1 })}>{coin1}</Button>
             <Button active={coin === coin2Address ? true : false}
-              onClick={() => this.setState({ coin: coin2Address })}>{coin2}</Button>
+              onClick={() => this.setState({ coin: coin2Address, coinSelected: coin2 })}>{coin2}</Button>
           </ButtonGroup>
         </div>
         <input type="hidden" name="coin" value={coin} />
@@ -189,7 +195,7 @@ class WarStage extends Component {
             required />
         </div>
         <div className="form-group">
-          <button type="submit" className="btn btn-block btn-primary">Submit</button>
+          <button type="submit" disabled={!coin} className="btn btn-block btn-primary">Submit</button>
         </div>
       </form>
     )
@@ -273,6 +279,26 @@ class WarStage extends Component {
     return y
   }
 
+  // get decimal value for a coin
+  getDecimalsInCoin = (coin) => {
+    if (!coin) return 18
+    let _coin = TokenDecimals[coin.toLowerCase()]
+    if (_coin) {
+      return _coin['decimals']
+    }
+    return 18
+  }
+
+  // getNumberOfTokens2 = (coin, bet_amount) => {
+  //   if (!bet_amount) bet_amount = 0
+  //   let _coin = TokenDecimals[coin.toLowerCase()]
+  //   let x = new Big(bet_amount)
+  //   let y = x
+  //     .times(this.getTokenDecimals(_coin))
+  //     .toFixed(this.getDecimals(_coin))
+  //   return y
+  // }
+
   getTime = async (currentBlock) => {
     const { fromBlock } = this.props.opponents
     this.getBlockAverageTime()
@@ -331,11 +357,11 @@ class WarStage extends Component {
           <Col xs={6} md={6}>
             <div className="progress_wrap">
               <span>${coin1_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}/<span className="balance">{coin1_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin1}</span>
-              <ProgressBar striped active now={coin1Progress} label={`60%`} srOnly />
+              <ProgressBar striped bsStyle="info" active now={coin1Progress} label={`60%`} srOnly />
             </div>
             <div className="progress_wrap bottom">
               <span>${coin2_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}/<span className="balance">{coin2_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin2}</span>
-              <ProgressBar striped active now={coin2Progress} label={`${coin2Progress}%`} srOnly />
+              <ProgressBar striped bsStyle="success" active now={coin2Progress} label={`${coin2Progress}%`} srOnly />
             </div>
           </Col>
           <Col xs={4} md={4}>

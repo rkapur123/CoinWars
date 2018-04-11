@@ -1,10 +1,5 @@
 pragma solidity ^0.4.18;
-
-
 import { CoinWar } from "./CoinWar.sol";
-
-
-
 
 contract WarFactory {
 
@@ -55,8 +50,9 @@ contract WarFactory {
     return (allWars[index].opponents, address(coinWar.token1()), address(coinWar.token2()), balance1, balance2, coinWar.fromBlock(), coinWar.toBlock(), address(coinWar));
   }
 
-  function isWarClosedAtIndex(uint index) public view returns (bool) {
-    return allWars[index].isOngoing;
+  function isWarClosedAtIndex(uint index) public view returns (bool, address) {
+    CoinWar coinWar = CoinWar(allWars[index].coinWar);
+    return (allWars[index].isOngoing, address(coinWar));
   }
 
   function getResultsAtIndexForUser(uint index, address user)
