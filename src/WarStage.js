@@ -379,14 +379,14 @@ class WarStage extends Component {
             <div className="progress_wrap">
               <div style={{ textAlign: 'left' }}>Balance: <Label bsStyle="info">{coin1_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {coin1}</Label></div>
               <div style={{ marginTop: 10, textAlign: 'right' }}>
-                <span>{coin1} <span className="balance">${coin1_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span><span style={{ marginLeft: 8, marginRight: 8 }}>{coin1_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span></span>
+                <span><span style={{ marginLeft: 8, marginRight: 8 }}>{coin1_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin1} <span className="balance">${coin1_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span></span>
                 <ProgressBar striped bsStyle="info" active now={coin1Progress} label={`${coin1Progress}%`} />
               </div>
             </div>
             <div className="progress_wrap bottom">
               <div style={{ textAlign: 'left' }}>Balance: <Label bsStyle="success">{coin2_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {coin2}</Label></div>
               <div style={{ marginTop: 10, textAlign: 'right' }}>
-                <span>{coin2} <span className="balance">${coin2_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span><span style={{ marginLeft: 8, marginRight: 8 }}>{coin2_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span></span>
+                <span><span style={{ marginLeft: 8, marginRight: 8 }}>{coin2_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin2} <span className="balance">${coin2_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span></span>
                 <ProgressBar striped bsStyle="success" active now={coin2Progress} label={`${coin2Progress}%`} />
               </div>
             </div>
