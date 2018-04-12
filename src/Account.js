@@ -146,19 +146,23 @@ export default class Account extends Component {
           .times(looserTokenTotalBet)
       }
 
+      const _winnerTokenAmount = winnerTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
+      const _looserTokenAmount = looserTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
+
       return (
-        <tr key={index}>
+        (winnerTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2') !== "0.0") && (looserTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2') !== "0.0") &&
+        (<tr key={index}>
           <td>{index + 1}</td>
           <td>{`${token1} vs ${token2}`}</td>
           <td>
-            <Label bsStyle="primary">{winnerTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</Label> {winner},
-              <Label style={{ marginLeft: 10 }} bsStyle="success">{looserTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</Label> {looser}
+            <Label bsStyle="primary">{_winnerTokenAmount}</Label> {winner},
+              <Label style={{ marginLeft: 10 }} bsStyle="success">{_looserTokenAmount}</Label> {looser}
           </td>
           <td>{winner}</td>
-          <td>{arith.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} , <span style={{ color: '#8c2828' }}>-{looserTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {(winnerTokenAmount > 0 && (withdrawn !== true)) && (
+          <td>{arith.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} , <span style={{ color: '#8c2828' }}>-{_looserTokenAmount}</span> {(winnerTokenAmount > 0 && (withdrawn !== true)) && (
               <Button bsStyle="success" bsSize="large" onClick={this.withdraw.bind(this, coinWarAddress)}>Withdraw</Button>
             )}</td>
-        </tr>
+        </tr>)
       )
     })
 
