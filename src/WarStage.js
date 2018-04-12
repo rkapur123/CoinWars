@@ -147,6 +147,7 @@ class WarStage extends Component {
       const _bid = new Big(parseFloat(showBid))
       const _amount = _bid
         .times(this.getMultFactorForCoin(coinSelected))
+        .times(this.getMultFactorForCoin(coinSelected))
         .toFixed(this.getDecimalsInCoin(coinSelected))
       console.log(`Bet ${_amount} placed for ${coinSelected}`)
 
@@ -283,6 +284,7 @@ class WarStage extends Component {
     let x = new Big(price_usd)
     let y = x
       .times(bet_amount)
+      .div(this.getMultFactorForCoin(coin))
       .toFixed(this.getDecimals(_coin))
     return y
   }
@@ -293,6 +295,7 @@ class WarStage extends Component {
     let _coin = TokenDecimals[coin.toLowerCase()]
     let x = new Big(bet_amount)
     let y = x
+      .div(this.getMultFactorForCoin(coin))
       .toFixed(this.getDecimals(_coin))
     return y
   }
