@@ -352,8 +352,6 @@ class WarStage extends Component {
     return (
       <div>
         <div className="time_notif">{startTime} seconds / {block}# {toBlock}</div>
-        <div>Balance {coin1}: <Label bsStyle="info">{coin1_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</Label> tokens</div>
-        <div>Balance {coin2}: <Label bsStyle="success">{coin2_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</Label> tokens</div>
         <Row className="show-grid">
           <Col xs={2} md={2}>
             <div className="coin">
@@ -377,12 +375,18 @@ class WarStage extends Component {
           </Col>
           <Col xs={6} md={6}>
             <div className="progress_wrap">
-              <span>${coin1_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}/<span className="balance">{coin1_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin1}</span>
-              <ProgressBar striped bsStyle="info" active now={coin1Progress} label={`60%`} srOnly />
+              <div style={{ textAlign: 'left' }}>Balance: <Label bsStyle="info">{coin1_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {coin1}</Label> tokens</div>
+              <div style={{ marginTop: 10, textAlign: 'right' }}>
+                <span>${coin1_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}/<span className="balance">{coin1_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin1}</span>
+                <ProgressBar striped bsStyle="info" active now={coin1Progress} label={`${coin1Progress}%`} />
+              </div>
             </div>
             <div className="progress_wrap bottom">
-              <span>${coin2_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}/<span className="balance">{coin2_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin2}</span>
-              <ProgressBar striped bsStyle="success" active now={coin2Progress} label={`${coin2Progress}%`} srOnly />
+              <div style={{ textAlign: 'left' }}>Balance: <Label bsStyle="success">{coin2_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {coin2}</Label> tokens</div>
+              <div style={{ marginTop: 10, textAlign: 'right' }}>
+                <span>${coin2_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}/<span className="balance">{coin2_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin2}</span>
+                <ProgressBar striped bsStyle="success" active now={coin2Progress} label={`${coin2Progress}%`} />
+              </div>
             </div>
           </Col>
           <Col xs={4} md={4}>

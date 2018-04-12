@@ -40,8 +40,6 @@ body {
 
 }
 
-
-
 .intro {
   border-radius: 25px;
   padding-top: 25px;
@@ -69,6 +67,7 @@ body {
   padding-top: 10px;
   padding-bottom: 30px;
 }
+
 .bounce {
   -moz-animation: bounce 1s infinite ease-in-out;
   -webkit-animation: bounce 1s infinite ease-in-out;
@@ -150,10 +149,8 @@ body {
 }
 
 .progress_wrap {
-  margin-top: 15px;
 }
 .progress_wrap.bottom {
-  margin-top: 60px;
 }
 
 .coin {
