@@ -149,9 +149,13 @@ export default class Account extends Component {
       const _winnerTokenAmount = winnerTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
       const _looserTokenAmount = looserTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
 
+      console.log(_winnerTokenAmount, _winnerTokenAmount)
+      if (_winnerTokenAmount === "0.0" && _looserTokenAmount === "0.0") {
+        return null
+      }
+
       return (
-        (winnerTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2') !== "0.0") && (looserTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2') !== "0.0") &&
-        (<tr key={index}>
+        <tr key={index}>
           <td>{index + 1}</td>
           <td>{`${token1} vs ${token2}`}</td>
           <td>
@@ -162,7 +166,7 @@ export default class Account extends Component {
           <td>{arith.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} , <span style={{ color: '#8c2828' }}>-{_looserTokenAmount}</span> {(winnerTokenAmount > 0 && (withdrawn !== true)) && (
               <Button bsStyle="success" bsSize="large" onClick={this.withdraw.bind(this, coinWarAddress)}>Withdraw</Button>
             )}</td>
-        </tr>)
+        </tr>
       )
     })
 
