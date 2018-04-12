@@ -145,18 +145,16 @@ export default class Account extends Component {
           .times(looserTokenTotalBet)
       }
 
-      console.log(arith.toString())
-
       return (
         <tr key={index}>
           <td>{index + 1}</td>
           <td>{`${token1} vs ${token2}`}</td>
           <td>
-            <Label bsStyle="primary">{winnerTokenAmount.toString()}</Label> {winner},
-              <Label style={{ marginLeft: 10 }} bsStyle="success">{looserTokenAmount.toString()}</Label> {looser}
+            <Label bsStyle="primary">{winnerTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</Label> {winner},
+              <Label style={{ marginLeft: 10 }} bsStyle="success">{looserTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</Label> {looser}
           </td>
           <td>{winner}</td>
-          <td>{arith.toString()} {(winnerTokenAmount > 0 && (withdrawn !== true)) && (
+          <td>{arith.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {(winnerTokenAmount > 0 && (withdrawn !== true)) && (
               <Button bsStyle="success" bsSize="large" onClick={this.withdraw.bind(this, coinWarAddress)}>Withdraw</Button>
             )}</td>
         </tr>
