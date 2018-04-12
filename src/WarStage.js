@@ -62,6 +62,7 @@ class WarStage extends Component {
       console.log('COIN1_EVENT', results.args._value.toNumber())
       const coinWarBalance = await this.coin1.balanceOf(coinWarAddress)
       const myBalance = await this.coin1.balanceOf(this.props.account)
+      console.log('CoinWar1', coinWarBalance.toNumber())
       this.setState({
         netCoin1Balance: myBalance.toNumber(),
         netCoin1Bet: coinWarBalance.toNumber()
@@ -74,6 +75,7 @@ class WarStage extends Component {
       console.log('COIN2_EVENT', results.args._value.toNumber())
       const coinWarBalance = await this.coin2.balanceOf(coinWarAddress)
       const myBalance = await this.coin2.balanceOf(this.props.account)
+      console.log('CoinWar2', coinWarBalance.toNumber())
       this.setState({
         netCoin2Balance: myBalance.toNumber(),
         netCoin2Bet: coinWarBalance.toNumber()

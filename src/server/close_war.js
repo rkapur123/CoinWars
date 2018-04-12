@@ -5,6 +5,7 @@ const WarFactory = require('../solidity/build/contracts/WarFactory.json')
 const HDWalletProvider = require("truffle-hdwallet-provider")
 const CoinMarketCap = require('coinmarketcap-api')
 const TokenDecimals = require('./token_decimals')
+const Big = require('big.js')
 
 const accessToken = 'vXJ9MlTj969EuStvmyPN'
 
@@ -40,15 +41,28 @@ const app = {
     return instance
   },
 
-  Promisify: function(inner) {
-    new Promise((resolve, reject) =>
-      inner((err, res) => {
-          if (err) {
-              reject(err);
-          } else {
-              resolve(res);
-          }
-      }))
+  getDecimalsInCoin: function(coin) {
+    if (!coin) return 18
+    let _coin = TokenDecimals[coin.toLowerCase()]
+    if (_coin) {
+      return _coin['decimals']
+    }
+    return 18
+  },
+
+  getMultFactorForCoin: function(coin) {
+    let factor = 1
+    for (let i = 0; i < this.getDecimalsInCoin(coin); i++) {
+      factor = factor * 10;
+    }
+    return factor
+  },
+
+  getDecimals: function(coin) {
+    if (coin) {
+      return coin['decimals']
+    }
+    return 18
   },
 
   close: async function() {
@@ -119,7 +133,11 @@ const app = {
               _price1 += data._value.toNumber()
               console.log(_price1)
             }
-            coin1TotalBetPrice = _price1 * coin1_price
+            let _bigPrice1 = new Big(_price1)
+            coin1TotalBetPrice = _bigPrice1
+              .times(coin1_price)
+              .div(this.getMultFactorForCoin(coin1_sym))
+              .toFixed(this.getDecimals(coin1_sym))
           }
           coin2.Transfer({ _to: coinWarAddress }, filter).get(async (err, rc2) => {
             console.log('__________________________________________________________')
@@ -134,7 +152,11 @@ const app = {
                 console.log(_price2)
               }
 
-              coin2TotalBetPrice = _price2 * coin2_price
+              let _bigPrice2 = new Big(_price2)
+              coin2TotalBetPrice = _bigPrice2
+                .times(coin2_price)
+                .div(this.getMultFactorForCoin(coin2_sym))
+                .toFixed(this.getDecimals(coin2_sym))
 
               console.log('coin1 total bet price', coin1TotalBetPrice)
               console.log('coin2 total bet price', coin2TotalBetPrice)

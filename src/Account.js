@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import { Table, Label, Button } from 'react-bootstrap'
 import Big from 'big.js'
+import TokenDecimals from './token_decimals'
 
 export default class Account extends Component {
 
@@ -15,6 +16,32 @@ export default class Account extends Component {
 
   componentWillMount = () => {
     this.setState({ loading: true })
+  }
+
+  getMultFactorForCoin = coin => {
+    let factor = 1
+    for (let i = 0; i < this.getDecimalsInCoin(coin); i++) {
+      factor = factor * 10;
+    }
+    return factor
+  }
+
+  getDecimalsInCoin = (coin) => {
+    if (!coin) return 18
+    let _coin = TokenDecimals[coin.toLowerCase()]
+    if (_coin) {
+      return _coin['decimals']
+    }
+    return 18
+  }
+
+  getFomatted = (player, value) => {
+    if (!value) value = 0
+    let _amount = new Big(value)
+    let _finalAmount = _amount
+      .div(this.getMultFactorForCoin(player.toLowerCase()))
+      .toFixed(this.getDecimalsInCoin(player.toLowerCase()))
+    return _finalAmount
   }
 
   loadWars = async () => {
@@ -43,10 +70,10 @@ export default class Account extends Component {
             token2: tokens[1],
             winner,
             looser,
-            winnerTokenAmount: new Big(results[2]),
-            looserTokenAmount: new Big(results[3]),
-            winnerTokenTotalBet: new Big(results[4]),
-            looserTokenTotalBet: new Big(results[5]),
+            winnerTokenAmount: this.getFomatted(winner, results[2]),
+            looserTokenAmount: this.getFomatted(looser, results[3]),
+            winnerTokenTotalBet: this.getFomatted(winner, results[4]),
+            looserTokenTotalBet: this.getFomatted(looser, results[5]),
             coinWarAddress: isOnGoing[1]
           })
         }
@@ -59,6 +86,7 @@ export default class Account extends Component {
     this.wfInstance = await this.props.warFactoryContract.deployed()
     const warClosedEvent = await this.wfInstance.WarClosed()
     warClosedEvent.watch((error, results) => {
+      console.log(error, results)
       this.setState({ warClosed: true })
     })
     this.loadWars(this.wfInstance)
@@ -109,16 +137,15 @@ export default class Account extends Component {
         winnerTokenTotalBet, looserTokenTotalBet, coinWarAddress } = item
 
       let arith = 0
-      const _winnerTokenAmt = winnerTokenAmount.toFixed(10)
 
-      if (_winnerTokenAmt > 0) {
-        arith = winnerTokenAmount
+      if (winnerTokenAmount > 0) {
+        let _arith = new Big(winnerTokenAmount)
+        arith = _arith
           .div(winnerTokenTotalBet)
           .times(looserTokenTotalBet)
-          .toFixed(5)
       }
 
-      console.log(arith)
+      console.log(arith.toString())
 
       return (
         <tr key={index}>
@@ -129,7 +156,7 @@ export default class Account extends Component {
               <Label style={{ marginLeft: 10 }} bsStyle="success">{looserTokenAmount.toString()}</Label> {looser}
           </td>
           <td>{winner}</td>
-          <td>{arith} {(_winnerTokenAmt > 0 && (withdrawn !== true)) && (
+          <td>{arith.toString()} {(winnerTokenAmount > 0 && (withdrawn !== true)) && (
               <Button bsStyle="success" bsSize="large" onClick={this.withdraw.bind(this, coinWarAddress)}>Withdraw</Button>
             )}</td>
         </tr>
