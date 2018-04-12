@@ -106,6 +106,15 @@ export default class Account extends Component {
     }
   }
 
+  getLabel = (labelType, amount, labelTxt) => {
+    if (amount === "0.0") return null
+    return (
+      <span>
+        <Label bsStyle={labelType}>{amount}</Label> {labelTxt}
+      </span>
+    )
+  }
+
   loadData = () => {
     const { loading, withdrawn } = this.state
     if (loading) {
@@ -159,12 +168,14 @@ export default class Account extends Component {
           <td>{index + 1}</td>
           <td>{`${token1} vs ${token2}`}</td>
           <td>
-            <Label bsStyle="primary">{_winnerTokenAmount}</Label> {winner},
-              <Label style={{ marginLeft: 10 }} bsStyle="success">{_looserTokenAmount}</Label> {looser}
+            {this.getLabel('primary', _winnerTokenAmount, winner)}
+              <span style={{ marginLeft: 10 }}>
+                {this.getLabel('success', _looserTokenAmount, looser)}
+              </span>
           </td>
           <td>{winner}</td>
-          <td>{arith.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} , <span style={{ color: '#8c2828' }}>-{_looserTokenAmount}</span> {(winnerTokenAmount > 0 && (withdrawn !== true)) && (
-              <Button bsStyle="success" bsSize="large" onClick={this.withdraw.bind(this, coinWarAddress)}>Withdraw</Button>
+          <td><Label bsStyle="success">{arith.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {winner}</Label> , <Label bsStyle="danger">-{_looserTokenAmount} {looser}</Label> {(winnerTokenAmount > 0 && (withdrawn !== true)) && (
+              <Button bsStyle="success" onClick={this.withdraw.bind(this, coinWarAddress)}>Withdraw</Button>
             )}</td>
         </tr>
       )
