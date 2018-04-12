@@ -87,6 +87,7 @@ export default class Account extends Component {
     const warClosedEvent = await this.wfInstance.WarClosed()
     warClosedEvent.watch((error, results) => {
       console.log(error, results)
+      // FIX THE UPDATE ISSUE
       this.setState({ warClosed: true })
     })
     this.loadWars(this.wfInstance)
@@ -154,7 +155,7 @@ export default class Account extends Component {
               <Label style={{ marginLeft: 10 }} bsStyle="success">{looserTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</Label> {looser}
           </td>
           <td>{winner}</td>
-          <td>{arith.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {(winnerTokenAmount > 0 && (withdrawn !== true)) && (
+          <td>{arith.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} , <span style={{ color: '#8c2828' }}>-{looserTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {(winnerTokenAmount > 0 && (withdrawn !== true)) && (
               <Button bsStyle="success" bsSize="large" onClick={this.withdraw.bind(this, coinWarAddress)}>Withdraw</Button>
             )}</td>
         </tr>
