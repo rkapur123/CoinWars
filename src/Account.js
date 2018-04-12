@@ -110,7 +110,7 @@ export default class Account extends Component {
     if (amount === "0.0") return null
     return (
       <span>
-        <Label bsStyle={labelType}>{amount}</Label> {labelTxt}
+        <Label bsStyle={labelType}>{amount} {labelTxt}</Label> 
       </span>
     )
   }
