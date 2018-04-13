@@ -6,6 +6,12 @@ import hexToDec from 'hex-to-dec'
 import CoinMarketCap from 'coinmarketcap-api'
 import Big from 'big.js'
 import TokenDecimals from './token_decimals'
+import moment from 'moment'
+import momentDurationFormat from 'moment-duration-format'
+
+momentDurationFormat(moment)
+typeof moment.duration.fn.format === "function";
+typeof moment.duration.format === "function";
 
 // change this value to 50000 or more
 const MAX_PROGRESS_PRICE = 1000
@@ -329,10 +335,12 @@ class WarStage extends Component {
     const { fromBlock, toBlock } = this.props.opponents
     if (currentBlock < fromBlock) {
       let _startTime = avgTime * (fromBlock - currentBlock)
-      this.setState({ startTime: `${_startTime.toString()} seconds to start ...`, block: currentBlock })
+      let _formattedTime = moment.duration(_startTime, "seconds").format('h:mm:ss')
+      this.setState({ startTime: `${_formattedTime} To Go!`, block: currentBlock })
     } else if (currentBlock >= fromBlock && currentBlock <= toBlock) {
       let _startTime = avgTime * (toBlock - currentBlock)
-      this.setState({ startTime: `${_startTime.toString()} seconds left ...`, block: currentBlock })
+      let _formattedTime = moment.duration(_startTime, "seconds").format('h:mm:ss')
+      this.setState({ startTime: `${_formattedTime} Remaining!`, block: currentBlock })
     } else if (currentBlock > toBlock) {
       this.setState({ startTime: 0, block: currentBlock })
     }
@@ -343,8 +351,6 @@ class WarStage extends Component {
     const { netCoin1Balance, netCoin2Balance,
       netCoin1Bet, netCoin2Bet, coin1_usd,
       coin2_usd, startTime, block } = this.state
-
-      console.log(startTime)
 
     const coin1_balance = this.getNumberOfTokensBet(coin1, netCoin1Balance)
     const coin2_balance = this.getNumberOfTokensBet(coin2, netCoin2Balance)
@@ -361,7 +367,7 @@ class WarStage extends Component {
     return (
       <div>
         <div className="time_notif">
-          <Label bsStyle="danger" style={{ fontSize: 14 }}>{startTime !== 0 ? `${startTime} | ` : null} #{block} - #{toBlock}</Label>
+          <Label bsStyle="danger" style={{ fontSize: 14 }}>{startTime !== 0 ? `${startTime}` : null} #{block} - #{toBlock}</Label>
         </div>
         <Row className="show-grid">
           <Col xs={2} md={2}>
