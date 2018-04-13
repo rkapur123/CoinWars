@@ -34,7 +34,9 @@ class WarStage extends Component {
     coin1Image: null,
     coin2Image: null,
     overtake: 0,
-    startTime: 0
+    startTime: 0,
+    myToken1BetPercentage: 0,
+    myToken2BetPercentage: 0
   }
 
   async componentDidMount() {
@@ -62,28 +64,48 @@ class WarStage extends Component {
       netCoin2Balance: c2_balance.toNumber()
     })
 
+    let totalToken1Bet = 0
     const coin1Event = await this.coin1.Transfer({}, { fromBlock, toBlock })
     coin1Event.watch(async (error, results) => {
-      console.log('COIN1_EVENT', results.args._value.toNumber())
       const coinWarBalance = await this.coin1.balanceOf(coinWarAddress)
       const myBalance = await this.coin1.balanceOf(this.props.account)
-      console.log('CoinWar1', coinWarBalance.toNumber())
+
+      const { _from, _value } = results.args
+      let _myBetAmount = 0
+      if (_from === this.props.account) {
+        _myBetAmount = _value.toNumber()
+      }
+
+      totalToken1Bet += _value.toNumber()
+      let _percentage = (_myBetAmount / totalToken1Bet) * 100
+
       this.setState({
         netCoin1Balance: myBalance.toNumber(),
-        netCoin1Bet: coinWarBalance.toNumber()
+        netCoin1Bet: coinWarBalance.toNumber(),
+        myToken1BetPercentage: _percentage
       })
       this.props.reload(coinWarBalance)
     })
 
+    let totalToken2Bet = 0
     const coin2Event = await this.coin2.Transfer({}, { fromBlock, toBlock })
     coin2Event.watch(async (error, results) => {
-      console.log('COIN2_EVENT', results.args._value.toNumber())
       const coinWarBalance = await this.coin2.balanceOf(coinWarAddress)
       const myBalance = await this.coin2.balanceOf(this.props.account)
-      console.log('CoinWar2', coinWarBalance.toNumber())
+
+      const { _from, _value } = results.args
+      let _myBetAmount = 0
+      if (_from === this.props.account) {
+        _myBetAmount = _value.toNumber()
+      }
+
+      totalToken2Bet += _value.toNumber()
+      let _percentage = (_myBetAmount / totalToken2Bet) * 100
+
       this.setState({
         netCoin2Balance: myBalance.toNumber(),
-        netCoin2Bet: coinWarBalance.toNumber()
+        netCoin2Bet: coinWarBalance.toNumber(),
+        myToken2BetPercentage: _percentage
       })
       this.props.reload(coinWarBalance)
     })
@@ -349,7 +371,8 @@ class WarStage extends Component {
     const { coin1, coin2, toBlock } = this.props.opponents
     const { netCoin1Balance, netCoin2Balance,
       netCoin1Bet, netCoin2Bet, coin1_usd,
-      coin2_usd, startTime, block } = this.state
+      coin2_usd, startTime, block,
+      myToken1BetPercentage, myToken2BetPercentage } = this.state
 
     const coin1_balance = this.getNumberOfTokensBet(coin1, netCoin1Balance)
     const coin2_balance = this.getNumberOfTokensBet(coin2, netCoin2Balance)
@@ -361,8 +384,6 @@ class WarStage extends Component {
     const coin2_bet_price = this.getNumberOfTokensBetPrice(coin2, netCoin2Bet, coin2_usd)
 
     const _maxProgressPrice = this.getMaxProgressPrice(coin1_bet_price, coin2_bet_price, MAX_PROGRESS_PRICE)
-
-    console.log(coin2, _maxProgressPrice)
 
     const coin1Progress = parseFloat((coin1_bet_price / _maxProgressPrice) * 100)
     const coin2Progress = parseFloat((coin2_bet_price / _maxProgressPrice) * 100)
@@ -395,17 +416,17 @@ class WarStage extends Component {
               <Label bsStyle="danger" style={{ fontSize: 14 }}>{startTime !== 0 ? `${startTime}` : null} #{block} - #{toBlock}</Label>
             </div>
             <div className="progress_wrap">
-              <div style={{ marginTop: 15, textAlign: 'left' }}>Balance: <Label bsStyle="info">{coin1_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {coin1}</Label></div>
+              <div style={{ marginTop: 15, textAlign: 'left' }}>Balance: <Label bsStyle="info">{myToken1BetPercentage}% {coin1}</Label></div>
               <div style={{ marginTop: -18, textAlign: 'right' }}>
                 <span><span style={{ marginLeft: 8, marginRight: 8 }}>{coin1_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin1} <span className="balance">${coin1_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span></span>
-                <ProgressBar striped bsStyle="info" active now={coin1Progress} label={`${coin1Progress.toFixed(2)}%`} />
+                <ProgressBar striped bsStyle="info" active now={coin1Progress} />
               </div>
             </div>
             <div className="progress_wrap bottom">
-              <div style={{ textAlign: 'left' }}>Balance: <Label bsStyle="success">{coin2_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {coin2}</Label></div>
+              <div style={{ textAlign: 'left' }}>Balance: <Label bsStyle="success">{myToken2BetPercentage}% {coin2}</Label></div>
               <div style={{ marginTop: -18, textAlign: 'right' }}>
                 <span><span style={{ marginLeft: 8, marginRight: 8 }}>{coin2_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin2} <span className="balance">${coin2_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span></span>
-                <ProgressBar striped bsStyle="success" active now={coin2Progress} label={`${coin2Progress.toFixed(2)}%`} />
+                <ProgressBar striped bsStyle="success" active now={coin2Progress} />
               </div>
             </div>
           </Col>
