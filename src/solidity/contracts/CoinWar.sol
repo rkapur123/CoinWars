@@ -177,8 +177,6 @@ contract CoinWar {
     } else {
       return (0, 0, 0, 0, 0);
     }
-
-
   }
 
   function getTeamBet(address team)

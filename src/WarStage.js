@@ -21,7 +21,6 @@ class WarStage extends Component {
   state = {
     coin: false,
     bid: 0,
-    showBid: 0,
     message: false,
     coinWarBalance: 0,
     block: 0,
@@ -154,12 +153,11 @@ class WarStage extends Component {
   async handleSubmit(e) {
     e.preventDefault()
     const { coinWarAddress } = this.props.opponents
-    const { coin, coinSelected, showBid } = this.state
+    const { coin, coinSelected, bid } = this.state
     const _coin = this.coins.get(coin)
     if (_coin) {
-      const _bid = new Big(parseFloat(showBid))
+      const _bid = new Big(parseFloat(bid))
       const _amount = _bid
-        .times(this.getMultFactorForCoin(coinSelected))
         .times(this.getMultFactorForCoin(coinSelected))
         .toFixed(this.getDecimalsInCoin(coinSelected))
       console.log(`Bet ${_amount} placed for ${coinSelected}`)
@@ -187,9 +185,9 @@ class WarStage extends Component {
 
   bidForm = () => {
     const { coin1, coin2, coin1Address, coin2Address } = this.props.opponents
-    const { coin, bid, showBid, coinSelected } = this.state
+    const { coin, bid, coinSelected } = this.state
     return (
-      <form style={{ marginTop: -50 }} onSubmit={this.handleSubmit.bind(this)}>
+      <form onSubmit={this.handleSubmit.bind(this)}>
         <div className="form-group">
           <ButtonGroup className="flex_btn_group">
             <Button active={coin === coin1Address ? true : false}
@@ -210,19 +208,10 @@ class WarStage extends Component {
             value={bid}
             onChange={(e) => {
               this.setState({
-                bid: e.target.value,
-                showBid: this.formatted(e.target.value, coinSelected)
+                bid: e.target.value
               })
             }}
             disabled={!coin}
-            placeholder="bet amount e.g. 100"
-            required />
-        </div>
-        <div className="form-group">
-          <input type="number" className="form-control" name="final_amount"
-            ref="show_amount"
-            value={showBid}
-            disabled
             placeholder="bet amount e.g. 100"
             required />
         </div>

@@ -30,6 +30,7 @@ export default class CoinItem extends Component {
           const coinWarAddress = wars[7].toString(10)
 
           warsList.push({
+            warIndex: j - 1,
             coin1,
             coin2,
             coin1Address,
