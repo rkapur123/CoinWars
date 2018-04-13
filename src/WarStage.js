@@ -8,7 +8,7 @@ import Big from 'big.js'
 import TokenDecimals from './token_decimals'
 
 // change this value to 50000 or more
-const MAX_PROGRESS_PRICE = 50000
+const MAX_PROGRESS_PRICE = 1000
 
 class WarStage extends Component {
 
@@ -85,14 +85,18 @@ class WarStage extends Component {
 
     // get latest block event
     const blockTracker = new BlockTracker({ provider: this.props.provider })
-    blockTracker.on('block', (newBlock) => {
+    blockTracker.on('block', async (newBlock) => {
       this.setState({ block: hexToDec(newBlock.number) })
-      // await this.getTime(hexToDec(newBlock.number))
+      await this.getTime(hexToDec(newBlock.number))
     })
     blockTracker.start()
 
     // get price from coinmarketcap after every 3 seconds
-    this.props.setTimeout(this.getCoinsPrice, 3000)
+    this.props.setInterval(this.getCoinsPrice, 3000)
+  }
+
+  componentWillUnmount() {
+    this.props.clearInterval(this.getCoinsPrice)
   }
 
   getCoinsId = (coin) => {
@@ -180,7 +184,7 @@ class WarStage extends Component {
     return (
       <form style={{ marginTop: -50 }} onSubmit={this.handleSubmit.bind(this)}>
         <div className="form-group">
-          <ButtonGroup>
+          <ButtonGroup className="flex_btn_group">
             <Button active={coin === coin1Address ? true : false}
               onClick={() => this.setState({ coin: coin1Address, coinSelected: coin1 })}>{coin1}</Button>
             <Button active={coin === coin2Address ? true : false}
@@ -326,6 +330,7 @@ class WarStage extends Component {
       .then(avgTime => {
         if (currentBlock < fromBlock) {
           let _startTime = avgTime * (fromBlock - currentBlock)
+          _startTime -= avgTime
           this.setState({ startTime: _startTime })
         }
       })
@@ -352,7 +357,7 @@ class WarStage extends Component {
     return (
       <div>
         <div className="time_notif">
-          <Label bsStyle="danger" style={{ fontSize: 14 }}>#{block} - #{toBlock}</Label>
+          <Label bsStyle="danger" style={{ fontSize: 14 }}>{startTime > 0 ? `${startTime} seconds | ` : null} #{block} - #{toBlock}</Label>
         </div>
         <Row className="show-grid">
           <Col xs={2} md={2}>
@@ -377,15 +382,15 @@ class WarStage extends Component {
           </Col>
           <Col xs={6} md={6}>
             <div className="progress_wrap">
-              <div style={{ textAlign: 'left' }}>Balance: <Label bsStyle="info">{coin1_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {coin1}</Label></div>
-              <div style={{ marginTop: 10, textAlign: 'right' }}>
+              <div style={{ marginTop: 15, textAlign: 'left' }}>Balance: <Label bsStyle="info">{coin1_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {coin1}</Label></div>
+              <div style={{ marginTop: -18, textAlign: 'right' }}>
                 <span><span style={{ marginLeft: 8, marginRight: 8 }}>{coin1_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin1} <span className="balance">${coin1_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span></span>
                 <ProgressBar striped bsStyle="info" active now={coin1Progress} label={`${coin1Progress}%`} />
               </div>
             </div>
             <div className="progress_wrap bottom">
               <div style={{ textAlign: 'left' }}>Balance: <Label bsStyle="success">{coin2_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {coin2}</Label></div>
-              <div style={{ marginTop: 10, textAlign: 'right' }}>
+              <div style={{ marginTop: -18, textAlign: 'right' }}>
                 <span><span style={{ marginLeft: 8, marginRight: 8 }}>{coin2_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin2} <span className="balance">${coin2_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span></span>
                 <ProgressBar striped bsStyle="success" active now={coin2Progress} label={`${coin2Progress}%`} />
               </div>

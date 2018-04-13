@@ -150,6 +150,7 @@ body {
 .progress_wrap {
 }
 .progress_wrap.bottom {
+  margin-top: 50px;
 }
 
 .coin {
@@ -176,6 +177,12 @@ body {
   -webkit-border-top-right-radius: 4px;
   margin-right: 5px;
 }
+
+.flex_btn_group.btn-group {
+  display: flex !important;
+}
+
+.flex_btn_group.btn-group button { flex: 1; }
 
 @keyframes bounce {
   0%, 100% {
