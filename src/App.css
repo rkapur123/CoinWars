@@ -132,7 +132,8 @@ body {
 }
 
 .time_notif {
-  margin: 30px 0 20px;
+  text-align: center;
+  margin-top: -10px;
 }
 
 .coin-btn {
