@@ -14,7 +14,7 @@ typeof moment.duration.fn.format === "function";
 typeof moment.duration.format === "function";
 
 // change this value to 50000 or more
-const MAX_PROGRESS_PRICE = 1000
+let MAX_PROGRESS_PRICE = 1000
 
 class WarStage extends Component {
 
@@ -320,6 +320,16 @@ class WarStage extends Component {
     return factor
   }
 
+  getMaxProgressPrice = (coin1_bet_price, coin2_bet_price, max_progress_price) => {
+    let new_max_progress_price = max_progress_price
+    let price = Math.max(coin1_bet_price, coin2_bet_price)
+    if (price > max_progress_price) {
+      let factor = price / max_progress_price
+      new_max_progress_price = new_max_progress_price * (factor)
+    }
+    return new_max_progress_price
+  }
+
   getTime = (currentBlock, avgTime) => {
     const { fromBlock, toBlock } = this.props.opponents
     if (currentBlock < fromBlock) {
@@ -350,14 +360,18 @@ class WarStage extends Component {
     const coin1_bet_price = this.getNumberOfTokensBetPrice(coin1, netCoin1Bet, coin1_usd)
     const coin2_bet_price = this.getNumberOfTokensBetPrice(coin2, netCoin2Bet, coin2_usd)
 
-    const coin1Progress = parseFloat((coin1_bet_price / MAX_PROGRESS_PRICE) * 100)
-    const coin2Progress = parseFloat((coin2_bet_price / MAX_PROGRESS_PRICE) * 100)
+    const _maxProgressPrice = this.getMaxProgressPrice(coin1_bet_price, coin2_bet_price, MAX_PROGRESS_PRICE)
+
+    console.log(coin2, _maxProgressPrice)
+
+    const coin1Progress = parseFloat((coin1_bet_price / _maxProgressPrice) * 100)
+    const coin2Progress = parseFloat((coin2_bet_price / _maxProgressPrice) * 100)
 
     return (
       <div>
         <Row className="show-grid">
           <Col xs={2} md={2}>
-            <div className="coin">
+            <div className="coin" style={{ marginTop: 70 }}>
               <Button
                 bsClass="coin-btn"
                 bsSize="lg" bsStyle="info">
@@ -384,19 +398,19 @@ class WarStage extends Component {
               <div style={{ marginTop: 15, textAlign: 'left' }}>Balance: <Label bsStyle="info">{coin1_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {coin1}</Label></div>
               <div style={{ marginTop: -18, textAlign: 'right' }}>
                 <span><span style={{ marginLeft: 8, marginRight: 8 }}>{coin1_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin1} <span className="balance">${coin1_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span></span>
-                <ProgressBar striped bsStyle="info" active now={coin1Progress} label={`${coin1Progress}%`} />
+                <ProgressBar striped bsStyle="info" active now={coin1Progress} label={`${coin1Progress.toFixed(2)}%`} />
               </div>
             </div>
             <div className="progress_wrap bottom">
               <div style={{ textAlign: 'left' }}>Balance: <Label bsStyle="success">{coin2_balance.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {coin2}</Label></div>
               <div style={{ marginTop: -18, textAlign: 'right' }}>
                 <span><span style={{ marginLeft: 8, marginRight: 8 }}>{coin2_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin2} <span className="balance">${coin2_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span></span>
-                <ProgressBar striped bsStyle="success" active now={coin2Progress} label={`${coin2Progress}%`} />
+                <ProgressBar striped bsStyle="success" active now={coin2Progress} label={`${coin2Progress.toFixed(2)}%`} />
               </div>
             </div>
           </Col>
           <Col xs={4} md={4}>
-            <div style={{ paddingLeft: 20, paddingRight: 20 }}>
+            <div style={{ paddingLeft: 20, paddingRight: 20, marginTop: 60 }}>
               {this.placeBid()}
             </div>
           </Col>
