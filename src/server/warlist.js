@@ -15,8 +15,8 @@ module.exports = {
       'coin2_name': 'BNB',
       'coin1_address': '0xa71a212c041e9c3b70d1b7f2f1170bb1d75d0586',
       'coin2_address': '0x2aa0878102ccf1fe74c9aecad520d0ebe25f3d54',
-      'from_block': 2102864,
-      'to_block': 2102964
+      'from_block': 2103075,
+      'to_block': 2103169
     },
     // {
     //   'id': 2,

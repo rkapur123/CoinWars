@@ -83,11 +83,12 @@ class WarStage extends Component {
       this.props.reload(coinWarBalance)
     })
 
+    const averageBlockTime = await this.getBlockAverageTime()
+
     // get latest block event
     const blockTracker = new BlockTracker({ provider: this.props.provider })
-    blockTracker.on('block', async (newBlock) => {
-      this.setState({ block: hexToDec(newBlock.number) })
-      await this.getTime(hexToDec(newBlock.number))
+    blockTracker.on('block', (newBlock) => {
+      this.getTime(hexToDec(newBlock.number), averageBlockTime)
     })
     blockTracker.start()
 
@@ -324,16 +325,17 @@ class WarStage extends Component {
     return factor
   }
 
-  getTime = async (currentBlock) => {
-    const { fromBlock } = this.props.opponents
-    this.getBlockAverageTime()
-      .then(avgTime => {
-        if (currentBlock < fromBlock) {
-          let _startTime = avgTime * (fromBlock - currentBlock)
-          _startTime -= avgTime
-          this.setState({ startTime: _startTime })
-        }
-      })
+  getTime = (currentBlock, avgTime) => {
+    const { fromBlock, toBlock } = this.props.opponents
+    if (currentBlock < fromBlock) {
+      let _startTime = avgTime * (fromBlock - currentBlock)
+      this.setState({ startTime: `${_startTime.toString()} seconds to start ...`, block: currentBlock })
+    } else if (currentBlock >= fromBlock && currentBlock <= toBlock) {
+      let _startTime = avgTime * (toBlock - currentBlock)
+      this.setState({ startTime: `${_startTime.toString()} seconds left ...`, block: currentBlock })
+    } else if (currentBlock > toBlock) {
+      this.setState({ startTime: 0, block: currentBlock })
+    }
   }
 
   render() {
@@ -341,6 +343,8 @@ class WarStage extends Component {
     const { netCoin1Balance, netCoin2Balance,
       netCoin1Bet, netCoin2Bet, coin1_usd,
       coin2_usd, startTime, block } = this.state
+
+      console.log(startTime)
 
     const coin1_balance = this.getNumberOfTokensBet(coin1, netCoin1Balance)
     const coin2_balance = this.getNumberOfTokensBet(coin2, netCoin2Balance)
@@ -357,7 +361,7 @@ class WarStage extends Component {
     return (
       <div>
         <div className="time_notif">
-          <Label bsStyle="danger" style={{ fontSize: 14 }}>{startTime > 0 ? `${startTime} seconds | ` : null} #{block} - #{toBlock}</Label>
+          <Label bsStyle="danger" style={{ fontSize: 14 }}>{startTime !== 0 ? `${startTime} | ` : null} #{block} - #{toBlock}</Label>
         </div>
         <Row className="show-grid">
           <Col xs={2} md={2}>
