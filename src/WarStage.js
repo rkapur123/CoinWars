@@ -51,20 +51,15 @@ class WarStage extends Component {
     this.coin2 = await this.props.erc20Contract.at(coin2Address)
     this.coins.set(coin2Address, this.coin2)
 
-    let totalToken1Bet = 0, _percentage = 0
+    let _percentage = 0
     const coin1Event = await this.coin1.Transfer({}, { fromBlock, toBlock })
     coin1Event.watch(async (error, results) => {
       const coinWarBalance = await this.coin1.balanceOf(coinWarAddress)
 
       const { _from, _value, _to } = results.args
-      let _myBetAmount = 0
-      if (_from === this.props.account) {
-        _myBetAmount = _value.toNumber()
-      }
-
-      totalToken1Bet += _value.toNumber()
-      if (_to === coinWarAddress) {
-        _percentage = (_myBetAmount / totalToken1Bet) * 100
+      if (_from === this.props.account && _to === coinWarAddress) {
+        const _myBetAmount = _value.toNumber()
+        _percentage = (_myBetAmount / coinWarBalance.toNumber()) * 100
       }
 
       this.setState({
@@ -74,20 +69,14 @@ class WarStage extends Component {
       this.props.reload(coinWarBalance)
     })
 
-    let totalToken2Bet = 0
     const coin2Event = await this.coin2.Transfer({}, { fromBlock, toBlock })
     coin2Event.watch(async (error, results) => {
       const coinWarBalance = await this.coin2.balanceOf(coinWarAddress)
 
       const { _from, _value, _to } = results.args
-      let _myBetAmount = 0
-      if (_from === this.props.account) {
-        _myBetAmount = _value.toNumber()
-      }
-
-      totalToken2Bet += _value.toNumber()
-      if (_to === coinWarAddress) {
-        _percentage = (_myBetAmount / totalToken2Bet) * 100
+      if (_from === this.props.account && _to === coinWarAddress) {
+        const _myBetAmount = _value.toNumber()
+        _percentage = (_myBetAmount / coinWarBalance.toNumber()) * 100
       }
 
       this.setState({
