@@ -24,8 +24,6 @@ class WarStage extends Component {
     message: false,
     coinWarBalance: 0,
     block: 0,
-    netCoin1Balance: 0,
-    netCoin2Balance: 0,
     netCoin1Bet: 0,
     netCoin2Bet: 0,
     coin1_usd: 0,
@@ -53,36 +51,25 @@ class WarStage extends Component {
     this.coin2 = await this.props.erc20Contract.at(coin2Address)
     this.coins.set(coin2Address, this.coin2)
 
-    // get coin1 balance
-    const c1_balance = await this.coin1.balanceOf(this.props.account)
-
-    // get coin2 balance
-    const c2_balance = await this.coin2.balanceOf(this.props.account)
-
-    this.setState({
-      netCoin1Balance: c1_balance.toNumber(),
-      netCoin2Balance: c2_balance.toNumber()
-    })
-
-    let totalToken1Bet = 0
+    let totalToken1Bet = 0, _percentage = 0
     const coin1Event = await this.coin1.Transfer({}, { fromBlock, toBlock })
     coin1Event.watch(async (error, results) => {
       const coinWarBalance = await this.coin1.balanceOf(coinWarAddress)
-      const myBalance = await this.coin1.balanceOf(this.props.account)
 
-      const { _from, _value } = results.args
+      const { _from, _value, _to } = results.args
       let _myBetAmount = 0
       if (_from === this.props.account) {
         _myBetAmount = _value.toNumber()
       }
 
       totalToken1Bet += _value.toNumber()
-      let _percentage = (_myBetAmount / totalToken1Bet) * 100
+      if (_to === coinWarAddress) {
+        _percentage = (_myBetAmount / totalToken1Bet) * 100
+      }
 
       this.setState({
-        netCoin1Balance: myBalance.toNumber(),
         netCoin1Bet: coinWarBalance.toNumber(),
-        myToken1BetPercentage: _percentage
+        myToken1BetPercentage: parseInt(_percentage, 10)
       })
       this.props.reload(coinWarBalance)
     })
@@ -91,21 +78,21 @@ class WarStage extends Component {
     const coin2Event = await this.coin2.Transfer({}, { fromBlock, toBlock })
     coin2Event.watch(async (error, results) => {
       const coinWarBalance = await this.coin2.balanceOf(coinWarAddress)
-      const myBalance = await this.coin2.balanceOf(this.props.account)
 
-      const { _from, _value } = results.args
+      const { _from, _value, _to } = results.args
       let _myBetAmount = 0
       if (_from === this.props.account) {
         _myBetAmount = _value.toNumber()
       }
 
       totalToken2Bet += _value.toNumber()
-      let _percentage = (_myBetAmount / totalToken2Bet) * 100
+      if (_to === coinWarAddress) {
+        _percentage = (_myBetAmount / totalToken2Bet) * 100
+      }
 
       this.setState({
-        netCoin2Balance: myBalance.toNumber(),
         netCoin2Bet: coinWarBalance.toNumber(),
-        myToken2BetPercentage: _percentage
+        myToken2BetPercentage: parseInt(_percentage, 10)
       })
       this.props.reload(coinWarBalance)
     })
@@ -187,13 +174,45 @@ class WarStage extends Component {
       const bet = await _coin.transfer(coinWarAddress, _amount,
         { from: `${this.props.account}`, gas: 5000000 })
       console.log('Transfer initialiated', bet)
+      this.setState({ coin: false, bid: 0 })
     } else {
       console.log('no coin found ...')
     }
   }
 
-  overtake = () => {
-    this.refs.amount.value = 300
+  overtake = async (coin) => {
+    const { coin1, coin2 } = this.props.opponents
+    const { netCoin1Bet, netCoin2Bet, coin1_usd, coin2_usd } = this.state
+
+    const coin1_bet_price = new Big(this.getNumberOfTokensBetPrice(coin1, netCoin1Bet, coin1_usd))
+    const coin2_bet_price = new Big(this.getNumberOfTokensBetPrice(coin2, netCoin2Bet, coin2_usd))
+
+    if (coin === coin1) {
+      // get the bet price of coin2
+      if (coin2_bet_price.gt(coin1_bet_price)) {
+        const diff = coin2_bet_price
+          .minus(coin1_bet_price)
+
+        const x = new Big(1)
+        const overtakeAmount = x
+          .div(coin2_usd)
+          .times(diff)
+          .toFixed(this.getDecimalsInCoin(coin))
+        console.log(`You can overtake ${coin2} by `, overtakeAmount)
+      } else {
+        console.log(`You cannot overtake ${coin2} as its price is less or equal to ${coin1}`)
+      }
+    } else if (coin === coin2) {
+      if (coin1_bet_price.gt(coin2_bet_price)) {
+        const diff = coin1_bet_price
+          .minus(coin2_bet_price)
+          .toFixed(this.getDecimalsInCoin(coin))
+        console.log('You can overtake', diff)
+      } else {
+        console.log(`You cannot overtake ${coin1} as its price is less or equal to ${coin2}`)
+      }
+    }
+
   }
 
   formatted = (bid, coinSelected) => {
@@ -223,7 +242,7 @@ class WarStage extends Component {
           <Button bsStyle="info"
             style={{ width: '100%' }}
             disabled={!coin}
-            onClick={this.overtake}>Overtake</Button>
+            onClick={this.overtake.bind(this, coinSelected)}>Overtake</Button>
         </div>
         <div className="form-group">
           <input type="number" className="form-control" name="amount"
@@ -369,13 +388,9 @@ class WarStage extends Component {
 
   render() {
     const { coin1, coin2, toBlock } = this.props.opponents
-    const { netCoin1Balance, netCoin2Balance,
-      netCoin1Bet, netCoin2Bet, coin1_usd,
+    const { netCoin1Bet, netCoin2Bet, coin1_usd,
       coin2_usd, startTime, block,
       myToken1BetPercentage, myToken2BetPercentage } = this.state
-
-    const coin1_balance = this.getNumberOfTokensBet(coin1, netCoin1Balance)
-    const coin2_balance = this.getNumberOfTokensBet(coin2, netCoin2Balance)
 
     const coin1_bet_amount = this.getNumberOfTokensBet(coin1, netCoin1Bet)
     const coin2_bet_amount = this.getNumberOfTokensBet(coin2, netCoin2Bet)
