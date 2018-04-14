@@ -13,9 +13,6 @@ momentDurationFormat(moment)
 typeof moment.duration.fn.format === "function";
 typeof moment.duration.format === "function";
 
-// change this value to 50000 or more
-let MAX_PROGRESS_PRICE = 1000
-
 class WarStage extends Component {
 
   state = {
@@ -35,6 +32,10 @@ class WarStage extends Component {
     startTime: 0,
     myToken1BetPercentage: 0,
     myToken2BetPercentage: 0
+  }
+
+  componentWillMount() {
+    this.MAX_PROGRESS_PRICE = 0
   }
 
   async componentDidMount() {
@@ -64,7 +65,7 @@ class WarStage extends Component {
 
       this.setState({
         netCoin1Bet: coinWarBalance.toNumber(),
-        myToken1BetPercentage: parseInt(_percentage, 10)
+        myToken1BetPercentage: _percentage.toFixed(2)
       })
       this.props.reload(coinWarBalance)
     })
@@ -81,7 +82,7 @@ class WarStage extends Component {
 
       this.setState({
         netCoin2Bet: coinWarBalance.toNumber(),
-        myToken2BetPercentage: parseInt(_percentage, 10)
+        myToken2BetPercentage: _percentage.toFixed(2)
       })
       this.props.reload(coinWarBalance)
     })
@@ -387,7 +388,17 @@ class WarStage extends Component {
     const coin1_bet_price = this.getNumberOfTokensBetPrice(coin1, netCoin1Bet, coin1_usd)
     const coin2_bet_price = this.getNumberOfTokensBetPrice(coin2, netCoin2Bet, coin2_usd)
 
-    const _maxProgressPrice = this.getMaxProgressPrice(coin1_bet_price, coin2_bet_price, MAX_PROGRESS_PRICE)
+    let _maxProgressPrice
+    if (this.MAX_PROGRESS_PRICE === 0) {
+      _maxProgressPrice = Math.max(coin1_bet_price, coin2_bet_price)
+      this.MAX_PROGRESS_PRICE = _maxProgressPrice
+    } else {
+      _maxProgressPrice = this.getMaxProgressPrice(
+        coin1_bet_price,
+        coin2_bet_price,
+        this.MAX_PROGRESS_PRICE
+      )
+    }
 
     const coin1Progress = parseFloat((coin1_bet_price / _maxProgressPrice) * 100)
     const coin2Progress = parseFloat((coin2_bet_price / _maxProgressPrice) * 100)
