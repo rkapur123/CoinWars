@@ -52,7 +52,8 @@ class WarStage extends Component {
     myToken1BetPrice: 0,
     myToken2BetPrice: 0,
     myToken1BetAmount: 0,
-    myToken2BetAmount: 0
+    myToken2BetAmount: 0,
+    tooglePrice: true
   }
 
   componentWillMount() {
@@ -81,21 +82,27 @@ class WarStage extends Component {
 
     const coin1Event = await this.coin1.Transfer({}, { fromBlock, toBlock })
     coin1Event.watch(async (error, results) => {
-      let _percentage = 0, _myBetPrice = 0
+      let _percentage = 0, _myBetPrice = 0, _myBetAmount = 0
       const coinWarBalance = await this.coin1.balanceOf(coinWarAddress)
 
       const { _from, _value, _to } = results.args
       if (_from === this.props.account && _to === coinWarAddress) {
-        const _myBetAmount = _value.toNumber()
-        _myBetPrice = new Big(_myBetAmount)
+        const _amt = _value.toNumber()
+
+        _myBetPrice = new Big(_amt)
           .times(this.state.coin1_usd)
           .div(this.getMultFactorForCoin(coin1))
-        _percentage = (_myBetAmount / coinWarBalance.toNumber()) * 100
+
+        _myBetAmount = new Big(_amt)
+          .div(this.getMultFactorForCoin(coin1))
+
+        _percentage = (_amt / coinWarBalance.toNumber()) * 100
       }
 
       this.setState({
         netCoin1Bet: coinWarBalance.toNumber(),
         myToken1BetPrice: _myBetPrice,
+        myToken1BetAmount: _myBetAmount,
         myToken1BetPercentage: _percentage.toFixed(2)
       })
       this.props.reload(coinWarBalance)
@@ -103,21 +110,27 @@ class WarStage extends Component {
 
     const coin2Event = await this.coin2.Transfer({}, { fromBlock, toBlock })
     coin2Event.watch(async (error, results) => {
-      let _percentage = 0, _myBetPrice = 0
+      let _percentage = 0, _myBetPrice = 0, _myBetAmount = 0
       const coinWarBalance = await this.coin2.balanceOf(coinWarAddress)
 
       const { _from, _value, _to } = results.args
       if (_from === this.props.account && _to === coinWarAddress) {
-        const _myBetAmount = _value.toNumber()
-        _myBetPrice = new Big(_myBetAmount)
+        const _amt = _value.toNumber()
+
+        _myBetPrice = new Big(_amt)
           .times(this.state.coin2_usd)
           .div(this.getMultFactorForCoin(coin2))
-        _percentage = (_myBetAmount / coinWarBalance.toNumber()) * 100
+
+        _myBetAmount = new Big(_amt)
+          .div(this.getMultFactorForCoin(coin2))
+
+        _percentage = (_amt / coinWarBalance.toNumber()) * 100
       }
 
       this.setState({
         netCoin2Bet: coinWarBalance.toNumber(),
         myToken2BetPrice: _myBetPrice,
+        myToken2BetAmount: _myBetAmount,
         myToken2BetPercentage: _percentage.toFixed(2)
       })
       this.props.reload(coinWarBalance)
@@ -427,6 +440,7 @@ class WarStage extends Component {
   }
 
   getDisplayAmount = (amount, decimal = 2, isCurrency = false) => {
+    const { togglePrice } = this.state
     const amt = new Big(amount)
       .toFixed(decimal)
       .toString()
@@ -436,11 +450,16 @@ class WarStage extends Component {
     return amt
   }
 
+  togglePrice = () => {
+    this.setState({ togglePrice: !this.state.togglePrice })
+  }
+
   render() {
     const { coin1, coin2, toBlock } = this.props.opponents
     const { netCoin1Bet, netCoin2Bet, coin1_usd,
       coin2_usd, startTime, block, myToken1BetPrice, myToken2BetPrice,
-      myToken1BetPercentage, myToken2BetPercentage } = this.state
+      myToken1BetPercentage, myToken2BetPercentage, togglePrice,
+      myToken1BetAmount, myToken2BetAmount } = this.state
 
     const coin1_bet_amount = this.getNumberOfTokensBet(coin1, netCoin1Bet)
     const coin2_bet_amount = this.getNumberOfTokensBet(coin2, netCoin2Bet)
@@ -493,26 +512,44 @@ class WarStage extends Component {
             <div className="time_notif">
                 {startTime !== 0 ? `${startTime}` : null} <span>15:00 Remaining !</span>
             </div>
-            <div className="progress_wrap">
-              <div style={{ marginTop: 15, textAlign: 'left' }}>
-                <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken1BetPercentage)}%`} href="#" id="tooltip-1">
-                  {this.getDisplayAmount(myToken1BetPrice, 2, true)}
-                </LinkWithTooltip>{' '}
+            <div onClick={this.togglePrice.bind(this)}>
+              <div className="progress_wrap">
+                <div style={{ marginTop: 15, textAlign: 'left' }}>
+                  <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken1BetPercentage)}%`} href="#" id="tooltip-1">
+                    {this.getDisplayAmount(
+                      togglePrice ? myToken1BetAmount : myToken1BetPrice,
+                      2, togglePrice ? false : true
+                    )}
+                  </LinkWithTooltip>{' '}
+                </div>
+                <div style={{ marginTop: -18, textAlign: 'right' }}>
+                  <span className="balance">
+                    {this.getDisplayAmount(
+                      togglePrice ? coin1_bet_amount : coin1_bet_price,
+                      2, togglePrice ? false : true
+                    )}
+                  </span> <span>{coin1}</span>
+                  <ProgressBar striped bsStyle="info" active now={coin1Progress} />
+                </div>
               </div>
-              <div style={{ marginTop: -18, textAlign: 'right' }}>
-                <span className="balance">${this.getDisplayAmount(coin1_bet_price)}</span> <span>{coin1}</span>
-                <ProgressBar striped bsStyle="info" active now={coin1Progress} />
-              </div>
-            </div>
-            <div className="progress_wrap bottom">
-              <div style={{ textAlign: 'left' }}>
-                <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken2BetPercentage)}%`} href="#" id="tooltip-2">
-                  {this.getDisplayAmount(myToken2BetPrice, 2, true)}
-                </LinkWithTooltip>{' '}
-              </div>
-              <div style={{ marginTop: -18, textAlign: 'right' }}>
-                <span className="balance">${this.getDisplayAmount(coin2_bet_price)}</span> <span>{coin2}</span>
-                <ProgressBar striped bsStyle="success" active now={coin2Progress} />
+              <div className="progress_wrap bottom">
+                <div style={{ textAlign: 'left', marginTop: 3 }}>
+                  <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken2BetPercentage)}%`} href="#" id="tooltip-2">
+                    {this.getDisplayAmount(
+                      togglePrice ?  myToken2BetAmount : myToken2BetPrice,
+                      2, togglePrice ? false : true
+                    )}
+                  </LinkWithTooltip>{' '}
+                </div>
+                <div style={{ marginTop: -18, textAlign: 'right' }}>
+                  <span className="balance">
+                    {this.getDisplayAmount(
+                      togglePrice ? coin2_bet_amount : coin2_bet_price,
+                      2, togglePrice ? false : true
+                    )}
+                  </span> <span>{coin2}</span>
+                  <ProgressBar striped bsStyle="success" active now={coin2Progress} />
+                </div>
               </div>
             </div>
           </Col>
