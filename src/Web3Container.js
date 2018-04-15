@@ -41,15 +41,14 @@ export default (WrappedComponent) => {
     componentDidMount = async () => {
       try {
         const account = await this.web3.eth.getCoinbase()
-        const currentBlock = await this.web3.eth.getBlock('latest')
-        this.setState({ account, currentBlock: currentBlock.number })
+        this.setState({ account })
       } catch (error) {
         this.setState({ error: `Please ensure that you are connected to your network` })
       }
     }
 
     render() {
-      const { account, currentBlock, error } = this.state
+      const { account, error } = this.state
 
       if (error) {
         return (
@@ -68,7 +67,6 @@ export default (WrappedComponent) => {
       const newProps = Object.assign({}, this.props, {
         web3: this.web3,
         account,
-        currentBlock,
         provider: this.web3Provider,
         warFactoryContract: this.warfactory,
         coinWarContract: this.coinwars,

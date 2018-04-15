@@ -14,6 +14,7 @@ contract WarFactory {
 
   address public owner;
   event WarClosed(uint index);
+  event NewWarCreated(string opponents);
 
   function WarFactory()
     public
@@ -28,6 +29,7 @@ contract WarFactory {
     ongGoingWars += 1;
     CoinWar newWar = new CoinWar(_tokeOne, _tokenTwo, _fromBlock, _toBlock);
     allWars.push(War(_opponents, newWar, true));
+    NewWarCreated(_opponents);
   }
 
   function closeWarAtIndex(uint index, address[] winningAddresses, uint[] winningBets, address winningContract, address[] loosingAddresses, uint[] loosingBets, address loosingContract)

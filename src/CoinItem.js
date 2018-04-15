@@ -6,8 +6,7 @@ export default class CoinItem extends Component {
   constructor() {
     super()
     this.state = {
-      wars: [],
-      warClosed: false
+      wars: []
     }
     this.wfInstance = null
   }
@@ -49,9 +48,19 @@ export default class CoinItem extends Component {
 
   componentDidMount = async () => {
     this.wfInstance = await this.props.warFactoryContract.deployed()
+
     const warClosedEvent = await this.wfInstance.WarClosed()
+    const newWarCreatedEvent = await this.wfInstance.NewWarCreated()
+
+    // new war created event
+    newWarCreatedEvent.watch((error, results) => {
+      console.log(error, results)
+      this.loadWars(this.wfInstance)
+    })
+
+    // war closed event
     warClosedEvent.watch((error, results) => {
-      this.setState({ warClosed: true })
+      this.loadWars(this.wfInstance)
     })
     this.loadWars(this.wfInstance)
   }

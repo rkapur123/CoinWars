@@ -12,7 +12,6 @@ contract RinkebyWithdraw {
 
   mapping (address => bool) hasWithdrawn;
 
-
   function RinkebyWithdraw()
     public
   {
@@ -36,15 +35,9 @@ contract RinkebyWithdraw {
     ven.transfer(msg.sender, 100);
   }
 
-
-
   modifier onlyOneWithdraw() {
     require(hasWithdrawn[msg.sender] == false);
     _ ;
   }
-
-
-
-
 
 }

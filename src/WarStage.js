@@ -52,9 +52,10 @@ class WarStage extends Component {
     this.coin2 = await this.props.erc20Contract.at(coin2Address)
     this.coins.set(coin2Address, this.coin2)
 
-    let _percentage = 0
+
     const coin1Event = await this.coin1.Transfer({}, { fromBlock, toBlock })
     coin1Event.watch(async (error, results) => {
+      let _percentage = 0
       const coinWarBalance = await this.coin1.balanceOf(coinWarAddress)
 
       const { _from, _value, _to } = results.args
@@ -72,6 +73,7 @@ class WarStage extends Component {
 
     const coin2Event = await this.coin2.Transfer({}, { fromBlock, toBlock })
     coin2Event.watch(async (error, results) => {
+      let _percentage = 0
       const coinWarBalance = await this.coin2.balanceOf(coinWarAddress)
 
       const { _from, _value, _to } = results.args
@@ -170,6 +172,15 @@ class WarStage extends Component {
     }
   }
 
+  // get normalized bet amount
+  getNormalizedBetAmount = (coin, bet_amount) => {
+    const _bet = new Big(bet_amount)
+    const bet = _bet
+      .div(this.getMultFactorForCoin(coin))
+      .toFixed(this.getDecimalsInCoin(coin))
+    return bet
+  }
+
   overtake = async (coin) => {
     const { coin1, coin2 } = this.props.opponents
     const { netCoin1Bet, netCoin2Bet, coin1_usd, coin2_usd } = this.state
@@ -180,19 +191,12 @@ class WarStage extends Component {
     let overtakeAmount = 0
 
     if (coin === coin1) {
-      // get the bet price of coin2
       if (coin2_bet_price.gt(coin1_bet_price)) {
-        const diff = coin2_bet_price
+        let c2_price = new Big(coin2_bet_price)
+        overtakeAmount = c2_price
           .plus(coin2_usd)
-          .plus(coin2_usd)
-          .div(coin1_bet_price)
-
-        let n1 = new Big(netCoin1Bet)
-        let n = n1.div(this.getMultFactorForCoin(coin1))
-          .toFixed(this.getDecimalsInCoin(coin1))
-
-        overtakeAmount = diff
-          .times(n)
+          .div(coin1_usd)
+          .minus(this.getNormalizedBetAmount(coin, netCoin1Bet))
           .toFixed(this.getDecimalsInCoin(coin))
         console.log(`You can overtake ${coin2} by `, overtakeAmount)
       } else {
@@ -200,17 +204,11 @@ class WarStage extends Component {
       }
     } else if (coin === coin2) {
       if (coin1_bet_price.gt(coin2_bet_price)) {
-        const diff = coin1_bet_price
+        let c1_price = new Big(coin1_bet_price)
+        overtakeAmount = c1_price
           .plus(coin1_usd)
-          .plus(coin1_usd)
-          .div(coin2_bet_price)
-
-          let n1 = new Big(netCoin2Bet)
-          let n = n1.div(this.getMultFactorForCoin(coin2))
-            .toFixed(this.getDecimalsInCoin(coin2))
-
-        overtakeAmount = diff
-          .times(n)
+          .div(coin2_usd)
+          .minus(this.getNormalizedBetAmount(coin, netCoin2Bet))
           .toFixed(this.getDecimalsInCoin(coin))
         console.log(`You can overtake ${coin1} by `, overtakeAmount)
       } else {
