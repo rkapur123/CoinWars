@@ -477,14 +477,15 @@ class WarStage extends Component {
             </div>
             <div className="progress_wrap">
               <div style={{ marginTop: 15, textAlign: 'left' }}>{this.getDisplayAmount(myToken1BetPrice, 2, true)} <Label bsStyle="info">{myToken1BetPercentage}% {coin1}</Label></div>
-              <div style={{ marginTop: -18, textAlign: 'right' }}><span> {coin1} <span className="balance">${this.getDisplayAmount(coin1_bet_price)}</span></span>
+              <div style={{ marginTop: -18, textAlign: 'right' }}>
+                <span><span style={{ marginLeft: 8, marginRight: 8 }}>{this.getDisplayAmount(coin1_bet_amount)}</span> {coin1} <span className="balance">${this.getDisplayAmount(coin1_bet_price)}</span></span>
                 <ProgressBar striped bsStyle="info" active now={coin1Progress} />
               </div>
             </div>
             <div className="progress_wrap bottom">
               <div style={{ textAlign: 'left' }}>{this.getDisplayAmount(myToken2BetPrice, 2, true)} <Label bsStyle="success">{myToken2BetPercentage}% {coin2}</Label></div>
               <div style={{ marginTop: -18, textAlign: 'right' }}>
-                <span> {coin2} <span className="balance">${this.getDisplayAmount(coin2_bet_price)}</span></span>
+                <span><span style={{ marginLeft: 8, marginRight: 8 }}>{this.getDisplayAmount(coin2_bet_amount)}</span> {coin2} <span className="balance">${this.getDisplayAmount(coin2_bet_price)}</span></span>
                 <ProgressBar striped bsStyle="success" active now={coin2Progress} />
               </div>
             </div>
