@@ -452,7 +452,7 @@ class WarStage extends Component {
       <div>
         <Row className="show-grid">
           <Col xs={2} md={2}>
-            <div className="coin" style={{ marginTop: 70 }}>
+            <div className="coin" style={{ marginTop: 100 }}>
               <Button
                 bsClass="coin-btn"
                 bsSize="lg" bsStyle="info">
@@ -472,19 +472,23 @@ class WarStage extends Component {
             </div>
           </Col>
           <Col xs={6} md={6}>
+            <div style={{ fontFamily: 'Star Wars', textAlign: 'center' }}>
+              {`${coin1} vs ${coin2}`}
+            </div>
             <div className="time_notif">
-              <div style={{ fontSize: 14 }}>{startTime !== 0 ? `${startTime}` : null} #{block} - #{toBlock}</div>
+              {startTime !== 0 ? `${startTime}` : null} <span>15:00 Remaining !</span>
             </div>
             <div className="progress_wrap">
-              <div style={{ marginTop: 15, textAlign: 'left' }}>{this.getDisplayAmount(myToken1BetPrice, 2, true)} <Label bsStyle="info">{myToken1BetPercentage}% {coin1}</Label></div>
-              <div style={{ marginTop: -18, textAlign: 'right' }}><span> {coin1} <span className="balance">${this.getDisplayAmount(coin1_bet_price)}</span></span>
+              <div style={{ marginTop: 15, textAlign: 'left' }}>{this.getDisplayAmount(myToken1BetPrice, 2, true)}</div>
+              <div style={{ marginTop: -18, textAlign: 'right' }}>
+                <span className="balance">${this.getDisplayAmount(coin1_bet_price)}</span> <span>{coin1}</span>
                 <ProgressBar striped bsStyle="info" active now={coin1Progress} />
               </div>
             </div>
             <div className="progress_wrap bottom">
-              <div style={{ textAlign: 'left' }}>{this.getDisplayAmount(myToken2BetPrice, 2, true)} <Label bsStyle="success">{myToken2BetPercentage}% {coin2}</Label></div>
+              <div style={{ textAlign: 'left' }}>{this.getDisplayAmount(myToken2BetPrice, 2, true)}</div>
               <div style={{ marginTop: -18, textAlign: 'right' }}>
-                <span> {coin2} <span className="balance">${this.getDisplayAmount(coin2_bet_price)}</span></span>
+                <span className="balance">${this.getDisplayAmount(coin2_bet_price)}</span> <span>{coin2}</span>
                 <ProgressBar striped bsStyle="success" active now={coin2Progress} />
               </div>
             </div>
