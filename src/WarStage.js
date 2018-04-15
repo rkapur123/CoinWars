@@ -435,7 +435,7 @@ class WarStage extends Component {
       let _formattedTime = moment.duration(_startTime, "seconds").format('h:mm:ss')
       this.setState({ startTime: `${_formattedTime} Remaining!`, block: currentBlock })
     } else if (currentBlock > toBlock) {
-      this.setState({ startTime: 0, block: currentBlock })
+      this.setState({ startTime: `Game Over`, block: currentBlock })
     }
   }
 
@@ -509,10 +509,10 @@ class WarStage extends Component {
             <div style={{ fontFamily: 'Open Sans', textAlign: 'center', fontSize: 30, fontWeight:'bold' }}>
               <span>{`${coin1} vs ${coin2}`}</span>
             </div>
-            <div className="time_notif">
-                {startTime !== 0 ? `${startTime}` : null} <span>15:00 Remaining !</span>
-            </div>
             <div onClick={this.togglePrice.bind(this)}>
+              <div className="time_notif">
+                {startTime !== 0 ? `${startTime}` : null}
+              </div>
               <div className="progress_wrap">
                 <div style={{ marginTop: 15, textAlign: 'left' }}>
                   <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken1BetPercentage)}%`} href="#" id="tooltip-1">
@@ -520,7 +520,7 @@ class WarStage extends Component {
                       togglePrice ? myToken1BetAmount : myToken1BetPrice,
                       2, togglePrice ? false : true
                     )}
-                  </LinkWithTooltip>{' '}
+                  </LinkWithTooltip>{` ${coin1}`}
                 </div>
                 <div style={{ marginTop: -18, textAlign: 'right' }}>
                   <span className="balance">
@@ -539,7 +539,7 @@ class WarStage extends Component {
                       togglePrice ?  myToken2BetAmount : myToken2BetPrice,
                       2, togglePrice ? false : true
                     )}
-                  </LinkWithTooltip>{' '}
+                  </LinkWithTooltip>{` ${coin2}`}
                 </div>
                 <div style={{ marginTop: -18, textAlign: 'right' }}>
                   <span className="balance">
