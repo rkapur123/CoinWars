@@ -520,7 +520,7 @@ class WarStage extends Component {
                       togglePrice ? myToken1BetAmount : myToken1BetPrice,
                       2, togglePrice ? false : true
                     )}
-                  </LinkWithTooltip>{` ${coin1}`}
+                  </LinkWithTooltip>{togglePrice && ` ${coin1}`}
                 </div>
                 <div style={{ marginTop: -18, textAlign: 'right' }}>
                   <span className="balance">
@@ -539,7 +539,7 @@ class WarStage extends Component {
                       togglePrice ?  myToken2BetAmount : myToken2BetPrice,
                       2, togglePrice ? false : true
                     )}
-                  </LinkWithTooltip>{` ${coin2}`}
+                  </LinkWithTooltip>{togglePrice && ` ${coin2}`}
                 </div>
                 <div style={{ marginTop: -18, textAlign: 'right' }}>
                   <span className="balance">
