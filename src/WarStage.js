@@ -13,6 +13,8 @@ momentDurationFormat(moment)
 typeof moment.duration.fn.format === "function";
 typeof moment.duration.format === "function";
 
+const API_REFRESH_RATE = 60000
+
 class WarStage extends Component {
 
   state = {
@@ -98,8 +100,11 @@ class WarStage extends Component {
     })
     blockTracker.start()
 
-    // get price from coinmarketcap after every 3 seconds
-    this.props.setInterval(this.getCoinsPrice, 3000)
+    // get initial price
+    this.getCoinsPrice()
+
+    // get price from coinmarketcap after every 60 seconds
+    this.props.setInterval(this.getCoinsPrice, API_REFRESH_RATE)
   }
 
   componentWillUnmount() {
@@ -447,14 +452,14 @@ class WarStage extends Component {
             <div className="progress_wrap">
               <div style={{ marginTop: 15, textAlign: 'left' }}>Balance: <Label bsStyle="info">{myToken1BetPercentage}% {coin1}</Label></div>
               <div style={{ marginTop: -18, textAlign: 'right' }}>
-                <span><span style={{ marginLeft: 8, marginRight: 8 }}>{coin1_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin1} <span className="balance">${coin1_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span></span>
+                <span><span style={{ marginLeft: 8, marginRight: 8 }}>{new Big(coin1_bet_amount).toFixed(2).toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin1} <span className="balance">${new Big(coin1_bet_price).toFixed(2).toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span></span>
                 <ProgressBar striped bsStyle="info" active now={coin1Progress} />
               </div>
             </div>
             <div className="progress_wrap bottom">
               <div style={{ textAlign: 'left' }}>Balance: <Label bsStyle="success">{myToken2BetPercentage}% {coin2}</Label></div>
               <div style={{ marginTop: -18, textAlign: 'right' }}>
-                <span><span style={{ marginLeft: 8, marginRight: 8 }}>{coin2_bet_amount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin2} <span className="balance">${coin2_bet_price.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span></span>
+                <span><span style={{ marginLeft: 8, marginRight: 8 }}>{new Big(coin2_bet_amount).toFixed(2).toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span> {coin2} <span className="balance">${new Big(coin2_bet_price).toFixed(2).toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')}</span></span>
                 <ProgressBar striped bsStyle="success" active now={coin2Progress} />
               </div>
             </div>
