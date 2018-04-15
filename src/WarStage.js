@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
-import { Button, Row, Col, ButtonGroup, Label, Image, ProgressBar } from 'react-bootstrap'
+import { Button, Row, Col, ButtonGroup, OverlayTrigger, Tooltip,
+  Label, Image, ProgressBar } from 'react-bootstrap'
 import ReactTimeout from 'react-timeout'
 import BlockTracker from 'eth-block-tracker'
 import hexToDec from 'hex-to-dec'
@@ -14,6 +15,20 @@ typeof moment.duration.fn.format === "function";
 typeof moment.duration.format === "function";
 
 const API_REFRESH_RATE = 60000
+
+const LinkWithTooltip = ({ id, children, href, tooltip }) => {
+  return (
+    <OverlayTrigger
+      overlay={<Tooltip id={id}>{tooltip}</Tooltip>}
+      placement="top"
+      delayShow={300}
+      delayHide={150}
+    >
+      <a style={{ color: 'white', textDecoration: 'none' }} href={href}>{children}</a>
+    </OverlayTrigger>
+  );
+}
+
 
 class WarStage extends Component {
 
@@ -452,7 +467,7 @@ class WarStage extends Component {
       <div>
         <Row className="show-grid">
           <Col xs={2} md={2}>
-            <div className="coin" style={{ marginTop: 100 }}>
+            <div className="coin" style={{ marginTop: 130 }}>
               <Button
                 bsClass="coin-btn"
                 bsSize="lg" bsStyle="info">
@@ -472,21 +487,29 @@ class WarStage extends Component {
             </div>
           </Col>
           <Col xs={6} md={6}>
-            <div style={{ fontFamily: 'Star Wars', textAlign: 'center' }}>
-              {`${coin1} vs ${coin2}`}
+            <div style={{ fontFamily: 'Open Sans', textAlign: 'center', fontSize: 30, fontWeight:'bold' }}>
+              <span>{`${coin1} vs ${coin2}`}</span>
             </div>
             <div className="time_notif">
-              {startTime !== 0 ? `${startTime}` : null} <span>15:00 Remaining !</span>
+                {startTime !== 0 ? `${startTime}` : null} <span>15:00 Remaining !</span>
             </div>
             <div className="progress_wrap">
-              <div style={{ marginTop: 15, textAlign: 'left' }}>{this.getDisplayAmount(myToken1BetPrice, 2, true)}</div>
+              <div style={{ marginTop: 15, textAlign: 'left' }}>
+                <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken1BetPercentage)}%`} href="#" id="tooltip-1">
+                  {this.getDisplayAmount(myToken1BetPrice, 2, true)}
+                </LinkWithTooltip>{' '}
+              </div>
               <div style={{ marginTop: -18, textAlign: 'right' }}>
                 <span className="balance">${this.getDisplayAmount(coin1_bet_price)}</span> <span>{coin1}</span>
                 <ProgressBar striped bsStyle="info" active now={coin1Progress} />
               </div>
             </div>
             <div className="progress_wrap bottom">
-              <div style={{ textAlign: 'left' }}>{this.getDisplayAmount(myToken2BetPrice, 2, true)}</div>
+              <div style={{ textAlign: 'left' }}>
+                <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken2BetPercentage)}%`} href="#" id="tooltip-2">
+                  {this.getDisplayAmount(myToken2BetPrice, 2, true)}
+                </LinkWithTooltip>{' '}
+              </div>
               <div style={{ marginTop: -18, textAlign: 'right' }}>
                 <span className="balance">${this.getDisplayAmount(coin2_bet_price)}</span> <span>{coin2}</span>
                 <ProgressBar striped bsStyle="success" active now={coin2Progress} />
