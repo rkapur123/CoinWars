@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Button, Row, Col, ButtonGroup, OverlayTrigger, Tooltip,
-  Label, Image, ProgressBar } from 'react-bootstrap'
+  Image, ProgressBar } from 'react-bootstrap'
 import ReactTimeout from 'react-timeout'
 import BlockTracker from 'eth-block-tracker'
 import hexToDec from 'hex-to-dec'
@@ -429,7 +429,7 @@ class WarStage extends Component {
     if (currentBlock < fromBlock) {
       let _startTime = avgTime * (fromBlock - currentBlock)
       let _formattedTime = moment.duration(_startTime, "seconds").format('h:mm:ss')
-      this.setState({ startTime: `${_formattedTime} To Go!`, block: currentBlock })
+      this.setState({ startTime: `${_formattedTime} To Begin!`, block: currentBlock })
     } else if (currentBlock >= fromBlock && currentBlock <= toBlock) {
       let _startTime = avgTime * (toBlock - currentBlock)
       let _formattedTime = moment.duration(_startTime, "seconds").format('h:mm:ss')
@@ -440,7 +440,6 @@ class WarStage extends Component {
   }
 
   getDisplayAmount = (amount, decimal = 2, isCurrency = false) => {
-    const { togglePrice } = this.state
     const amt = new Big(amount)
       .toFixed(decimal)
       .toString()
@@ -451,6 +450,7 @@ class WarStage extends Component {
   }
 
   togglePrice = () => {
+    const { togglePrice } = this.state
     this.setState({ togglePrice: !this.state.togglePrice })
   }
 
@@ -554,7 +554,7 @@ class WarStage extends Component {
             </div>
           </Col>
           <Col xs={4} md={4}>
-            <div style={{ paddingLeft: 20, paddingRight: 20, marginTop: 60 }}>
+            <div style={{ paddingLeft: 20, paddingRight: 20, marginTop: 120 }}>
               {this.placeBid()}
             </div>
           </Col>
