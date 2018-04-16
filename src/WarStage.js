@@ -88,15 +88,16 @@ class WarStage extends Component {
       const { _from, _value, _to } = results.args
       if (_from === this.props.account && _to === coinWarAddress) {
         const _amt = _value.toNumber()
+        if (_amt > 0) {
+          _myBetPrice = new Big(_amt)
+            .times(this.state.coin1_usd)
+            .div(this.getMultFactorForCoin(coin1))
 
-        _myBetPrice = new Big(_amt)
-          .times(this.state.coin1_usd)
-          .div(this.getMultFactorForCoin(coin1))
+          _myBetAmount = new Big(_amt)
+            .div(this.getMultFactorForCoin(coin1))
 
-        _myBetAmount = new Big(_amt)
-          .div(this.getMultFactorForCoin(coin1))
-
-        _percentage = (_amt / coinWarBalance.toNumber()) * 100
+          _percentage = (_amt / coinWarBalance.toNumber()) * 100
+        }
       }
 
       this.setState({
@@ -116,15 +117,16 @@ class WarStage extends Component {
       const { _from, _value, _to } = results.args
       if (_from === this.props.account && _to === coinWarAddress) {
         const _amt = _value.toNumber()
+        if (_amt > 0) {
+          _myBetPrice = new Big(_amt)
+            .times(this.state.coin2_usd)
+            .div(this.getMultFactorForCoin(coin2))
 
-        _myBetPrice = new Big(_amt)
-          .times(this.state.coin2_usd)
-          .div(this.getMultFactorForCoin(coin2))
+          _myBetAmount = new Big(_amt)
+            .div(this.getMultFactorForCoin(coin2))
 
-        _myBetAmount = new Big(_amt)
-          .div(this.getMultFactorForCoin(coin2))
-
-        _percentage = (_amt / coinWarBalance.toNumber()) * 100
+          _percentage = (_amt / coinWarBalance.toNumber()) * 100
+        }
       }
 
       this.setState({
