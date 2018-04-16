@@ -5,6 +5,9 @@ import CoinWars from './solidity/build/contracts/CoinWar.json'
 import WarFactory from './solidity/build/contracts/WarFactory.json'
 import ERC20 from './solidity/build/contracts/ERC20.json'
 
+// only for test network
+import TokenFaucet from './solidity/build/contracts/TokenFaucet.json'
+
 const accessToken = 'vXJ9MlTj969EuStvmyPN'
 
 export default (WrappedComponent) => {
@@ -36,6 +39,10 @@ export default (WrappedComponent) => {
       this.warfactory.setProvider(this.web3Provider)
       this.erc20 = TruffleContract(ERC20)
       this.erc20.setProvider(this.web3Provider)
+
+      // only for test network
+      this.tokenFaucet = TruffleContract(TokenFaucet)
+      this.tokenFaucet.setProvider(this.web3Provider)
     }
 
     componentDidMount = async () => {
@@ -70,7 +77,8 @@ export default (WrappedComponent) => {
         provider: this.web3Provider,
         warFactoryContract: this.warfactory,
         coinWarContract: this.coinwars,
-        erc20Contract: this.erc20
+        erc20Contract: this.erc20,
+        tokenFaucet: this.tokenFaucet // only test
       })
 
       return (

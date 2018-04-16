@@ -2,8 +2,7 @@ pragma solidity ^0.4.18;
 
 import { ERC20 } from "./ERC20.sol";
 
-contract RinkebyWithdraw {
-
+contract TokenFaucet {
 
   ERC20 public eos;
   ERC20 public tron;
@@ -13,7 +12,7 @@ contract RinkebyWithdraw {
   mapping (address => bool) hasWithdrawn;
 
 
-  function RinkebyWithdraw()
+  function TokenFaucet()
     public
   {
 
@@ -36,15 +35,9 @@ contract RinkebyWithdraw {
     ven.transfer(msg.sender, 100);
   }
 
-
-
   modifier onlyOneWithdraw() {
     require(hasWithdrawn[msg.sender] == false);
     _ ;
   }
-
-
-
-
 
 }

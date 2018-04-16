@@ -3,6 +3,7 @@ var ERC22 = artifacts.require("ERC20");
 var CoinWar = artifacts.require("CoinWar");
 var WarFactory = artifacts.require("WarFactory");
 var CoinManager = artifacts.require("CoinManager");
+var TokenFaucet = artifacts.require("TokenFaucet");
 
 module.exports = deployer => {
   /*
@@ -30,4 +31,5 @@ module.exports = deployer => {
     })
   deployer.deploy(CoinManager)
   deployer.deploy(WarFactory)
+  deployer.deploy(TokenFaucet)
 };
