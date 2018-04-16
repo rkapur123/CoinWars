@@ -312,7 +312,10 @@ class WarStage extends Component {
             required />
         </div>
         <div className="form-group">
-          <button type="submit" disabled={!coin} className="btn btn-block btn-primary">Submit</button>
+          <button
+            type="submit"
+            disabled={!coin}
+            className="btn btn-block btn-primary">Submit</button>
         </div>
       </form>
     )
@@ -453,13 +456,13 @@ class WarStage extends Component {
 
   togglePrice = () => {
     const { togglePrice } = this.state
-    this.setState({ togglePrice: !this.state.togglePrice })
+    this.setState({ togglePrice: !togglePrice })
   }
 
   render() {
-    const { coin1, coin2, toBlock } = this.props.opponents
+    const { coin1, coin2 } = this.props.opponents
     const { netCoin1Bet, netCoin2Bet, coin1_usd,
-      coin2_usd, startTime, block, myToken1BetPrice, myToken2BetPrice,
+      coin2_usd, startTime, myToken1BetPrice, myToken2BetPrice,
       myToken1BetPercentage, myToken2BetPercentage, togglePrice,
       myToken1BetAmount, myToken2BetAmount } = this.state
 
