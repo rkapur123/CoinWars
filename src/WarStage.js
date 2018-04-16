@@ -554,7 +554,7 @@ class WarStage extends Component {
             </div>
           </Col>
           <Col xs={4} md={4}>
-            <div style={{ paddingLeft: 20, paddingRight: 20, marginTop: 60 }}>
+            <div style={{ paddingLeft: 20, paddingRight: 20, marginTop: 120 }}>
               {this.placeBid()}
             </div>
           </Col>
