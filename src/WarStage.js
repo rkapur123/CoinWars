@@ -46,7 +46,7 @@ class WarStage extends Component {
     coin1Image: null,
     coin2Image: null,
     overtake: 0,
-    startTime: 0,
+    startTime: `loading ...`,
     myToken1BetPercentage: 0,
     myToken2BetPercentage: 0,
     myToken1BetPrice: 0,

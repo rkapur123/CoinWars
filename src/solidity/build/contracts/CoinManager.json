@@ -229,7 +229,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1271,
+                        "referencedDeclaration": 1516,
                         "src": "209:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -974,7 +974,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1271,
+                        "referencedDeclaration": 1516,
                         "src": "209:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -1567,28 +1567,10 @@
     "4": {
       "events": {},
       "links": {},
-      "address": "0x19f4f05d2a888d2c8485ad1461305d73b467e682",
-      "transactionHash": "0x2caa833b5a0ea9e88a8ce310eb4f6e900ad9f400c4e5da98c013ada967e3beb8"
-    },
-    "5777": {
-      "events": {},
-      "links": {},
-      "address": "0x8f0483125fcb9aaaefa9209d8e9d7b9c8b9fb90f",
-      "transactionHash": "0x16873fa5ebb3fec82d6827342e379019dde55245b8089e4dfefdfee3ee1a09bf"
-    },
-    "1521621949366": {
-      "events": {},
-      "links": {},
-      "address": "0xa058734d97a92a1cb2d3a70218ec0bdef25ef633",
-      "transactionHash": "0x2934daae6ffe3d4a00d718a46687dc1727080ea02a19f720464962284808af9d"
-    },
-    "1521783249454": {
-      "events": {},
-      "links": {},
-      "address": "0xbf2b1859567d9b21dd33b04806f6ec4cbe42d9a6",
-      "transactionHash": "0x04a70d0d94f8a2c5d0a96cc3bde9a9a6e8cce08f6c9c693f533bd7d38d4e9ed0"
+      "address": "0xac880e11df568f15000cf6fe37b3be7406051edd",
+      "transactionHash": "0xebe5b57a9ca95f0cdd62a4bf84b24b3584f10e078e379b2396248d661d2c591f"
     }
   },
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-04-16T10:39:13.806Z"
+  "updatedAt": "2018-04-16T12:48:26.652Z"
 }

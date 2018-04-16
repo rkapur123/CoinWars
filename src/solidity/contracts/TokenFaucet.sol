@@ -29,10 +29,10 @@ contract TokenFaucet {
   {
     hasWithdrawn[msg.sender] = true;
 
-    eos.transfer(msg.sender, 100);
-    tron.transfer(msg.sender, 100);
-    binance.transfer(msg.sender, 100);
-    ven.transfer(msg.sender, 100);
+    eos.transfer(msg.sender, 1000000000000000000000);
+    tron.transfer(msg.sender, 1000000000);
+    binance.transfer(msg.sender, 1000000000000000000000);
+    ven.transfer(msg.sender, 1000000000000000000000);
   }
 
   modifier onlyOneWithdraw() {
