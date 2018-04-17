@@ -534,7 +534,7 @@ class WarStage extends Component {
                     {this.getDisplayAmount(
                       togglePrice ? coin1_bet_amount : coin1_bet_price,
                       2, togglePrice ? false : true
-                    )} <span>{!togglePrice && ` ${coin1}`}</span>
+                    )}
                   </span>
                   <ProgressBar striped bsStyle="info" active now={coin1Progress} />
                 </div>
@@ -553,7 +553,7 @@ class WarStage extends Component {
                     {this.getDisplayAmount(
                       togglePrice ? coin2_bet_amount : coin2_bet_price,
                       2, togglePrice ? false : true
-                    )} <span>{!togglePrice && ` ${coin2}`}</span>
+                    )}
                   </span>
                   <ProgressBar striped bsStyle="success" active now={coin2Progress} />
                 </div>

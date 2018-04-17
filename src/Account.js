@@ -110,7 +110,7 @@ export default class Account extends Component {
     if (amount === "0.0") return null
     return (
       <span>
-        <Label bsStyle={labelType}>{amount} {labelTxt}</Label> 
+        <Label bsStyle={labelType}>{amount} {labelTxt}</Label>
       </span>
     )
   }
@@ -169,14 +169,16 @@ export default class Account extends Component {
           <td>{`${token1} vs ${token2}`}</td>
           <td>
             {this.getLabel('primary', _winnerTokenAmount, winner)}
-              <span style={{ marginLeft: 10 }}>
-                {this.getLabel('success', _looserTokenAmount, looser)}
-              </span>
+            <span style={{ marginLeft: 10 }}>
+              {this.getLabel('success', _looserTokenAmount, looser)}
+            </span>
           </td>
           <td>{winner}</td>
-          <td><Label bsStyle="success">{arith.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {winner}</Label> , <Label bsStyle="danger">-{_looserTokenAmount} {looser}</Label> {(winnerTokenAmount > 0 && (withdrawn !== true)) && (
+          <td>
+            <Label bsStyle="success">{arith.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {looser}</Label> , <Label bsStyle="danger">-{_looserTokenAmount} {winner}</Label> {(winnerTokenAmount > 0 && (withdrawn !== true)) && (
               <Button bsStyle="success" onClick={this.withdraw.bind(this, coinWarAddress)}>Withdraw</Button>
-            )}</td>
+            )}
+          </td>
         </tr>
       )
     })
