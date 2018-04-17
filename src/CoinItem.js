@@ -148,19 +148,19 @@ export default class CoinItem extends Component {
             <div style={{ display: 'flex', fontSize: 14, justifyContent: 'center' }}>
               <div style={{ flex: 1 }}>
                 <div>EOS</div>
-                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{eos > 0 ? eos : `100000000000`}</Label>
+                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{eos > 0 ? eos : `0`}</Label>
               </div>
               <div style={{ flex: 1 }}>
                 <div>TRX</div>
-                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{trx > 0 ? trx : `100000000000`}</Label>
+                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{trx > 0 ? trx : `0`}</Label>
               </div>
               <div style={{ flex: 1 }}>
                 <div>BNB</div>
-                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{bnb > 0 ? bnb : `100000000000`}</Label>
+                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{bnb > 0 ? bnb : `0`}</Label>
               </div>
               <div style={{ flex: 1 }}>
                 <div>VEN</div>
-                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{ven > 0 ? ven : `100000000000`}</Label>
+                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{ven > 0 ? ven : `0`}</Label>
               </div>
             </div>
           </div>
