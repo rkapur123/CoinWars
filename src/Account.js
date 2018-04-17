@@ -38,9 +38,10 @@ export default class Account extends Component {
   getFomatted = (player, value) => {
     if (!value) value = 0
     let _amount = new Big(value)
+    console.log(player, value.toNumber(), player)
     let _finalAmount = _amount
-      .div(this.getMultFactorForCoin(player.toLowerCase()))
-      .toFixed(this.getDecimalsInCoin(player.toLowerCase()))
+      .div(this.getMultFactorForCoin(player))
+      .toFixed(this.getDecimalsInCoin(player))
     return _finalAmount
   }
 
@@ -64,6 +65,8 @@ export default class Account extends Component {
             winner = tokens[1]
             looser = tokens[0]
           }
+
+          console.log(results)
 
           warResults.push({
             token1: tokens[0],
@@ -115,6 +118,27 @@ export default class Account extends Component {
     )
   }
 
+  singleCoinPlayer = (amount, isWinner = true, token) => {
+    const label = isWinner ? 'success' : 'danger'
+    const _amount = isWinner ? `+${amount}` : `-${amount}`
+    return (
+      <span>
+        <Label bsStyle={label} style={{ marginRight: 5 }}>{_amount} {token}</Label>
+        {isWinner && <Button bsStyle="success" onClick={this.withdraw}>Withdraw</Button>}
+      </span>
+    )
+  }
+
+  doubleCoinPlayer = (winner, amountWinner, looser, amountLooser) => {
+    return (
+      <span>
+        <Label bsStyle="success" style={{ marginRight: 5 }}>+{amountWinner} {winner}</Label>
+        <Label bsStyle="danger" style={{ marginRight: 5 }}>+{amountLooser} {looser}</Label>
+        <Button bsStyle="success" onClick={this.withdraw}>Withdraw</Button>
+      </span>
+    )
+  }
+
   loadData = () => {
     const { loading, withdrawn } = this.state
     if (loading) {
@@ -146,22 +170,42 @@ export default class Account extends Component {
         winnerTokenAmount, looserTokenAmount,
         winnerTokenTotalBet, looserTokenTotalBet, coinWarAddress } = item
 
+      if (new Big(winnerTokenAmount).eq(0) && new Big(looserTokenAmount).eq(0)) {
+        return null
+      }
+
+      let amount = 0
+      let amountWinner = 0, amountLooser = 0
       let arith = 0
 
-      if (winnerTokenAmount > 0) {
-        let _arith = new Big(winnerTokenAmount)
-        arith = _arith
+      let amountDisplay = null
+
+      if (new Big(winnerTokenAmount).eq(0) && new Big(looserTokenAmount).gt(0)) {
+        // only Looser
+        console.log(`${token1}vs${token2} - only looser`)
+        amount = looserTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
+        amountDisplay = this.singleCoinPlayer(amount, false, looser)
+      } else if (new Big(winnerTokenAmount).gt(0) && new Big(looserTokenAmount).eq(0)) {
+        // only Winner
+        console.log(`${token1}vs${token2} - only winner`)
+        arith = new Big(winnerTokenAmount)
           .div(winnerTokenTotalBet)
           .times(looserTokenTotalBet)
+        amount = arith.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
+        amountDisplay = this.singleCoinPlayer(amount, true, looser)
+      } else if (new Big(winnerTokenAmount).gt(0) && new Big(looserTokenAmount).gt(0)) {
+        // both winner and looser
+        console.log(`${token1}vs${token2} - both winner and looser`)
+        arith = new Big(winnerTokenAmount)
+          .div(winnerTokenTotalBet)
+          .times(looserTokenTotalBet)
+        amountWinner = arith.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
+        amountLooser = looserTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
+        amountDisplay = this.doubleCoinPlayer(winner, amountWinner, looser, amountLooser)
       }
 
       const _winnerTokenAmount = winnerTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
       const _looserTokenAmount = looserTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
-
-      console.log(_winnerTokenAmount, _winnerTokenAmount)
-      if (_winnerTokenAmount === "0.0" && _looserTokenAmount === "0.0") {
-        return null
-      }
 
       return (
         <tr key={index}>
@@ -175,9 +219,7 @@ export default class Account extends Component {
           </td>
           <td>{winner}</td>
           <td>
-            <Label bsStyle="success">{arith.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')} {looser}</Label> , <Label bsStyle="danger">-{_looserTokenAmount} {winner}</Label> {(winnerTokenAmount > 0 && (withdrawn !== true)) && (
-              <Button bsStyle="success" onClick={this.withdraw.bind(this, coinWarAddress)}>Withdraw</Button>
-            )}
+            {amountDisplay}
           </td>
         </tr>
       )
