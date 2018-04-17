@@ -132,8 +132,8 @@ export default class Account extends Component {
   doubleCoinPlayer = (winner, amountWinner, looser, amountLooser) => {
     return (
       <span>
-        <Label bsStyle="success" style={{ marginRight: 5 }}>+{amountWinner} {winner}</Label>
-        <Label bsStyle="danger" style={{ marginRight: 5 }}>+{amountLooser} {looser}</Label>
+        <Label bsStyle="success" style={{ marginRight: 5 }}>+{amountWinner} {looser}</Label>
+        <Label bsStyle="danger" style={{ marginRight: 5 }}>-{amountLooser} {looser}</Label>
         <Button bsStyle="success" onClick={this.withdraw}>Withdraw</Button>
       </span>
     )
