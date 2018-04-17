@@ -11,8 +11,8 @@ import moment from 'moment'
 import momentDurationFormat from 'moment-duration-format'
 
 momentDurationFormat(moment)
-typeof moment.duration.fn.format === "function";
-typeof moment.duration.format === "function";
+// typeof moment.duration.fn.format === "function";
+// typeof moment.duration.format === "function";
 
 const API_REFRESH_RATE = 60000
 
@@ -499,6 +499,7 @@ class WarStage extends Component {
                   style={{ maxWidth: 64 }}
                   src={require(`./128/color/${coin1.toLowerCase()}.png`)} />
               </Button>
+              <div>{coin1}</div>
             </div>
             <div className="coin">
               <Button
@@ -508,6 +509,7 @@ class WarStage extends Component {
                   style={{ maxWidth: 64 }}
                   src={require(`./128/color/${coin2.toLowerCase()}.png`)} />
               </Button>
+              <div>{coin2}</div>
             </div>
           </Col>
           <Col xs={6} md={6}>

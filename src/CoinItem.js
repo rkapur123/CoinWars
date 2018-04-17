@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import WarStage from './WarStage'
 
-import { Button, ListGroup, ListGroupItem } from 'react-bootstrap'
+import { Button, ListGroup, ListGroupItem, Tooltip, Label } from 'react-bootstrap'
 
 // only for test
 const tokensAddress = {
@@ -143,16 +143,28 @@ export default class CoinItem extends Component {
           <strong > {this.props.account}</strong>
         </p>
         <div style={{ marginBottom: 20 }}>
-          <Button bsStyle="primary" onClick={this.withdrawFromFaucet.bind(this)}>Withdraw Tokens from Faucet</Button>
-          <div style={{ padding: '20px 150px' }}>
-            <ListGroup>
-                <ListGroupItem bsStyle="info">EOS: {eos > 0 ? eos : `0`} tokens</ListGroupItem>
-                <ListGroupItem bsStyle="info">TRX: {trx > 0 ? trx : `0`} tokens</ListGroupItem>
-                <ListGroupItem bsStyle="info">BNB: {bnb > 0 ? bnb : `0`} tokens</ListGroupItem>
-                <ListGroupItem bsStyle="info">VEN: {ven > 0 ? bnb : `0`} tokens</ListGroupItem>
-              </ListGroup>
+          <Button bsStyle="success" onClick={this.withdrawFromFaucet.bind(this)}>Withdraw Tokens from Faucet</Button>
+          <div style={{ padding: '20px 150px', marginBottom: 50, marginTop: 20 }}>
+            <div style={{ display: 'flex', fontSize: 14, justifyContent: 'center' }}>
+              <div style={{ flex: 1 }}>
+                <div>EOS</div>
+                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{eos > 0 ? eos : `100000000000`}</Label>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div>TRX</div>
+                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{trx > 0 ? trx : `100000000000`}</Label>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div>BNB</div>
+                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{bnb > 0 ? bnb : `100000000000`}</Label>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div>VEN</div>
+                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{ven > 0 ? ven : `100000000000`}</Label>
+              </div>
             </div>
           </div>
+        </div>
         {this.state.message && (
           <p>
             <strong>Holy guacamole!</strong> {this.state.message}
