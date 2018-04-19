@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import WarStage from './WarStage'
 
-import { Button, ListGroup, ListGroupItem, Tooltip, Label } from 'react-bootstrap'
+import { Button, Label } from 'react-bootstrap'
 
 // only for test
 const tokensAddress = {

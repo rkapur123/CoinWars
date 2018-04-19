@@ -459,6 +459,14 @@ class WarStage extends Component {
     this.setState({ togglePrice: !togglePrice })
   }
 
+  getTokenName = (symbol) => {
+    const token = TokenDecimals[symbol.toLowerCase()]
+    if (token) {
+      return token.name
+    }
+    return null
+  }
+
   render() {
     const { coin1, coin2 } = this.props.opponents
     const { netCoin1Bet, netCoin2Bet, coin1_usd,
@@ -499,7 +507,7 @@ class WarStage extends Component {
                   style={{ maxWidth: 64 }}
                   src={require(`./128/color/${coin1.toLowerCase()}.png`)} />
               </Button>
-              <div>{coin1}</div>
+              <div>{this.getTokenName(coin1)}</div>
             </div>
             <div className="coin">
               <Button
@@ -509,7 +517,7 @@ class WarStage extends Component {
                   style={{ maxWidth: 64 }}
                   src={require(`./128/color/${coin2.toLowerCase()}.png`)} />
               </Button>
-              <div>{coin2}</div>
+              <div>{this.getTokenName(coin2)}</div>
             </div>
           </Col>
           <Col xs={6} md={6}>
@@ -547,12 +555,12 @@ class WarStage extends Component {
                 <div className="pbar last">
                   <div className="meta">
                     <div className="info first">
-                      <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken1BetPercentage)}%`} href="#" id="tooltip-1">
+                      <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken2BetPercentage)}%`} href="#" id="tooltip-1">
                         {this.getDisplayAmount(
-                          togglePrice ? myToken1BetAmount : myToken1BetPrice,
+                          togglePrice ? myToken2BetAmount : myToken2BetPrice,
                           2, togglePrice ? false : true
                         )}
-                      </LinkWithTooltip>{togglePrice && ` ${coin1}`}
+                      </LinkWithTooltip>{togglePrice && ` ${coin2}`}
                     </div>
                     <div className="info last">
                       <span className="balance">
@@ -571,7 +579,7 @@ class WarStage extends Component {
             </div>
           </Col>
           <Col xs={4} md={4}>
-            <div style={{ paddingLeft: 20, paddingRight: 20, marginTop: 120 }}>
+            <div style={{ paddingLeft: 20, paddingRight: 20, marginTop: 150 }}>
               {this.placeBid()}
             </div>
           </Col>

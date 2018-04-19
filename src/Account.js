@@ -140,7 +140,7 @@ export default class Account extends Component {
   }
 
   loadData = () => {
-    const { loading, withdrawn } = this.state
+    const { loading } = this.state
     if (loading) {
       return (
         <div className="intro">
@@ -168,7 +168,7 @@ export default class Account extends Component {
     const warsClosed = this.state.results.map((item, index) => {
       const { token1, token2, winner, looser,
         winnerTokenAmount, looserTokenAmount,
-        winnerTokenTotalBet, looserTokenTotalBet, coinWarAddress } = item
+        winnerTokenTotalBet, looserTokenTotalBet } = item
 
       if (new Big(winnerTokenAmount).eq(0) && new Big(looserTokenAmount).eq(0)) {
         return null
