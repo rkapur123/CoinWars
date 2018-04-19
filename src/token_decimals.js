@@ -1,7 +1,7 @@
 const token_decimals = {
   eos: {
     id: 'eos',
-    name: 'Eos',
+    name: 'EOS',
     decimals: 18
   },
   trx: {
