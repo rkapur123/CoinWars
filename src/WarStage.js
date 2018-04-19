@@ -521,41 +521,51 @@ class WarStage extends Component {
                 {startTime !== 0 ? `${startTime}` : null}
               </div>
               <div className="progress_wrap">
-                <div style={{ marginTop: 15, textAlign: 'left' }}>
-                  <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken1BetPercentage)}%`} href="#" id="tooltip-1">
-                    {this.getDisplayAmount(
-                      togglePrice ? myToken1BetAmount : myToken1BetPrice,
-                      2, togglePrice ? false : true
-                    )}
-                  </LinkWithTooltip>{togglePrice && ` ${coin1}`}
+                <div className="pbar first">
+                  <div className="meta">
+                    <div className="info first">
+                      <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken1BetPercentage)}%`} href="#" id="tooltip-1">
+                        {this.getDisplayAmount(
+                          togglePrice ? myToken1BetAmount : myToken1BetPrice,
+                          2, togglePrice ? false : true
+                        )}
+                      </LinkWithTooltip>{togglePrice && ` ${coin1}`}
+                    </div>
+                    <div className="info last">
+                      <span className="balance">
+                        {this.getDisplayAmount(
+                          togglePrice ? coin1_bet_amount : coin1_bet_price,
+                          2, togglePrice ? false : true
+                        )} {togglePrice && ` ${coin1}`}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="bar">
+                    <ProgressBar striped bsStyle="info" active now={coin1Progress} />
+                  </div>
                 </div>
-                <div style={{ marginTop: -18, textAlign: 'right' }}>
-                  <span className="balance">
-                    {this.getDisplayAmount(
-                      togglePrice ? coin1_bet_amount : coin1_bet_price,
-                      2, togglePrice ? false : true
-                    )} {togglePrice && ` ${coin1}`}
-                  </span>
-                  <ProgressBar striped bsStyle="info" active now={coin1Progress} />
-                </div>
-              </div>
-              <div className="progress_wrap bottom">
-                <div style={{ textAlign: 'left', marginTop: 3 }}>
-                  <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken2BetPercentage)}%`} href="#" id="tooltip-2">
-                    {this.getDisplayAmount(
-                      togglePrice ?  myToken2BetAmount : myToken2BetPrice,
-                      2, togglePrice ? false : true
-                    )}
-                  </LinkWithTooltip>{togglePrice && ` ${coin2}`}
-                </div>
-                <div style={{ marginTop: -18, textAlign: 'right' }}>
-                  <span className="balance">
-                    {this.getDisplayAmount(
-                      togglePrice ? coin2_bet_amount : coin2_bet_price,
-                      2, togglePrice ? false : true
-                    )} {togglePrice && ` ${coin2}`}
-                  </span>
-                  <ProgressBar striped bsStyle="success" active now={coin2Progress} />
+                <div className="pbar last">
+                  <div className="meta">
+                    <div className="info first">
+                      <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken1BetPercentage)}%`} href="#" id="tooltip-1">
+                        {this.getDisplayAmount(
+                          togglePrice ? myToken1BetAmount : myToken1BetPrice,
+                          2, togglePrice ? false : true
+                        )}
+                      </LinkWithTooltip>{togglePrice && ` ${coin1}`}
+                    </div>
+                    <div className="info last">
+                      <span className="balance">
+                        {this.getDisplayAmount(
+                          togglePrice ? coin2_bet_amount : coin2_bet_price,
+                          2, togglePrice ? false : true
+                        )} {togglePrice && ` ${coin2}`}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="bar">
+                    <ProgressBar striped bsStyle="info" active now={coin2Progress} />
+                  </div>
                 </div>
               </div>
             </div>

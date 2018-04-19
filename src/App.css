@@ -38,8 +38,20 @@ body {
     color: #ffffff;
     font-family: 'Star Wars';
     font-size: 20px;
-
 }
+
+/*********** progress bar *************/
+.progress_wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.pbar { flex: 1; }
+.pbar.first { margin-top: 20px; }
+.pbar.last { margin-top: 55px; }
+.pbar .meta { display: flex; }
+.pbar .meta .info.first { flex: 1; text-align: left; }
+.pbar .meta .info.last { flex: 1; text-align: right; }
 
 .intro {
   border-radius: 25px;
