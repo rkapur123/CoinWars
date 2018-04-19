@@ -98,14 +98,13 @@ class WarStage extends Component {
 
           _percentage = (_amt / coinWarBalance.toNumber()) * 100
         }
+        this.setState({
+          netCoin1Bet: coinWarBalance.toNumber(),
+          myToken1BetPrice: _myBetPrice,
+          myToken1BetAmount: _myBetAmount,
+          myToken1BetPercentage: _percentage.toFixed(2)
+        })
       }
-
-      this.setState({
-        netCoin1Bet: coinWarBalance.toNumber(),
-        myToken1BetPrice: _myBetPrice,
-        myToken1BetAmount: _myBetAmount,
-        myToken1BetPercentage: _percentage.toFixed(2)
-      })
       this.props.reload(coinWarBalance)
     })
 
@@ -127,14 +126,13 @@ class WarStage extends Component {
 
           _percentage = (_amt / coinWarBalance.toNumber()) * 100
         }
+        this.setState({
+          netCoin2Bet: coinWarBalance.toNumber(),
+          myToken2BetPrice: _myBetPrice,
+          myToken2BetAmount: _myBetAmount,
+          myToken2BetPercentage: _percentage.toFixed(2)
+        })
       }
-
-      this.setState({
-        netCoin2Bet: coinWarBalance.toNumber(),
-        myToken2BetPrice: _myBetPrice,
-        myToken2BetAmount: _myBetAmount,
-        myToken2BetPercentage: _percentage.toFixed(2)
-      })
       this.props.reload(coinWarBalance)
     })
 
@@ -522,7 +520,7 @@ class WarStage extends Component {
           </Col>
           <Col xs={6} md={6}>
             <div style={{ fontFamily: 'Open Sans', textAlign: 'center', fontSize: 30, fontWeight:'bold' }}>
-              <span>{`${coin1} vs ${coin2}`}</span>
+              <span>{`${this.getTokenName(coin1)} vs ${this.getTokenName(coin2)}`}</span>
             </div>
             <div onClick={this.togglePrice.bind(this)}>
               <div className="time_notif">
