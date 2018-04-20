@@ -16,7 +16,7 @@ momentDurationFormat(moment)
 
 const API_REFRESH_RATE = 60000
 
-const LinkWithTooltip = ({ id, children, href, tooltip }) => {
+const LinkWithTooltip = ({ id, children, tooltip }) => {
   return (
     <OverlayTrigger
       overlay={<Tooltip id={id}>{tooltip}</Tooltip>}
@@ -24,7 +24,7 @@ const LinkWithTooltip = ({ id, children, href, tooltip }) => {
       delayShow={300}
       delayHide={150}
     >
-      <a style={{ color: 'white', textDecoration: 'none' }} href={href}>{children}</a>
+      <a style={{ color: 'white', textDecoration: 'none' }}>Bet: {children}</a>
     </OverlayTrigger>
   );
 }
@@ -82,21 +82,31 @@ class WarStage extends Component {
 
     const coin1Event = await this.coin1.Transfer({}, { fromBlock, toBlock })
     coin1Event.watch(async (error, results) => {
-      let _percentage = 0, _myBetPrice = 0, _myBetAmount = 0
+      let _percentage = new Big(0), _myBetPrice = 0, _myBetAmount = 0
       const coinWarBalance = await this.coin1.balanceOf(coinWarAddress)
 
       const { _from, _value, _to } = results.args
+
+
       if (_from === this.props.account && _to === coinWarAddress) {
-        const _amt = _value.toNumber()
-        if (_amt > 0) {
-          _myBetPrice = new Big(_amt)
+        const _amt = new Big(_value.toNumber())
+        if (_amt.gt(0)) {
+
+          const _prevTokenBetAmt = new Big(this.state.myToken1BetAmount)
+
+          _myBetPrice = _amt
+            .plus(Number(_prevTokenBetAmt))
             .times(this.state.coin1_usd)
             .div(this.getMultFactorForCoin(coin1))
 
-          _myBetAmount = new Big(_amt)
+          _myBetAmount = _amt
             .div(this.getMultFactorForCoin(coin1))
+            .plus(Number(_prevTokenBetAmt))
 
-          _percentage = (_amt / coinWarBalance.toNumber()) * 100
+          _percentage = _amt
+            .plus(Number(_prevTokenBetAmt))
+            .div(coinWarBalance.toNumber())
+            .times(100)
         }
         this.setState({
           netCoin1Bet: coinWarBalance.toNumber(),
@@ -110,21 +120,29 @@ class WarStage extends Component {
 
     const coin2Event = await this.coin2.Transfer({}, { fromBlock, toBlock })
     coin2Event.watch(async (error, results) => {
-      let _percentage = 0, _myBetPrice = 0, _myBetAmount = 0
+      let _percentage = new Big(0), _myBetPrice = 0, _myBetAmount = 0
       const coinWarBalance = await this.coin2.balanceOf(coinWarAddress)
 
       const { _from, _value, _to } = results.args
       if (_from === this.props.account && _to === coinWarAddress) {
-        const _amt = _value.toNumber()
-        if (_amt > 0) {
-          _myBetPrice = new Big(_amt)
+        const _amt = new Big(_value.toNumber())
+        if (_amt.gt(0)) {
+
+          const _prevTokenBetAmt = new Big(this.state.myToken2BetAmount)
+
+          _myBetPrice = _amt
+            .plus(Number(_prevTokenBetAmt))
             .times(this.state.coin2_usd)
             .div(this.getMultFactorForCoin(coin2))
 
-          _myBetAmount = new Big(_amt)
+          _myBetAmount = _amt
             .div(this.getMultFactorForCoin(coin2))
+            .plus(Number(_prevTokenBetAmt))
 
-          _percentage = (_amt / coinWarBalance.toNumber()) * 100
+          _percentage = _amt
+            .plus(Number(_prevTokenBetAmt))
+            .div(coinWarBalance.toNumber())
+            .times(100)
         }
         this.setState({
           netCoin2Bet: coinWarBalance.toNumber(),
@@ -530,7 +548,7 @@ class WarStage extends Component {
                 <div className="pbar first">
                   <div className="meta">
                     <div className="info first">
-                      <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken1BetPercentage)}%`} href="#" id="tooltip-1">
+                      <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken1BetPercentage)}%`} id="tooltip-1">
                         {this.getDisplayAmount(
                           togglePrice ? myToken1BetAmount : myToken1BetPrice,
                           2, togglePrice ? false : true
@@ -553,7 +571,7 @@ class WarStage extends Component {
                 <div className="pbar last">
                   <div className="meta">
                     <div className="info first">
-                      <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken2BetPercentage)}%`} href="#" id="tooltip-1">
+                      <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken2BetPercentage)}%`} id="tooltip-1">
                         {this.getDisplayAmount(
                           togglePrice ? myToken2BetAmount : myToken2BetPrice,
                           2, togglePrice ? false : true

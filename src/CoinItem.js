@@ -70,7 +70,6 @@ export default class CoinItem extends Component {
 
     // new war created event
     newWarCreatedEvent.watch((error, results) => {
-      console.log(error, results)
       this.loadWars(this.wfInstance)
     })
 

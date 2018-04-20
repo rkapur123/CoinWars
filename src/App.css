@@ -40,6 +40,13 @@ body {
     font-size: 20px;
 }
 
+.navbar.navbar-default {
+  height: 80px;
+}
+.navbar-header p {
+  color: #fff;
+}
+
 /*********** progress bar *************/
 .progress_wrap {
   display: flex;
@@ -210,4 +217,11 @@ body {
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@media (min-width: 768px) {
+  .navbar-nav > li > a {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
 }

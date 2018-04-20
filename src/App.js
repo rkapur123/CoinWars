@@ -17,6 +17,7 @@ class App extends Component {
           <div className="container">
             <div className="navbar-header">
               <NavLink to="/" className="navbar-brand">CryptoGamez</NavLink>
+              <p style={{ textAlign: 'right', paddingRight: 20 }}>Play Games, Win Money</p>
             </div>
             <ul className="nav navbar-nav navbar-right">
               <li>
