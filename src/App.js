@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Switch, Route, NavLink } from 'react-router-dom'
 import Web3Container from './Web3Container'
+
+// css imports
 import './App.css'
 
 // main components
@@ -16,8 +18,10 @@ class App extends Component {
         <nav className="navbar navbar-default navbar-fixed-top">
           <div className="container">
             <div className="navbar-header">
-              <NavLink to="/" className="navbar-brand">CryptoGamez</NavLink>
-              <p style={{ textAlign: 'right', paddingRight: 20 }}>Play Games, Win Money</p>
+              <NavLink to="/" className="navbar-brand">
+                <div>CryptoGamez</div>
+                <p style={{ textAlign: 'right', marginTop: 10, fontSize: 16 }}>Play Games, Win Money</p>
+              </NavLink>
             </div>
             <ul className="nav navbar-nav navbar-right">
               <li>

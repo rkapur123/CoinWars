@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Button, Row, Col, ButtonGroup, OverlayTrigger, Tooltip,
-  Image, ProgressBar } from 'react-bootstrap'
+  Image, ProgressBar, Glyphicon } from 'react-bootstrap'
 import ReactTimeout from 'react-timeout'
 import BlockTracker from 'eth-block-tracker'
 import hexToDec from 'hex-to-dec'
@@ -11,8 +11,6 @@ import moment from 'moment'
 import momentDurationFormat from 'moment-duration-format'
 
 momentDurationFormat(moment)
-// typeof moment.duration.fn.format === "function";
-// typeof moment.duration.format === "function";
 
 const API_REFRESH_RATE = 60000
 
@@ -28,7 +26,6 @@ const LinkWithTooltip = ({ id, children, tooltip }) => {
     </OverlayTrigger>
   );
 }
-
 
 class WarStage extends Component {
 
@@ -111,19 +108,11 @@ class WarStage extends Component {
           const n = _prevTokenBetAmt
           const n1 = _amt.div(this.getMultFactorForCoin(coin1)).plus(n)
 
-          const p = n1.div(cw)
+          _percentage = n1.div(cw).times(100)
 
-          _percentage = _amt
-            .plus(Number(n1))
-            .div(cw)
-            .times(100)
-            // .div(cw)
-            // .div(this.getMultFactorForCoin(coin1))
-            // .times(100)
-          if (coinWarAddress === '0xd59cd15c23a9f72e8cc62ac0d772b120b210f8ab') {
-            console.log(Number(p))
-          }
-
+          // if (coinWarAddress === '0xd59cd15c23a9f72e8cc62ac0d772b120b210f8ab') {
+          //   console.log(Number(_percentage))
+          // }
         }
         this.setState({
           netCoin1Bet: coinWarBalance.toNumber(),
@@ -162,11 +151,10 @@ class WarStage extends Component {
           const cw = new Big(coinWarBalance.toNumber())
             .div(this.getMultFactorForCoin(coin2))
 
-          _percentage = _amt
-            .plus(Number(_prevTokenBetAmt))
-            .div(cw)
-            .div(this.getMultFactorForCoin(coin2))
-            .times(100)
+          const n = _prevTokenBetAmt
+          const n1 = _amt.div(this.getMultFactorForCoin(coin2)).plus(n)
+
+          _percentage = n1.div(cw).times(100)
         }
         this.setState({
           netCoin2Bet: coinWarBalance.toNumber(),
@@ -507,6 +495,15 @@ class WarStage extends Component {
     return null
   }
 
+  help = (message, id) => (
+    <OverlayTrigger placement="top" overlay={
+        <Tooltip id={id}>
+          {message}
+        </Tooltip>}>
+      <Glyphicon glyph="question-sign" style={{ marginRight: 5 }} />
+    </OverlayTrigger>
+  )
+
   render() {
     const { coin1, coin2 } = this.props.opponents
     const { netCoin1Bet, netCoin2Bet, coin1_usd,
@@ -572,6 +569,7 @@ class WarStage extends Component {
                 <div className="pbar first">
                   <div className="meta">
                     <div className="info first">
+                      {this.help(`Your bet amount/price on ${this.getTokenName(coin1)}`, 'ttip1')}
                       <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken1BetPercentage)}%`} id="tooltip-1">
                         {this.getDisplayAmount(
                           togglePrice ? myToken1BetAmount : myToken1BetPrice,
@@ -580,6 +578,7 @@ class WarStage extends Component {
                       </LinkWithTooltip>{togglePrice && ` ${coin1}`}
                     </div>
                     <div className="info last">
+                      {this.help(`Total bet amount/price on ${this.getTokenName(coin1)}`, 'ttip2')}
                       <span className="balance">
                         {this.getDisplayAmount(
                           togglePrice ? coin1_bet_amount : coin1_bet_price,
@@ -595,6 +594,7 @@ class WarStage extends Component {
                 <div className="pbar last">
                   <div className="meta">
                     <div className="info first">
+                      {this.help(`Your bet amount/price on ${this.getTokenName(coin2)}`, 'ttip3')}
                       <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken2BetPercentage)}%`} id="tooltip-1">
                         {this.getDisplayAmount(
                           togglePrice ? myToken2BetAmount : myToken2BetPrice,
@@ -603,6 +603,7 @@ class WarStage extends Component {
                       </LinkWithTooltip>{togglePrice && ` ${coin2}`}
                     </div>
                     <div className="info last">
+                      {this.help(`Total bet amount/price on ${this.getTokenName(coin2)}`, 'ttip4')}
                       <span className="balance">
                         {this.getDisplayAmount(
                           togglePrice ? coin2_bet_amount : coin2_bet_price,
