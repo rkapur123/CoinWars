@@ -9,6 +9,8 @@ import ERC20 from './solidity/build/contracts/ERC20.json'
 // only for test network
 import TokenFaucet from './solidity/build/contracts/TokenFaucet.json'
 
+const CURRENT_NETWORK = 'rinkeby'
+
 export default (WrappedComponent) => {
 
   class Web3Container extends Component {
@@ -44,8 +46,13 @@ export default (WrappedComponent) => {
         if (!account) {
           this.setState({ error: `Please make sure that you are logged into your MetaMask` })
         } else {
-          this.initialize()
-          this.setState({ account, error: false })
+          const network = await this.web3.eth.net.getNetworkType()
+          if (network === CURRENT_NETWORK) {
+            this.initialize()
+            this.setState({ account, error: false })
+          } else {
+            this.setState({ account: null, error: `Please make sure you are connected to the Rinkeby network` })
+          }
         }
       } else {
         this.setState({ error: `Please make sure that MetaMask is installed` })
