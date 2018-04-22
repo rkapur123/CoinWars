@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import { Alert, Glyphicon } from 'react-bootstrap'
 import Web3 from 'web3'
 import TruffleContract from 'truffle-contract'
 import CoinWars from './solidity/build/contracts/CoinWar.json'
@@ -7,8 +8,6 @@ import ERC20 from './solidity/build/contracts/ERC20.json'
 
 // only for test network
 import TokenFaucet from './solidity/build/contracts/TokenFaucet.json'
-
-const accessToken = 'vXJ9MlTj969EuStvmyPN'
 
 export default (WrappedComponent) => {
 
@@ -21,18 +20,9 @@ export default (WrappedComponent) => {
         loading: false,
         error: false
       }
-      this.loadWeb3()
     }
 
-    loadWeb3 = () => {
-      if (typeof window.web3 !== 'undefined') {
-        this.web3Provider = window.web3.currentProvider
-      } else {
-        this.web3Provider =
-          new Web3.providers.HttpProvider(`https://rinkeby.infura.io/${accessToken}`)
-      }
-
-      this.web3 = new Web3(this.web3Provider)
+    initialize = () => {
       this.coinwars = TruffleContract(CoinWars)
       this.warfactory = TruffleContract(WarFactory)
       this.coinwars.setProvider(this.web3Provider)
@@ -45,13 +35,25 @@ export default (WrappedComponent) => {
       this.tokenFaucet.setProvider(this.web3Provider)
     }
 
-    componentDidMount = async () => {
-      try {
+    loadWeb3 = async () => {
+      if (typeof window.web3 !== 'undefined') {
+        this.web3Provider = window.web3.currentProvider
+        this.web3 = new Web3(this.web3Provider)
+
         const account = await this.web3.eth.getCoinbase()
-        this.setState({ account })
-      } catch (error) {
-        this.setState({ error: `Please ensure that you are connected to your network` })
+        if (!account) {
+          this.setState({ error: `Please make sure that you are logged into your MetaMask` })
+        } else {
+          this.initialize()
+          this.setState({ account, error: false })
+        }
+      } else {
+        this.setState({ error: `Please make sure that MetaMask is installed` })
       }
+    }
+
+    componentDidMount = () => {
+      this.loadWeb3()
     }
 
     render() {
@@ -59,14 +61,15 @@ export default (WrappedComponent) => {
 
       if (error) {
         return (
-          <div style={{ padding: 60, color: 'white' }}>{error}</div>
-        )
-      }
-
-      if (!account) {
-        return (
-          <div style={{ padding: '80px 50px' }}>
-            <p>Loading CoinWars ...</p>
+          <div style={{ marginTop: 50 }}>
+            <Alert bsStyle="danger">
+              <div style={{ padding: 20 }}>
+                <Glyphicon glyph="exclamation-sign" style={{ fontSize: 30, marginBottom: 10 }} />
+                <h4>Oh snap! You got an error!</h4>
+                <p>{error}</p>
+                <small style={{ fontSize: 13 }}>For more information visit <a target="__blank" href="https://metamask.io/">MetaMask</a></small>
+              </div>
+            </Alert>
           </div>
         )
       }
@@ -81,9 +84,7 @@ export default (WrappedComponent) => {
         tokenFaucet: this.tokenFaucet // only test
       })
 
-      return (
-        <WrappedComponent {...newProps} />
-      )
+      return account && <WrappedComponent {...newProps} />
 
     }
   }

@@ -87,26 +87,43 @@ class WarStage extends Component {
 
       const { _from, _value, _to } = results.args
 
-
       if (_from === this.props.account && _to === coinWarAddress) {
         const _amt = new Big(_value.toNumber())
         if (_amt.gt(0)) {
 
           const _prevTokenBetAmt = new Big(this.state.myToken1BetAmount)
 
+          const _prevPrice = _prevTokenBetAmt
+            .times(this.state.coin1_usd)
+
           _myBetPrice = _amt
-            .plus(Number(_prevTokenBetAmt))
             .times(this.state.coin1_usd)
             .div(this.getMultFactorForCoin(coin1))
+            .plus(Number(_prevPrice))
 
           _myBetAmount = _amt
             .div(this.getMultFactorForCoin(coin1))
             .plus(Number(_prevTokenBetAmt))
 
+          const cw = new Big(coinWarBalance.toNumber())
+            .div(this.getMultFactorForCoin(coin1))
+
+          const n = _prevTokenBetAmt
+          const n1 = _amt.div(this.getMultFactorForCoin(coin1)).plus(n)
+
+          const p = n1.div(cw)
+
           _percentage = _amt
-            .plus(Number(_prevTokenBetAmt))
-            .div(coinWarBalance.toNumber())
+            .plus(Number(n1))
+            .div(cw)
             .times(100)
+            // .div(cw)
+            // .div(this.getMultFactorForCoin(coin1))
+            // .times(100)
+          if (coinWarAddress === '0xd59cd15c23a9f72e8cc62ac0d772b120b210f8ab') {
+            console.log(Number(p))
+          }
+
         }
         this.setState({
           netCoin1Bet: coinWarBalance.toNumber(),
@@ -130,18 +147,25 @@ class WarStage extends Component {
 
           const _prevTokenBetAmt = new Big(this.state.myToken2BetAmount)
 
+          const _prevPrice = _prevTokenBetAmt
+            .times(this.state.coin2_usd)
+
           _myBetPrice = _amt
-            .plus(Number(_prevTokenBetAmt))
             .times(this.state.coin2_usd)
             .div(this.getMultFactorForCoin(coin2))
+            .plus(Number(_prevPrice))
 
           _myBetAmount = _amt
             .div(this.getMultFactorForCoin(coin2))
             .plus(Number(_prevTokenBetAmt))
 
+          const cw = new Big(coinWarBalance.toNumber())
+            .div(this.getMultFactorForCoin(coin2))
+
           _percentage = _amt
             .plus(Number(_prevTokenBetAmt))
-            .div(coinWarBalance.toNumber())
+            .div(cw)
+            .div(this.getMultFactorForCoin(coin2))
             .times(100)
         }
         this.setState({
@@ -565,7 +589,7 @@ class WarStage extends Component {
                     </div>
                   </div>
                   <div className="bar">
-                    <ProgressBar striped bsStyle="info" active now={coin1Progress} />
+                    <ProgressBar striped bsStyle="success" active now={coin1Progress} />
                   </div>
                 </div>
                 <div className="pbar last">
