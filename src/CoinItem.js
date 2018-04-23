@@ -142,24 +142,28 @@ export default class CoinItem extends Component {
           <strong > {this.props.account}</strong>
         </p>
         <div style={{ marginBottom: 20 }}>
-          <Button bsStyle="success" onClick={this.withdrawFromFaucet.bind(this)}>Withdraw Tokens from Faucet</Button>
+          <Button bsStyle="success" bsSize="large" style={{backgroundColor: '#27AE60', borderColor: '#27AE60'}} onClick={this.withdrawFromFaucet.bind(this)}>Get Free Tokens!</Button>
           <div style={{ padding: '20px 150px', marginBottom: 50, marginTop: 20 }}>
             <div style={{ display: 'flex', fontSize: 14, justifyContent: 'center' }}>
               <div style={{ flex: 1 }}>
-                <div>EOS</div>
-                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{eos > 0 ? eos : `0`}</Label>
+                <h3>
+                  <Label bsStyle="primary" style={{ padding: '3px 10px' }}>{eos > 0 ? eos : `0`} EOS</Label>
+                </h3>
               </div>
               <div style={{ flex: 1 }}>
-                <div>TRX</div>
-                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{trx > 0 ? trx : `0`}</Label>
+                <h3>
+                  <Label bsStyle="primary" style={{ padding: '3px 10px' }}>{trx > 0 ? trx : `0`} TRX</Label>
+                </h3>
               </div>
               <div style={{ flex: 1 }}>
-                <div>BNB</div>
-                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{bnb > 0 ? bnb : `0`}</Label>
+                <h3>
+                  <Label bsStyle="primary" style={{ padding: '3px 10px' }}>{bnb > 0 ? bnb : `0`} BNB</Label>
+                </h3>
               </div>
               <div style={{ flex: 1 }}>
-                <div>VEN</div>
-                <Label bsStyle="default" style={{ padding: '3px 10px' }}>{ven > 0 ? ven : `0`}</Label>
+                <h3>
+                  <Label bsStyle="primary" style={{ padding: '3px 10px' }}>{ven > 0 ? ven : `0`} VEN</Label>
+                </h3>
               </div>
             </div>
           </div>
