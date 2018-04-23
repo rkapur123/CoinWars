@@ -26,6 +26,14 @@ body {
   font-family: 'Star Wars';
   font-size: 50px;
 }
+
+.navbar-brand p {
+  font-family: 'Open Sans', sans-serif;
+  text-align: right;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus,
 .navbar-default .navbar-header p:hover,
