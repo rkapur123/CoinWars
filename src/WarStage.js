@@ -565,7 +565,7 @@ class WarStage extends Component {
                 <div className="pbar first">
                   <div className="meta">
                     <div className="info first">
-                      {this.help(`Your bet amount/price on ${this.getTokenName(coin1)}`, 'ttip1')}
+                      {this.help(`Your Bet`, 'ttip1')}
                       <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken1BetPercentage)}%`} id="tooltip-1">
                         {this.getDisplayAmount(
                           togglePrice ? myToken1BetAmount : myToken1BetPrice,
@@ -574,7 +574,7 @@ class WarStage extends Component {
                       </LinkWithTooltip>{togglePrice && ` ${coin1}`}
                     </div>
                     <div className="info last">
-                      {this.help(`Total bet amount/price on ${this.getTokenName(coin1)}`, 'ttip2')}
+                      {this.help(`Total Pool`, 'ttip2')}
                       <span className="balance">
                         {this.getDisplayAmount(
                           togglePrice ? coin1_bet_amount : coin1_bet_price,
@@ -590,7 +590,7 @@ class WarStage extends Component {
                 <div className="pbar last">
                   <div className="meta">
                     <div className="info first">
-                      {this.help(`Your bet amount/price on ${this.getTokenName(coin2)}`, 'ttip3')}
+                      {this.help(`Your Bet`, 'ttip3')}
                       <LinkWithTooltip tooltip={`${this.getDisplayAmount(myToken2BetPercentage)}%`} id="tooltip-1">
                         {this.getDisplayAmount(
                           togglePrice ? myToken2BetAmount : myToken2BetPrice,
@@ -599,7 +599,7 @@ class WarStage extends Component {
                       </LinkWithTooltip>{togglePrice && ` ${coin2}`}
                     </div>
                     <div className="info last">
-                      {this.help(`Total bet amount/price on ${this.getTokenName(coin2)}`, 'ttip4')}
+                      {this.help(`Total Pool`, 'ttip4')}
                       <span className="balance">
                         {this.getDisplayAmount(
                           togglePrice ? coin2_bet_amount : coin2_bet_price,

@@ -14,7 +14,7 @@ const Intro = () => (
           </div>
           <div style={{paddingTop:80}}>
             <p className="numberFont">1.</p>
-            <p className="instructionFont">Choose your token</p>
+            <p className="instructionFont">Pick a Token</p>
           </div>
         </Col>
         <Col xs={4} md={4} lg={4}>

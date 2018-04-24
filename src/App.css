@@ -53,6 +53,7 @@ body {
   height: 80px;
 }
 .navbar-header p {
+  font-family: 'Open Sans';
   color: #fff;
 }
 
@@ -68,6 +69,22 @@ body {
 .pbar .meta { display: flex; }
 .pbar .meta .info.first { flex: 1; text-align: left; }
 .pbar .meta .info.last { flex: 1; text-align: right; }
+
+.panel-group {
+  width:75%;
+  margin-left: 12%;
+
+}
+
+.panel-default > .panel-heading  {
+  color: #ffffff;
+  background-color: #303030;
+}
+
+.panel-body {
+  background:#303030;
+  text-align: left;
+}
 
 .intro {
   border-radius: 25px;
