@@ -80,12 +80,19 @@ export default class Home extends Component {
 
           <Panel eventKey="7">
             <Panel.Heading>
+              <Panel.Title toggle>How can I withdraw my winnings?</Panel.Title>
+            </Panel.Heading>
+            <Panel.Body collapsible>All Coin War results are lcoated in the Account page.</Panel.Body>
+          </Panel>
+
+          <Panel eventKey="8">
+            <Panel.Heading>
               <Panel.Title toggle>How can I contact you?</Panel.Title>
             </Panel.Heading>
             <Panel.Body collapsible> You can email us at hello@cryptogamez.io or message @rahul or @sunny directly on Discord.
             </Panel.Body>
           </Panel>
-          <Panel eventKey="8">
+          <Panel eventKey="9">
             <Panel.Heading>
               <Panel.Title toggle>What are the transaction fees?</Panel.Title>
             </Panel.Heading>

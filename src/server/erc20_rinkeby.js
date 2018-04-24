@@ -16,8 +16,8 @@ const server = {
   rahulAddresses: [],
 
   init: async function() {
-    const providerSunny = new HDWalletProvider(mnemonicSunny, `https://rinkeby.infura.io/${accessToken}`, 0)
-    this.web3 = new Web3(providerSunny)
+    const providerRahul = new HDWalletProvider(mnemonicRahul, `https://rinkeby.infura.io/${accessToken}`, 0)
+    this.web3 = new Web3(providerRahul)
 
     // set sunny addresses
     let i
@@ -37,7 +37,7 @@ const server = {
     }
 
     try {
-      this.address = this.sunnyAddresses[0]
+      this.address = this.rahulAddresses[0]
 
       // deploy first token
       const token1Contract = await this.deployDummyToken(100000000000000000, 'Tronix', 6, 'TRX')
@@ -70,61 +70,61 @@ const server = {
       console.log('_____________________#######___________________________')
 
       // create dummy balances TRX
-      await token1Contract.transfer(this.sunnyAddresses[1], 1000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token1Contract.transfer(this.sunnyAddresses[1], 25000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`1,000,000,000,000,000 TRX successfully transferred to ${this.sunnyAddresses[1]}`)
 
-      await token1Contract.transfer(this.sunnyAddresses[2], 1000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token1Contract.transfer(this.sunnyAddresses[2], 25000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`1,000,000,000,000,000 TRX successfully transferred to ${this.sunnyAddresses[2]}`)
 
-      await token1Contract.transfer(this.rahulAddresses[0], 1000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token1Contract.transfer(this.rahulAddresses[0], 25000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`1,000,000,000,000,000 TRX successfully transferred to ${this.rahulAddresses[0]}`)
 
-      await token1Contract.transfer(this.rahulAddresses[1], 1000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token1Contract.transfer(this.rahulAddresses[1], 25000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`1,000,000,000,000,000 TRX successfully transferred to ${this.rahulAddresses[1]}`)
 
       console.log('__________________________________')
 
       // create dummy balances EOS
-      await token2Contract.transfer(this.sunnyAddresses[1], 10000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token2Contract.transfer(this.sunnyAddresses[1], 250000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`10,000,000,000,000,000,000,000,000 EOS successfully transferred to ${this.sunnyAddresses[1]}`)
 
-      await token2Contract.transfer(this.sunnyAddresses[2], 10000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token2Contract.transfer(this.sunnyAddresses[2], 250000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`10,000,000,000,000,000,000,000,000 EOS successfully transferred to ${this.sunnyAddresses[2]}`)
 
-      await token2Contract.transfer(this.rahulAddresses[0], 10000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token2Contract.transfer(this.rahulAddresses[0], 250000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`10,000,000,000,000,000,000,000,000 EOS successfully transferred to ${this.rahulAddresses[0]}`)
 
-      await token2Contract.transfer(this.rahulAddresses[1], 10000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token2Contract.transfer(this.rahulAddresses[1], 250000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`10,000,000,000,000,000,000,000,000 EOS successfully transferred to ${this.rahulAddresses[1]}`)
 
       console.log('__________________________________')
 
       // create dummy balances BNB
-      await token3Contract.transfer(this.sunnyAddresses[1], 10596191000000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token3Contract.transfer(this.sunnyAddresses[1], 49298095500000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`10,596,191,000,000,000,000,000,000 BNB successfully transferred to ${this.sunnyAddresses[1]} `)
 
-      await token3Contract.transfer(this.sunnyAddresses[2], 10596191000000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token3Contract.transfer(this.sunnyAddresses[2], 49298095500000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`10,596,191,000,000,000,000,000,000 BNB successfully transferred to ${this.sunnyAddresses[2]} `)
 
-      await token3Contract.transfer(this.rahulAddresses[0], 10596191000000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token3Contract.transfer(this.rahulAddresses[0], 49298095500000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`10,596,191,000,000,000,000,000,000 BNB successfully transferred to ${this.rahulAddresses[0]}`)
 
-      await token3Contract.transfer(this.rahulAddresses[1], 10596191000000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token3Contract.transfer(this.rahulAddresses[1], 49298095500000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`10,596,191,000,000,000,000,000,000 BNB successfully transferred to ${this.rahulAddresses[1]}`)
 
       console.log('__________________________________')
 
       // create dummy balances VEN
-      await token4Contract.transfer(this.sunnyAddresses[1], 10000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token4Contract.transfer(this.sunnyAddresses[1], 250000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`10,000,000,000,000,000,000,000,000 VEN successfully transferred to ${this.sunnyAddresses[1]}`)
 
-      await token4Contract.transfer(this.sunnyAddresses[2], 10000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token4Contract.transfer(this.sunnyAddresses[2], 250000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`10,000,000,000,000,000,000,000,000 VEN successfully transferred to ${this.sunnyAddresses[2]}`)
 
-      await token4Contract.transfer(this.rahulAddresses[0], 10000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token4Contract.transfer(this.rahulAddresses[0], 250000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`10,000,000,000,000,000,000,000,000 VEN successfully transferred to ${this.rahulAddresses[0]}`)
 
-      await token4Contract.transfer(this.rahulAddresses[1], 10000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
+      await token4Contract.transfer(this.rahulAddresses[1], 250000000000000000000000000, { from: `${this.address}`, gas: 5000000 })
       console.log(`10,000,000,000,000,000,000,000,000 VEN successfully transferred to ${this.rahulAddresses[1]}`)
 
       console.log('____________________########__________________________')
