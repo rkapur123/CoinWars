@@ -109,10 +109,6 @@ class WarStage extends Component {
           const n1 = _amt.div(this.getMultFactorForCoin(coin1)).plus(n)
 
           _percentage = n1.div(cw).times(100)
-
-          // if (coinWarAddress === '0xd59cd15c23a9f72e8cc62ac0d772b120b210f8ab') {
-          //   console.log(Number(_percentage))
-          // }
         }
         this.setState({
           netCoin1Bet: coinWarBalance.toNumber(),

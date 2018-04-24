@@ -4,7 +4,7 @@ import Web3 from 'web3'
 import TruffleContract from 'truffle-contract'
 import CoinWars from './solidity/build/contracts/CoinWar.json'
 import WarFactory from './solidity/build/contracts/WarFactory.json'
-import ERC20 from './solidity/build/contracts/ERC20.json'
+import abi from 'human-standard-token-abi'
 
 // only for test network
 import TokenFaucet from './solidity/build/contracts/TokenFaucet.json'
@@ -29,7 +29,7 @@ export default (WrappedComponent) => {
       this.warfactory = TruffleContract(WarFactory)
       this.coinwars.setProvider(this.web3Provider)
       this.warfactory.setProvider(this.web3Provider)
-      this.erc20 = TruffleContract(ERC20)
+      this.erc20 = TruffleContract({ abi })
       this.erc20.setProvider(this.web3Provider)
 
       // only for test network

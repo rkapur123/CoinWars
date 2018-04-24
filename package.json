@@ -7,6 +7,7 @@
     "coinmarketcap-api": "^1.0.3",
     "eth-block-tracker": "^2.3.0",
     "hex-to-dec": "^1.0.1",
+    "human-standard-token-abi": "^1.0.2",
     "moment": "^2.22.0",
     "moment-duration-format": "^2.2.2",
     "react": "^16.2.0",
