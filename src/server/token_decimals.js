@@ -3,11 +3,19 @@ module.exports = {
     id: 'eos',
     decimals: 18
   },
+  jtrx: {
+    id: 'tron',
+    decimals: 6
+  },
   trx: {
     id: 'tron',
     decimals: 6
   },
   bnb: {
+    id: 'binance-coin',
+    decimals: 18
+  },
+  jbnb: {
     id: 'binance-coin',
     decimals: 18
   },

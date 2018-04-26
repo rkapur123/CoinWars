@@ -4,6 +4,11 @@ const token_decimals = {
     name: 'EOS',
     decimals: 18
   },
+  jtrx: {
+    id: 'tron',
+    name: 'JTronix',
+    decimals: 6
+  },
   trx: {
     id: 'tron',
     name: 'Tronix',
@@ -12,6 +17,10 @@ const token_decimals = {
   bnb: {
     id: 'binance-coin',
     name: 'Binance',
+    decimals: 18
+  },
+  jbnb: {
+    id: 'Jbinance-coin',
     decimals: 18
   },
   ven: {

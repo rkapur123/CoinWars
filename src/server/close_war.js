@@ -82,6 +82,8 @@ const app = {
       if (warIndex) {
         const warfactory = await this.getContract(WarFactory)
         const war = await warfactory.getWarAtIndex(warIndex)
+        const coin1_sym = war[0].split(' ')[0]
+        const coin2_sym = war[0].split(' ')[1]
         const coin1_address = war[1]
         const coin2_address = war[2]
         const from_block = war[5]
@@ -107,8 +109,6 @@ const app = {
         let coin2Bets = []
 
         const coinMarketCapClient = new CoinMarketCap()
-        const coin1_sym = await coin1.symbol()
-        const coin2_sym = await coin2.symbol()
         const coin1Id = TokenDecimals[coin1_sym.toLowerCase()]['id']
         const coin2Id = TokenDecimals[coin2_sym.toLowerCase()]['id']
 
@@ -130,7 +130,6 @@ const app = {
             coin1Addresses.push(data._from)
             coin1Bets.push(data._value.toNumber())
             _price1 += data._value.toNumber()
-            console.log(_price1)
           }
           let _bigPrice1 = new Big(_price1)
           coin1TotalBetPrice = _bigPrice1
@@ -146,7 +145,6 @@ const app = {
                 coin2Addresses.push(data._from)
                 coin2Bets.push(data._value.toNumber())
                 _price2 += data._value.toNumber()
-                console.log(_price2)
               }
 
               let _bigPrice2 = new Big(_price2)
