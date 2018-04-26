@@ -6,25 +6,25 @@ const HDWalletProvider = require("truffle-hdwallet-provider")
 
 const accessToken = 'vXJ9MlTj969EuStvmyPN'
 
-const mnemonicSunny = 'region fish wave balcony example useful pattern length genre defense crater push'
+const mnemonicRahul = 'chalk when job clarify trigger tongue only close glimpse hour multiply start'
 
 // set data here for token distribution
 const data = [
   {
-    token_address: '0xa71a212c041e9c3b70d1b7f2f1170bb1d75d0586', // TRX
-    value: 1000000000000
+    token_address: '0x4b3855f4df12101dbc3c06931796e70174d3e99e', // TRX
+    value: 25000000000000000
   },
   {
-    token_address: '0x84b6962db7114fc45a673db1be75d1c95fcd7dd6', // EOS
-    value: 1000000000000000000000000
+    token_address: '0xd0cd0114d255ddee071d863c77dfb63889c6cea0', // EOS
+    value: 250000000000000000000000000
   },
   {
-    token_address: '0x2aa0878102ccf1fe74c9aecad520d0ebe25f3d54', // BNB
-    value: 1000000000000000000000000
+    token_address: '0x3cf183515226770bc10ae3261fa224b575cdc33b', // BNB
+    value: 49298095500000000000000000
   },
   {
-    token_address: '0x2f701fac7768b45a9c5cb383b7a463ff86abacdc', // VEN
-    value: 1000000000000000000000000
+    token_address: '0x64721e96f8ba064fb5f4a7432f8026b2ddec6a52', // VEN
+    value: 250000000000000000000000000
   }
 ]
 
@@ -52,7 +52,7 @@ const app = {
   },
 
   init: async function() {
-    const provider = new HDWalletProvider(mnemonicSunny, `https://rinkeby.infura.io/${accessToken}`, 0)
+    const provider = new HDWalletProvider(mnemonicRahul, `https://rinkeby.infura.io/${accessToken}`, 1)
     this.web3 = new Web3(provider)
     this.address = provider.getAddress()
     this.provider = provider
