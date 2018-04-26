@@ -124,25 +124,22 @@ const app = {
         let coin1TotalBetPrice = 0, coin2TotalBetPrice = 0
 
         coin1.Transfer({ _to: coinWarAddress }, filter).get((error, rc1) => {
-          if (rc1.length > 0) {
-            let _price1 = 0
-            for (let j = 0; j < rc1.length; j++) {
-              const data = rc1[j].args
-              coin1Addresses.push(data._from)
-              coin1Bets.push(data._value.toNumber())
-              _price1 += data._value.toNumber()
-              console.log(_price1)
-            }
-            let _bigPrice1 = new Big(_price1)
-            coin1TotalBetPrice = _bigPrice1
-              .times(coin1_price)
-              .div(this.getMultFactorForCoin(coin1_sym))
-              .toFixed(this.getDecimals(coin1_sym))
+          let _price1 = 0
+          for (let j = 0; j < rc1.length; j++) {
+            const data = rc1[j].args
+            coin1Addresses.push(data._from)
+            coin1Bets.push(data._value.toNumber())
+            _price1 += data._value.toNumber()
+            console.log(_price1)
           }
-          coin2.Transfer({ _to: coinWarAddress }, filter).get(async (err, rc2) => {
-            console.log('__________________________________________________________')
+          let _bigPrice1 = new Big(_price1)
+          coin1TotalBetPrice = _bigPrice1
+            .times(coin1_price)
+            .div(this.getMultFactorForCoin(coin1_sym))
+            .toFixed(this.getDecimals(coin1_sym))
 
-            if (rc2.length > 0) {
+          coin2.Transfer({ _to: coinWarAddress }, filter).get(async (err, rc2) => {
+
               let _price2 = 0
               for (let j = 0; j < rc2.length; j++) {
                 const data = rc2[j].args
@@ -161,7 +158,7 @@ const app = {
               console.log('coin1 total bet price', coin1TotalBetPrice)
               console.log('coin2 total bet price', coin2TotalBetPrice)
 
-              if (coin1TotalBetPrice > coin2TotalBetPrice) {
+              if (coin1TotalBetPrice >= coin2TotalBetPrice) {
                 // coin1 wins
                 // call the warfactory closeWarAtIndex here
                 await warfactory.closeWarAtIndex(
@@ -177,8 +174,6 @@ const app = {
                 )
               }
               console.log(`War at index ${warIndex} has been successfully closed`)
-            }
-
           })
         })
       } else {
