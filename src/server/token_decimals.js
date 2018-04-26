@@ -14,5 +14,9 @@ module.exports = {
   ven: {
     id: 'vechain',
     decimals: 18
+  },
+  abt: {
+    id: 'tether',
+    decimals: 1
   }
 };

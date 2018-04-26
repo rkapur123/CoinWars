@@ -18,6 +18,11 @@ const token_decimals = {
     id: 'vechain',
     name: 'VeChain',
     decimals: 18
+  },
+  abt: {
+    id: 'tether',
+    name: 'Arcblock',
+    decimals: 1
   }
 }
 
