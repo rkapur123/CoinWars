@@ -79,6 +79,7 @@ class WarStage extends Component {
 
     const coin1Event = await this.coin1.Transfer({}, { fromBlock, toBlock })
     coin1Event.watch(async (error, results) => {
+      console.log('COIN1_EVENT', results)
       let _percentage = new Big(0), _myBetPrice = 0, _myBetAmount = 0
       const coinWarBalance = await this.coin1.balanceOf(coinWarAddress)
 
@@ -116,12 +117,17 @@ class WarStage extends Component {
           myToken1BetAmount: _myBetAmount,
           myToken1BetPercentage: _percentage.toFixed(2)
         })
+      } else {
+        this.setState({
+          netCoin1Bet: coinWarBalance.toNumber()
+        })
       }
       this.props.reload(coinWarBalance)
     })
 
     const coin2Event = await this.coin2.Transfer({}, { fromBlock, toBlock })
     coin2Event.watch(async (error, results) => {
+      console.log('COIN2_EVENT', results)
       let _percentage = new Big(0), _myBetPrice = 0, _myBetAmount = 0
       const coinWarBalance = await this.coin2.balanceOf(coinWarAddress)
 
@@ -157,6 +163,10 @@ class WarStage extends Component {
           myToken2BetPrice: _myBetPrice,
           myToken2BetAmount: _myBetAmount,
           myToken2BetPercentage: _percentage.toFixed(2)
+        })
+      } else {
+        this.setState({
+          netCoin2Bet: coinWarBalance.toNumber()
         })
       }
       this.props.reload(coinWarBalance)

@@ -1,14 +1,17 @@
 import React, {Component} from 'react'
 import WarStage from './WarStage'
+import Big from 'big.js'
 
 import { Button, Label } from 'react-bootstrap'
 
 // only for test
+import TokenDecimals from './token_decimals'
+
 const tokensAddress = {
-  'eos': '0x84b6962db7114fc45a673db1be75d1c95fcd7dd6',
-  'trx': '0xa71a212c041e9c3b70d1b7f2f1170bb1d75d0586',
-  'bnb': '0x2aa0878102ccf1fe74c9aecad520d0ebe25f3d54',
-  'ven': '0x2f701fac7768b45a9c5cb383b7a463ff86abacdc'
+  'eos': '0xd0cd0114d255ddee071d863c77dfb63889c6cea0',
+  'trx': '0x4b3855f4df12101dbc3c06931796e70174d3e99e',
+  'bnb': '0x3cf183515226770bc10ae3261fa224b575cdc33b',
+  'ven': '0x64721e96f8ba064fb5f4a7432f8026b2ddec6a52'
 }
 
 export default class CoinItem extends Component {
@@ -90,20 +93,45 @@ export default class CoinItem extends Component {
     this.getTokensBalances()
   }
 
+  getDecimalsInCoin = (coin) => {
+    if (!coin) return 18
+    let _coin = TokenDecimals[coin.toLowerCase()]
+    if (_coin) {
+      return _coin['decimals']
+    }
+    return 18
+  }
+
+  getMultFactorForCoin = coin => {
+    let factor = 1
+    for (let i = 0; i < this.getDecimalsInCoin(coin); i++) {
+      factor = factor * 10;
+    }
+    return factor
+  }
+
   // only for test network
   getTokensBalances = async () => {
     const { account } = this.props
     // get instance token
     const eos = await this.eosInstance.balanceOf(account)
+    const _eosN = new Big(Number(eos))
+      .div(this.getMultFactorForCoin('eos'))
     const trx = await this.trxInstance.balanceOf(account)
+    const _trxN = new Big(Number(trx))
+      .div(this.getMultFactorForCoin('trx'))
     const bnb = await this.bnbInstance.balanceOf(account)
+    const _bnbN = new Big(Number(bnb))
+      .div(this.getMultFactorForCoin('bnb'))
     const ven = await this.venInstance.balanceOf(account)
+    const _venN = new Big(Number(ven))
+      .div(this.getMultFactorForCoin('ven'))
 
     this.setState({
-      eos: eos.toNumber(),
-      trx: trx.toNumber(),
-      bnb: bnb.toNumber(),
-      ven: ven.toNumber()
+      eos: Number(_eosN),
+      trx: Number(_trxN),
+      bnb: Number(_bnbN),
+      ven: Number(_venN)
     })
   }
 
@@ -144,23 +172,23 @@ export default class CoinItem extends Component {
         <div style={{ marginBottom: 20 }}>
           <Button bsStyle="success" bsSize="large" style={{backgroundColor: '#27AE60', borderColor: '#27AE60'}} onClick={this.withdrawFromFaucet.bind(this)}>Get Free Tokens!</Button>
           <div style={{ padding: '20px 150px', marginBottom: 50, marginTop: 20 }}>
-            <div style={{ display: 'flex', fontSize: 14, justifyContent: 'center' }}>
-              <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', fontSize: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, marginLeft: 5, marginRight: 5 }}>
                 <h3>
                   <Label bsStyle="primary" style={{ padding: '3px 10px' }}>{eos > 0 ? eos : `0`} EOS</Label>
                 </h3>
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, marginLeft: 5, marginRight: 5 }}>
                 <h3>
                   <Label bsStyle="primary" style={{ padding: '3px 10px' }}>{trx > 0 ? trx : `0`} TRX</Label>
                 </h3>
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, marginLeft: 5, marginRight: 5 }}>
                 <h3>
                   <Label bsStyle="primary" style={{ padding: '3px 10px' }}>{bnb > 0 ? bnb : `0`} BNB</Label>
                 </h3>
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, marginLeft: 5, marginRight: 5 }}>
                 <h3>
                   <Label bsStyle="primary" style={{ padding: '3px 10px' }}>{ven > 0 ? ven : `0`} VEN</Label>
                 </h3>

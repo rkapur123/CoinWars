@@ -2,12 +2,12 @@ module.exports = {
   'wars': [
     {
       'id': 1,
-      'coin1_name': 'JTRX',
-      'coin2_name': 'JBNB',
+      'coin1_name': 'TRX',
+      'coin2_name': 'BNB',
       'coin1_address': '0x23cabbc41367890a069eec0ab06175611ccb73f1',
       'coin2_address': '0x3eed28a0e0aa5314bae67b6bcebbed0205f52f98',
-      'from_block': 2166302,
-      'to_block': 2166402
+      'from_block': 2166345,
+      'to_block': 2166425
     },
     // {
     //   'id': 3,

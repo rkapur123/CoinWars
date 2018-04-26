@@ -38,7 +38,6 @@ export default class Account extends Component {
   getFomatted = (player, value) => {
     if (!value) value = 0
     let _amount = new Big(value)
-    console.log(player, value.toNumber(), player)
     let _finalAmount = _amount
       .div(this.getMultFactorForCoin(player))
       .toFixed(this.getDecimalsInCoin(player))
@@ -66,8 +65,6 @@ export default class Account extends Component {
             looser = tokens[0]
           }
 
-          console.log(results)
-
           warResults.push({
             token1: tokens[0],
             token2: tokens[1],
@@ -81,8 +78,8 @@ export default class Account extends Component {
           })
         }
       }
-      this.setState({ results: warResults, loading: false })
     }
+    this.setState({ results: warResults, loading: false })
   }
 
   componentDidMount = async () => {
@@ -141,6 +138,7 @@ export default class Account extends Component {
 
   loadData = () => {
     const { loading } = this.state
+    console.log(loading)
     if (loading) {
       return (
         <div className="intro">

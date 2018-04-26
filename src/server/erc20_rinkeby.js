@@ -159,7 +159,7 @@ const server = {
     const tokenInstance = await tokenContract.new(
       totalAmt, name, decimal, symbol, { from: `${this.address}`, gas: 5000000 }
     )
-    return tokenInstance
+    return tokenContract
   }
 
 };
