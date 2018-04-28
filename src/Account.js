@@ -74,7 +74,7 @@ export default class Account extends Component {
             looserTokenAmount: this.getFomatted(looser, results[3]),
             winnerTokenTotalBet: this.getFomatted(winner, results[4]),
             looserTokenTotalBet: this.getFomatted(looser, results[5]),
-            coinWarAddress: isOnGoing[1]
+            coinWarAddress: results[6] ? results[6].toString(10) : null
           })
         }
       }

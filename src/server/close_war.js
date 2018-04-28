@@ -130,6 +130,7 @@ const app = {
             coin1Addresses.push(data._from)
             coin1Bets.push(data._value.toNumber())
             _price1 += data._value.toNumber()
+            console.log('Coin1 Bets', coin1Bets)
           }
           let _bigPrice1 = new Big(_price1)
           coin1TotalBetPrice = _bigPrice1
@@ -145,6 +146,7 @@ const app = {
                 coin2Addresses.push(data._from)
                 coin2Bets.push(data._value.toNumber())
                 _price2 += data._value.toNumber()
+                console.log('Coin2 Bets', coin2Bets)
               }
 
               let _bigPrice2 = new Big(_price2)

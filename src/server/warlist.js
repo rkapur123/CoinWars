@@ -3,21 +3,12 @@ module.exports = {
     {
       'id': 1,
       'coin1_name': 'TRX',
-      'coin2_name': 'ABT',
-      'coin1_address': '0x23cabbc41367890a069eec0ab06175611ccb73f1',
-      'coin2_address': '0x28a97933d271F69a53407cb7BA6A87F32C48B1c2',
-      'from_block': 2166345,
-      'to_block': 2178136
-    },
-    // {
-    //   'id': 1,
-   //    'coin1_name': 'TRX',
-   //    'coin2_name': 'EOS',
-   //    'coin1_address': '0x4b3855f4df12101dbc3c06931796e70174d3e99e',
-  //     'coin2_address': '0xd0cd0114d255ddee071d863c77dfb63889c6cea0',
-  //     'from_block': 2142046,
-  //     'to_block': 2142346
-  //  },
+      'coin2_name': 'EOS',
+      'coin1_address': '0x4b3855f4df12101dbc3c06931796e70174d3e99e',
+      'coin2_address': '0xd0cd0114d255ddee071d863c77dfb63889c6cea0',
+      'from_block': 2189212,
+      'to_block': 2189412
+   },
     // {
     //   'id': 2,
     //   'coin1_name': 'TRX',

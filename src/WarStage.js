@@ -77,9 +77,16 @@ class WarStage extends Component {
     this.coin2 = await this.props.erc20Contract.at(coin2Address)
     this.coins.set(coin2Address, this.coin2)
 
-    const coin1Event = await this.coin1.Transfer({}, { fromBlock, toBlock })
+    const coin1Event = await this.coin1.Transfer({ _from: this.props.account }, { fromBlock, toBlock })
     coin1Event.watch(async (error, results) => {
-      console.log('COIN1_EVENT', results)
+      // console.log('COIN1_EVENT', results)
+      if (coinWarAddress === '0x014e90d8b8ced8f83d8480e8cd9b21075a604dcf') {
+        const { _from, _value } = results.args
+        console.log(coin1, _from, _value.toNumber())
+        const coinWarBalance = await this.coin1.balanceOf(coinWarAddress)
+        console.log(`CoinWarBalance in ${coin1}`, Number(coinWarBalance))
+      }
+
       let _percentage = new Big(0), _myBetPrice = 0, _myBetAmount = 0
       const coinWarBalance = await this.coin1.balanceOf(coinWarAddress)
 
@@ -125,9 +132,16 @@ class WarStage extends Component {
       this.props.reload(coinWarBalance)
     })
 
-    const coin2Event = await this.coin2.Transfer({}, { fromBlock, toBlock })
+    const coin2Event = await this.coin2.Transfer({ }, { fromBlock, toBlock })
     coin2Event.watch(async (error, results) => {
-      console.log('COIN2_EVENT', results)
+
+      if (coinWarAddress === '0x014e90d8b8ced8f83d8480e8cd9b21075a604dcf') {
+        const { _from, _value } = results.args
+        console.log(coin2, _from, _value.toNumber())
+        const coinWarBalance = await this.coin2.balanceOf(coinWarAddress)
+        console.log(`CoinWarBalance in ${coin2}`, Number(coinWarBalance))
+      }
+      // console.log('COIN2_EVENT', results)
       let _percentage = new Big(0), _myBetPrice = 0, _myBetAmount = 0
       const coinWarBalance = await this.coin2.balanceOf(coinWarAddress)
 
