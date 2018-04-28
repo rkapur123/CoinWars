@@ -74,7 +74,7 @@ export default class Account extends Component {
             looserTokenAmount: this.getFomatted(looser, results[3]),
             winnerTokenTotalBet: this.getFomatted(winner, results[4]),
             looserTokenTotalBet: this.getFomatted(looser, results[5]),
-            coinWarAddress: results[6] ? results[6].toString(10) : null
+            coinWarAddress: results[6].toString(10)
           })
         }
       }
@@ -115,30 +115,29 @@ export default class Account extends Component {
     )
   }
 
-  singleCoinPlayer = (amount, isWinner = true, token) => {
+  singleCoinPlayer = (amount, isWinner = true, token, coinWarAddress) => {
     const label = isWinner ? 'success' : 'danger'
     const _amount = isWinner ? `+${amount}` : `-${amount}`
     return (
       <span>
         <Label bsStyle={label} style={{ marginRight: 5 }}>{_amount} {token}</Label>
-        {isWinner && <Button bsStyle="success" onClick={this.withdraw}>Withdraw</Button>}
+        {isWinner && <Button bsStyle="success" onClick={this.withdraw.bind(this, coinWarAddress)}>Withdraw</Button>}
       </span>
     )
   }
 
-  doubleCoinPlayer = (winner, amountWinner, looser, amountLooser) => {
+  doubleCoinPlayer = (winner, amountWinner, looser, amountLooser, coinWarAddress) => {
     return (
       <span>
         <Label bsStyle="success" style={{ marginRight: 5 }}>+{amountWinner} {looser}</Label>
         <Label bsStyle="danger" style={{ marginRight: 5 }}>-{amountLooser} {looser}</Label>
-        <Button bsStyle="success" onClick={this.withdraw}>Withdraw</Button>
+        <Button bsStyle="success" onClick={this.withdraw.bind(this, coinWarAddress)}>Withdraw</Button>
       </span>
     )
   }
 
   loadData = () => {
     const { loading } = this.state
-    console.log(loading)
     if (loading) {
       return (
         <div className="intro">
@@ -166,7 +165,7 @@ export default class Account extends Component {
     const warsClosed = this.state.results.map((item, index) => {
       const { token1, token2, winner, looser,
         winnerTokenAmount, looserTokenAmount,
-        winnerTokenTotalBet, looserTokenTotalBet } = item
+        winnerTokenTotalBet, looserTokenTotalBet, coinWarAddress } = item
 
       if (new Big(winnerTokenAmount).eq(0) && new Big(looserTokenAmount).eq(0)) {
         return null
@@ -180,26 +179,23 @@ export default class Account extends Component {
 
       if (new Big(winnerTokenAmount).eq(0) && new Big(looserTokenAmount).gt(0)) {
         // only Looser
-        console.log(`${token1}vs${token2} - only looser`)
         amount = looserTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
-        amountDisplay = this.singleCoinPlayer(amount, false, looser)
+        amountDisplay = this.singleCoinPlayer(amount, false, looser, coinWarAddress)
       } else if (new Big(winnerTokenAmount).gt(0) && new Big(looserTokenAmount).eq(0)) {
         // only Winner
-        console.log(`${token1}vs${token2} - only winner`)
         arith = new Big(winnerTokenAmount)
           .div(winnerTokenTotalBet)
           .times(looserTokenTotalBet)
         amount = arith.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
-        amountDisplay = this.singleCoinPlayer(amount, true, looser)
+        amountDisplay = this.singleCoinPlayer(amount, true, looser, coinWarAddress)
       } else if (new Big(winnerTokenAmount).gt(0) && new Big(looserTokenAmount).gt(0)) {
         // both winner and looser
-        console.log(`${token1}vs${token2} - both winner and looser`)
         arith = new Big(winnerTokenAmount)
           .div(winnerTokenTotalBet)
           .times(looserTokenTotalBet)
         amountWinner = arith.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
         amountLooser = looserTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
-        amountDisplay = this.doubleCoinPlayer(winner, amountWinner, looser, amountLooser)
+        amountDisplay = this.doubleCoinPlayer(winner, amountWinner, looser, amountLooser, coinWarAddress)
       }
 
       const _winnerTokenAmount = winnerTokenAmount.toString().replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
