@@ -7,7 +7,7 @@ module.exports = {
       'coin1_address': '0x4b3855f4df12101dbc3c06931796e70174d3e99e',
       'coin2_address': '0xd0cd0114d255ddee071d863c77dfb63889c6cea0',
       'from_block': 2189212,
-      'to_block': 2189412
+      'to_block': 2189684
    },
     // {
     //   'id': 2,

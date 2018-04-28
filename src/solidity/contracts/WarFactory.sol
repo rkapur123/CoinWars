@@ -60,12 +60,12 @@ contract WarFactory {
   function getResultsAtIndexForUser(uint index, address user)
     public
     view
-    returns (string, uint, uint, uint, uint, uint)
+    returns (string, uint, uint, uint, uint, uint, address)
   {
     CoinWar coinWar = CoinWar(allWars[index].coinWar);
     var (winnerIndex, winningBet, loosingBet, totalWinningBet, totalLoosingBet) = coinWar.getUserBet(user);
 
-    return (allWars[index].opponents, winnerIndex, winningBet, loosingBet, totalWinningBet, totalLoosingBet);
+    return (allWars[index].opponents, winnerIndex, winningBet, loosingBet, totalWinningBet, totalLoosingBet, address(coinWar));
 
   }
 
